@@ -14,7 +14,6 @@ public class Manifest {
 
 	public Manifest(String test_name, String ontology, String data, String schema, String in_shape_map,
 			String out_shape_map) {
-		super();
 		this.test_name = test_name;
 		this.ontology = ontology;
 		this.data = data;
@@ -76,7 +75,5 @@ public class Manifest {
 		return "Manifest [test_name=" + test_name + ", ontology=" + ontology + ", data=" + data + ", schema=" + schema
 				+ ", in_shape_map=" + in_shape_map + ", out_shape_map=" + out_shape_map + "]";
 	}
-	
-	
 
 }

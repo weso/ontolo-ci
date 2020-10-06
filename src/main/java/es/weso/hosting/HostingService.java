@@ -1,7 +1,9 @@
 package es.weso.hosting;
 
+import es.weso.model.Manifest;
+
 public interface HostingService {
 
-	String getSourceCode();
+	Manifest[] getValidationData(String owner,String repo, String branch,String ontologyFolder,String testFolder); 
 	
 }
