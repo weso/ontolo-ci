@@ -18,9 +18,9 @@
 	</build>
 
 	<modules>
-		<module>validation</module>
-		<module>communication</module>
-		<module>server-github</module>
+		<module>ontoloci-validation</module>
+		<module>ontoloci-communication</module>
+		<module>ontoloci-server-github</module>
 	</modules>
 
 	<dependencies>
