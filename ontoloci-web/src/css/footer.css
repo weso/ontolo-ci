@@ -1,0 +1,13 @@
+footer{
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: center;
+    align-items: center;
+    gap: 2vh;
+    height: 10vh;
+    border-top: 1px solid #dfdcdc;
+}
+
+footer > img {
+    height: 11vh;
+}
