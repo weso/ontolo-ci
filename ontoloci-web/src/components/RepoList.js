@@ -2,11 +2,11 @@ import React from 'react';
 import Repo from './Repo';
 
 
-function App() {
+function RepoList() {
   return (
     <div className="main">
       <h2><a>Builds</a></h2>
-      <div className="repos-list">
+      <div className="dashboard-elements-list">
         <Repo owner="weso" 
               repo="hercules-ontology" 
               pass={true}
@@ -38,7 +38,7 @@ function App() {
               repo="hercules-ontology" 
               pass={true}
               commitName="Ontology Update"
-              branchName="emilio_20%"
+              branchName="emilio_ontology"
               prId="#71 passed"
               commitId="f920308"
               executionTime="3 min 12 sec"
@@ -66,4 +66,4 @@ function App() {
   );
 }
 
-export default App;
+export default RepoList;
