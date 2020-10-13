@@ -1,5 +1,6 @@
 import React , {useState} from 'react';
 import { Collapse, Button, CardBody, Card } from 'reactstrap';
+import { LazyLog } from 'react-lazylog';
 import '../css/testcase.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -67,28 +68,32 @@ function TestCase(props){
     </div>
     <Collapse isOpen={isOpen} >
         <div className="test-element-log">
-<p><code>
-{
-"ResultShapeMap: [ \n"+
-"{\n"+
-  "'node' : '<http://purl.org/hercules/asio/modules#ES_SUBJECT_AREA_LEVEL_2_PIN>',\n"+
-  "'shape' : '<http://purl.org/hercules/asio/core#ResearchFieldShape>',\n"+
-  "'status' : 'conformant',\n"+
-  "'appInfo' : 'Shaclex',\n"+
-  "'reason' : '<http://purl.org/hercules/asio/modules#ES_SUBJECT_AREA_LEVEL_2_PIN> passes OR \n"+
-"}\n"+
-"{\n"+
-"'node' : '<http://purl.org/hercules/asio/modules#ES_SUBJECT_AREA_LEVEL_2_PIN>',\n"+
-" 'shape' : '<http://purl.org/hercules/asio/core#ESSubjectAreas3rdListShape>',\n"+
-" 'status' : 'conformant',\n"+
-" 'appInfo' : 'Shaclex',\n"+
-" 'reason' : ''\n"+
-"}\n"}</code>
-</p>
-
+            <LazyLog enableSearch url="http://localhost:3000/examplelog.log" />
         </div>
     </Collapse>
 </div>) 
 }
 
 export default TestCase;
+
+/**
+ * <code>
+{
+    "ResultShapeMap: [ \n"+
+    "{\n"+
+    "'node' : '<http://purl.org/hercules/asio/modules#ES_SUBJECT_AREA_LEVEL_2_PIN>',\n"+
+    "'shape' : '<http://purl.org/hercules/asio/core#ResearchFieldShape>',\n"+
+    "'status' : 'conformant',\n"+
+    "'appInfo' : 'Shaclex',\n"+
+    "'reason' : '<http://purl.org/hercules/asio/modules#ES_SUBJECT_AREA_LEVEL_2_PIN> passes OR \n"+
+    "}\n"+
+    "{\n"+
+    "'node' : '<http://purl.org/hercules/asio/modules#ES_SUBJECT_AREA_LEVEL_2_PIN>',\n"+
+    " 'shape' : '<http://purl.org/hercules/asio/core#ESSubjectAreas3rdListShape>',\n"+
+    " 'status' : 'conformant',\n"+
+    " 'appInfo' : 'Shaclex',\n"+
+    " 'reason' : ''\n"+
+    "}\n"
+}
+</code>
+ */

@@ -11,7 +11,7 @@
 
 .test-element{
     display: grid;
-    grid-template-columns: 6% 20% 25% 20% 12% 12% 10% ;
+    grid-template-columns: 6% 20% 25% 15% 12% 18% 10% ;
     align-items: center;
     justify-content: flex-start ;
     padding-top: 1vh;
@@ -20,11 +20,10 @@
 }
 
 .test-element-log{
-    display: grid;
-    align-items: center;
-    justify-content: center ;
-    padding-top: 1vh;
-    border: 1px solid #dfdcdc;
+
+    border-left: 1px solid #dfdcdc;
+    border-right: 1px solid #dfdcdc;
+    border-bottom: 1px solid #dfdcdc;
     height: 50vh;
 }
 
@@ -60,4 +59,7 @@ a{
 
 .expand-more-btn{
     fill: #9e9e9e;
+    cursor: pointer;
 }
+
+
