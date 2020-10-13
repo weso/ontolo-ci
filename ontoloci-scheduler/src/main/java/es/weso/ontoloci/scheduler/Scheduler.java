@@ -27,7 +27,7 @@ public class Scheduler {
         this.buildStack = new LinkedList<>();
 
         // This line uses dependency injection to set the specific type of worker to use.
-        this.workerExecutor = new WorkerExecutor(new WorkerSequential());
+        this.workerExecutor = WorkerExecutor.from(new WorkerSequential());
     }
 
     /**

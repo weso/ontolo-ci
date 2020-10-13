@@ -12,12 +12,17 @@ public class WorkerExecutor implements Worker {
 
     private final Worker worker;
 
+    public static WorkerExecutor from(Worker worker) {
+        LOGGER.debug("Static factory creating a new worker executor for " + worker);
+        return new WorkerExecutor(worker);
+    }
+    
     /**
      * Main constructor for the worker exeutor class. This is intended for dependency injection.
      *
      * @param worker to execute the builds.
      */
-    public WorkerExecutor(final Worker worker) {
+    private WorkerExecutor(final Worker worker) {
         this.worker = worker;
     }
 

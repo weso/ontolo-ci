@@ -13,6 +13,21 @@ public class MongoBuildResult implements Serializable {
     private String buildId;
     private BuildResult buildResult;
 
+    /**
+     * Public empty constructor
+     */
+    public MongoBuildResult() {}
+
+    /**
+     * Public constructor for springboot.
+     *
+     * @param buildResult to set
+     */
+    public MongoBuildResult(String buildId, BuildResult buildResult) {
+        this.buildId = buildId;
+        this.buildResult = buildResult;
+    }
+
     public String getBuildId() {
         return buildId;
     }
