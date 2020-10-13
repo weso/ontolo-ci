@@ -25,6 +25,8 @@ public class Scheduler {
     private Scheduler() {
         LOGGER.debug("Creating the scheduler instance");
         this.buildStack = new LinkedList<>();
+
+        // This line uses dependency injection to set the specific type of worker to use.
         this.workerExecutor = new WorkerExecutor(new WorkerSequential());
     }
 
@@ -40,6 +42,8 @@ public class Scheduler {
     /**
      * Schedule a build. This adds the build to the last of the build stack.
      *
+     * ¡¡¡ As it is implemented at the moment you cannot insert a build till the previous has finished!!!
+     *
      * @param build to add to the build stack.
      */
     public void scheduleBuild(Build build) {
@@ -47,6 +51,9 @@ public class Scheduler {
         this.cron();
     }
 
+    /**
+     * This cron task shoud be asynchronos but we need to be carefull with the accessed data structure.
+     */
     private void cron() {
         while(!this.buildStack.isEmpty()) {
             this.workerExecutor.executeBuild(this.buildStack.getFirst());

@@ -26,6 +26,7 @@
         <module>ontoloci-scheduler</module>
         <module>ontoloci-listener</module>
 		<module>ontoloci-hub</module>
+		<module>ontoloci-persistence-mongo</module>
 	</modules>
 
 	<dependencies>
