@@ -1,11 +1,48 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>es.weso</groupId>
-  <artifactId>ontology-ci</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  
-  <dependencies>
-  	<dependency>
+  <artifactId>ontoloci</artifactId>
+	<packaging>pom</packaging>
+	<version>0.0.1</version>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>11</source>
+					<target>11</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<modules>
+        <module>ontoloci-worker</module>
+        <module>ontoloci-scheduler</module>
+        <module>ontoloci-listener</module>
+		<module>ontoloci-hub</module>
+		<module>ontoloci-persistence-mongo</module>
+	</modules>
+
+	<dependencies>
+
+		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>2.0.0-alpha1</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12 -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>2.0.0-alpha1</version>
+		</dependency>
+
+		<dependency>
 			<groupId>es.weso</groupId>
 			<artifactId>shaclex_2.12</artifactId>
 			<version>0.1.59</version>
