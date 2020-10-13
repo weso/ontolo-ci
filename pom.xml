@@ -19,9 +19,6 @@
 	</build>
 
 	<modules>
-		<module>ontoloci-validation</module>
-		<module>ontoloci-communication</module>
-		<module>ontoloci-server-github</module>
         <module>ontoloci-worker</module>
         <module>ontoloci-scheduler</module>
         <module>ontoloci-listener</module>
