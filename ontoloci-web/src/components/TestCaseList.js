@@ -15,32 +15,32 @@ function TestCaseList() {
                   pass={true}  
                   executionTime="3 min 12 sec"
                   date="28 days ago"/>
-<TestCase 
-                  testName= "Researcher Test"
-                  data="weso:JoseEmilioLabraGayo"
-                  shape="weso:Researcher"
-                  status="Confortmant"
-                  pass={true}  
-                  executionTime="3 min 12 sec"
-                  date="28 days ago"/>
+        <TestCase 
+                          testName= "Researcher Test"
+                          data="weso:JoseEmilioLabraGayo"
+                          shape="weso:Researcher"
+                          status="Confortmant"
+                          pass={true}  
+                          executionTime="3 min 12 sec"
+                          date="28 days ago"/>
 
-<TestCase 
-                  testName= "Researcher Test"
-                  data="weso:JoseEmilioLabraGayo"
-                  shape="weso:Researcher"
-                  status="Confortmant"
-                  pass={true}  
-                  executionTime="3 min 12 sec"
-                  date="28 days ago"/>
+        <TestCase 
+                          testName= "Researcher Test"
+                          data="weso:JoseEmilioLabraGayo"
+                          shape="weso:Researcher"
+                          status="Confortmant"
+                          pass={true}  
+                          executionTime="3 min 12 sec"
+                          date="28 days ago"/>
 
-<TestCase 
-                  testName= "Researcher Test"
-                  data="weso:JoseEmilioLabraGayo"
-                  shape="weso:Researcher"
-                  status="Confortmant"
-                  pass={true}  
-                  executionTime="3 min 12 sec"
-                  date="28 days ago"/>
+        <TestCase 
+                          testName= "Researcher Test"
+                          data="weso:JoseEmilioLabraGayo"
+                          shape="weso:Researcher"
+                          status="Confortmant"
+                          pass={true}  
+                          executionTime="3 min 12 sec"
+                          date="28 days ago"/>
 
                                     
       </div>

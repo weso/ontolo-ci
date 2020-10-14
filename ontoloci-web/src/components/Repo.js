@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 
 function Repo(props){
 
@@ -32,7 +33,9 @@ function Repo(props){
         </div>
         <div className="dashboard-element-info">
             <a className={getPassClass()}>{props.owner}</a>
-            <a className={getPassClass()}>{props.repo}</a>
+            <Link to={`/tests/${props.repo}`} className={getPassClass()}>
+               {props.repo}
+            </Link>
         </div>
 
         <div className="dashboard-element-info">
