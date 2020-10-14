@@ -4,15 +4,14 @@ import es.weso.ontoloci.worker.test.TestCase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 
 public class Build {
 
     // LOGGER CREATION
     private static final Logger LOGGER = LoggerFactory.getLogger(Build.class);
 
+    private Map<String, String> metadata;
     private Collection<TestCase> testCases;
 
     /**
@@ -23,7 +22,7 @@ public class Build {
      */
     public static Build from(final TestCase... testCases) {
         LOGGER.debug("Factory method creating a new build for " + testCases);
-        return new Build(Arrays.asList(testCases));
+        return new Build(Arrays.asList(testCases),new HashMap<>());
     }
 
     /**
@@ -34,7 +33,7 @@ public class Build {
      */
     public static Build from(final Collection<TestCase> testCases) {
         LOGGER.debug("Factory method creating a new build for " + testCases);
-        return new Build(testCases);
+        return new Build(testCases,new HashMap<>());
     }
 
     /**
@@ -42,8 +41,9 @@ public class Build {
      *
      * @param testCases from which to create the build.
      */
-    private Build(final Collection<TestCase> testCases) {
+    private Build(final Collection<TestCase> testCases,Map<String, String> metadata) {
         this.testCases = testCases;
+        this.metadata = metadata;
 
         LOGGER.debug("Creating a new build for " + this);
     }
@@ -65,4 +65,23 @@ public class Build {
     public void setTestCases(final Collection<TestCase> testCases) {
         this.testCases = testCases;
     }
+
+    /**
+     * Gets the metadata map associated to the build.
+     *
+     * @return the metadata map.
+     */
+    public Map<String, String> getMetadata() {
+        LOGGER.debug("Getting the metadata of the test case result " + this.metadata.toString()
+                + " from " + this);
+
+        return Collections.unmodifiableMap(this.metadata);
+    }
+
+    public void setMetadata(Map<String, String> metadata) {
+        this.metadata = metadata;
+    }
+
+
+
 }
