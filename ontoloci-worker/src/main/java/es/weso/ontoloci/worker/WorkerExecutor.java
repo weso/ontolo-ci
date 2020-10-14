@@ -30,6 +30,8 @@ public class WorkerExecutor implements Worker {
     public BuildResult executeBuild(final Build build) {
         LOGGER.debug("Executing a nre build for " + build);
 
+        // Hub Call
+
         return this.worker.executeBuild(build);
     }
 }

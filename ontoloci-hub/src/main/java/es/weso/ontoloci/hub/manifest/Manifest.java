@@ -1,4 +1,4 @@
-package es.weso.ontoloci.hub;
+package es.weso.ontoloci.hub.manifest;
 
 import es.weso.ontoloci.worker.test.TestCase;
 import org.slf4j.Logger;
