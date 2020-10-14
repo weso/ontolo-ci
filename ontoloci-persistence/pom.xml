@@ -10,22 +10,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>es.weso.ontoloci</groupId>
-    <artifactId>persistence-mongo</artifactId>
+    <artifactId>persistence</artifactId>
     <version>0.0.1</version>
 
     <dependencies>
         <dependency>
             <groupId>es.weso.ontoloci</groupId>
-            <artifactId>persistence</artifactId>
+            <artifactId>worker</artifactId>
             <version>0.0.1</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.mongodb</groupId>
-            <artifactId>mongo-java-driver</artifactId>
-            <version>3.4.1</version>
-        </dependency>
-
     </dependencies>
+
 
 </project>

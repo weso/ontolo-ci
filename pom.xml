@@ -24,7 +24,8 @@
         <module>ontoloci-listener</module>
 		<module>ontoloci-hub</module>
 		<module>ontoloci-persistence-mongo</module>
-	</modules>
+        <module>ontoloci-persistence</module>
+    </modules>
 
 	<dependencies>
 
@@ -60,7 +61,16 @@
             <artifactId>jackson-dataformat-yaml</artifactId>
             <version>2.10.0</version>
         </dependency>
-   </dependencies>
+
+		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>5.7.0</version>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
    
    <repositories>
 		<repository>
