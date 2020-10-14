@@ -133,9 +133,9 @@ public class GitHubService implements RepositoryProviderService {
     }
 
     /**
-     * Performs a request to a concrete
-     * @param path
-     * @return
+     * Performs a request to a concrete url and returns the content data of the file returned by the request
+     * @param path  url
+     * @return contend data
      */
     private String getData(String path) {
         URL url;
@@ -150,7 +150,6 @@ public class GitHubService implements RepositoryProviderService {
             return getFileContent(con.getInputStream());
 
         } catch (IOException e) {
-            // TODO: handle exception
             e.printStackTrace();
         }
 
