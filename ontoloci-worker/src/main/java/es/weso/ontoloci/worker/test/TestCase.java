@@ -25,20 +25,20 @@ public class TestCase {
 
     /**
      * The default constructor is a basic all-args constructor. All the arguments
-     * that it takes are paths to the different files, except the name that is the
+     * that it takes are the contents of the different files, except the name that is the
      * literal string that will be assigned as test name.
      *
      * @param name                     of the test case.
-     * @param ontology         is the file path to the ontology file used
+     * @param ontology         is the content of the ontology file used
      *                                 for testing.
-     * @param instances             is the file path to the data file used to
+     * @param instances             is the content of the data file used to
      *                                 mock ontology instances.
-     * @param schema       is the file path to the schema used to
+     * @param schema       is the content of the schema used to
      *                                 validate the ontology.
-     * @param expectedShapeMap     is the file path to the shape map that
+     * @param expectedShapeMap     is the content of the shape map that
      *                                 relates each test data node with its
      *                                 corresponding schema.
-     * @param producedShapeMap is the file path to the expected result shape
+     * @param producedShapeMap is the content of the expected result shape
      *                                 map.
      */
     public TestCase(final String name, final String ontology, final String instances,
@@ -73,36 +73,36 @@ public class TestCase {
     }
 
     /**
-     * Gets data file path.
+     * Gets data content.
      *
-     * @return data file path
+     * @return data content
      */
     public String getInstances() {
         return instances;
     }
 
     /**
-     * Gets test schema file path.
+     * Gets test schema content.
      *
-     * @return test schema file path
+     * @return test schema content
      */
     public String getSchema() {
         return schema;
     }
 
     /**
-     * Gets test shape map file path.
+     * Gets test shape map content.
      *
-     * @return test shape map file path
+     * @return test shape map content
      */
     public String getExpectedShapeMap() {
         return expectedShapeMap;
     }
 
     /**
-     * Gets expected shape map file path.
+     * Gets expected shape map content.
      *
-     * @return the expected shape map file path
+     * @return the expected shape map content
      */
     public String getProducedShapeMap() {
         return producedShapeMap;
