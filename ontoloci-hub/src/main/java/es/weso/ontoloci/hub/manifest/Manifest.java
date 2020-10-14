@@ -9,9 +9,9 @@ import java.util.Collection;
 import java.util.Collections;
 
 /**
- * A manifest represents the description of a set of test cases.
+ * A manifest represents the description of a set of manifest entries.
  *
- * @author Guillermo Facundo Colunga
+ * @author Guillermo Facundo Colunga, Pablo Menéndez Suárez
  * @version 20201007
  */
 public class Manifest {
@@ -19,52 +19,52 @@ public class Manifest {
     // LOGGER CREATION
     private static final Logger LOGGER = LoggerFactory.getLogger(Manifest.class);
 
-    private Collection<TestCase> testCases;
+    private Collection<ManifestEntry> manifestEntries;
 
     /**
-     * This constructor for tha manifest file initializes the test cases collection to an empty array list.
+     * This constructor for the manifest file initializes the manifest entries collection to an empty array list.
      *
-     * @param testCases is the test cases collection to initialize the manifest.
+     * @param manifestEntries is the manifest entries collection to initialize the manifest.
      */
-    public Manifest(Collection testCases) {
-        this.testCases = new ArrayList<>();
+    public Manifest(Collection manifestEntries) {
+        this.manifestEntries = new ArrayList<>();
 
         LOGGER.debug("Creating a new manifest " + this.toString());
     }
 
     /**
-     * Gets a copy of the test cases collection.
+     * Gets a copy of the manifest entries collection.
      *
-     * @return a copy of the test cases collection.
+     * @return a copy of the manifest entries collection.
      */
-    public Collection getTestCases() {
-        return Collections.unmodifiableCollection(testCases);
+    public Collection<ManifestEntry> getmanifestEntries() {
+        return Collections.unmodifiableCollection(manifestEntries);
     }
 
     /**
-     * Sets the tests cases collection.
+     * Sets the manifest entries collection.
      *
-     * @param testCases is the collection that will substitute the existing one.
+     * @param manifestEntries is the collection that will substitute the existing one.
      */
-    public void setTestCases(Collection testCases) {
-        this.testCases = testCases;
+    public void setManifestEntries(Collection manifestEntries) {
+        this.manifestEntries = manifestEntries;
     }
 
     /**
-     * Gets the number of test cases that the manifest contains. This is implemented by using the size method
-     * of the test cases collection.
+     * Gets the number of manifest entries that the manifest contains. This is implemented by using the size method
+     * of the manifest entries collection.
      *
-     * @return the number of test cases that the manifest contains.
+     * @return the number of manifest entries that the manifest contains.
      */
-    public int getNumberOfTestCases() {
-        return this.testCases.size();
+    public int getNumberOfManifestEntries() {
+        return this.manifestEntries.size();
     }
 
     @Override
     public String toString() {
         return "Manifest{" +
-                    "testCases=" + testCases + "," +
-                    "n_test_cases=" + getNumberOfTestCases() +
+                    "manifestEntries=" + manifestEntries + "," +
+                    "n_test_cases=" + getNumberOfManifestEntries() +
                 '}';
     }
 }
