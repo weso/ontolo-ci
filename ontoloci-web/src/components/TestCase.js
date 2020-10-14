@@ -27,22 +27,22 @@ function TestCase(props){
     
             <div className="test-element-name">
                 <h3>TEST NAME</h3>
-                <a>Researcher Test</a>
+                <a>{props.testName}</a>
             </div>
 
             <div className="test-element-data">
                 <h3>DATA</h3>
-                <a>weso:JoseEmilioLabraGayo</a>
+                <a>{props.data}</a>
             </div>
 
             <div className="test-element-shape">
                 <h3>SHAPE</h3>
-                <a>weso:Researcher</a>
+                <a>{props.shape}</a>
             </div>
 
             <div className="test-element-validation-result">
                 <h3>STATUS</h3>
-                <a>Confortmant</a>
+                <a>{props.status}</a>
             </div>
 
             <div className="dashboard-element-info github-metadata">

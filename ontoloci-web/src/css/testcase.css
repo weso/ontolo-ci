@@ -1,13 +1,11 @@
 .test-elements-list{
     display: grid;
-    grid-template-rows: repeat(auto-fit,auto);
-    gap:1.5vh
+    grid-template-rows: repeat(50,auto);
+    align-items: start;
+
 }
 
-.test-element-container{
-    display: grid;
-    grid-template-columns: 100%;
-}
+
 
 .test-element{
     display: grid;
@@ -17,13 +15,15 @@
     padding-top: 1vh;
     border: 1px solid #dfdcdc;
     min-height: 10vh;
+    max-height: 10vh;
+    height: 100%;
 }
 
 .test-element-log{
-
     border-left: 1px solid #dfdcdc;
     border-right: 1px solid #dfdcdc;
     border-bottom: 1px solid #dfdcdc;
+    min-height: 0vh;
     height: 50vh;
 }
 
