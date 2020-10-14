@@ -39,8 +39,19 @@ public interface OntolociDAO {
     /**
      * Updates a build result. It will persist the values from the passed buildResult to the passed id.
      *
-     * @param id to update.
      * @param buildResult to attach.
      */
-    void update(long id, BuildResult buildResult);
+    void update(BuildResult buildResult);
+
+    /**
+     * Removes the element that matches the id from the persistence.
+     *
+     * @param buildResult to remove
+     */
+    void remove(BuildResult buildResult);
+
+    /**
+     * Removes all the build results in the persistence layer.
+     */
+    void removeAll();
 }

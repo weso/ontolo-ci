@@ -6,12 +6,15 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class BuildResult {
 
     // LOGGER CREATION
     private static final Logger LOGGER = LoggerFactory.getLogger(BuildResult.class);
 
+    private String id;
     private Collection<TestCaseResult> testCaseResults;
 
     /**
@@ -21,7 +24,7 @@ public class BuildResult {
      * @return a new instance of build result from an array of test case results.
      */
     public static BuildResult from(final TestCaseResult... testCaseResults) {
-        return new BuildResult(Arrays.asList(testCaseResults));
+        return new BuildResult("", Arrays.asList(testCaseResults));
     }
 
     /**
@@ -31,7 +34,7 @@ public class BuildResult {
      * @return a new instance of build result from an array of test case results.
      */
     public static BuildResult from(final Collection<TestCaseResult> testCaseResults) {
-        return new BuildResult(testCaseResults);
+        return new BuildResult("", testCaseResults);
     }
 
     /**
@@ -39,9 +42,25 @@ public class BuildResult {
      *
      * @param testCaseResults from which to create the build result.
      */
-    private BuildResult(final Collection<TestCaseResult> testCaseResults) {
+    private BuildResult(final String id, final Collection<TestCaseResult> testCaseResults) {
         this.testCaseResults = testCaseResults;
 
         LOGGER.debug("Creating a new build result for " + testCaseResults);
+    }
+
+    public void setId(final String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return this.id;
+    }
+
+    public Collection<TestCaseResult> getTestCaseResults() {
+        return Collections.unmodifiableCollection(this.testCaseResults);
+    }
+
+    public void addTestCaseResults(List<TestCaseResult> testCaseResults) {
+        this.testCaseResults.addAll(testCaseResults);
     }
 }
