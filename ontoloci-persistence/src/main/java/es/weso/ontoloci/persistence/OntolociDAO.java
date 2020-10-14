@@ -27,7 +27,7 @@ public interface OntolociDAO {
      * @param id of the build result to find.
      * @return an optional that might contain the build result.
      */
-    Optional<BuildResult> findBuildResultForId(long id);
+    Optional<BuildResult> findBuildResultForId(String id);
 
     /**
      * Saves a build result.

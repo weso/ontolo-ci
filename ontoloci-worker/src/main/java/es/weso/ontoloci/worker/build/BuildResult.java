@@ -63,4 +63,12 @@ public class BuildResult {
     public void addTestCaseResults(List<TestCaseResult> testCaseResults) {
         this.testCaseResults.addAll(testCaseResults);
     }
+
+    @Override
+    public String toString() {
+        return "BuildResult{" +
+                "id='" + id + '\'' +
+                ", testCaseResults=" + testCaseResults +
+                '}';
+    }
 }
