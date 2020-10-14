@@ -2,26 +2,20 @@ package es.weso.ontoloci.persistence;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
-import com.mongodb.ServerAddress;
 import es.weso.ontoloci.persistence.mongo.BuildResultMongoObjectRepository;
-import es.weso.ontoloci.persistence.mongo.OntolociMongoDAO;
-import es.weso.ontoloci.persistence.mongo.OntolociMongoSprinbootDAO;
+import es.weso.ontoloci.persistence.mongo.OntolociInMemoryDAO;
 import es.weso.ontoloci.worker.build.BuildResult;
 import es.weso.ontoloci.worker.test.TestCase;
 import es.weso.ontoloci.worker.test.TestCaseResult;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.junit4.SpringRunner;
+
 
 import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.List;
 
-@RunWith(SpringRunner.class)
 public class OntolociMongoDAOTest {
 
     @Autowired
@@ -31,25 +25,25 @@ public class OntolociMongoDAOTest {
     private final MongoCredential credential = MongoCredential.createCredential("root", "ontoloci", "a123456".toCharArray());
 
     // DAO to test.
-    private final OntolociDAO dao = new OntolociMongoSprinbootDAO(repo);
+    private final OntolociDAO dao = new OntolociInMemoryDAO(); //new OntolociMongoSprinbootDAO(repo);
         //new OntolociMongoDAO(new MongoClient(new ServerAddress("ds241489.mlab.com", 41489), Arrays.asList(credential)));
 
     // Test instances.
-    private final BuildResult r1 = BuildResult.from();
-    private final BuildResult r2 = BuildResult.from();
-    private final BuildResult r3 = BuildResult.from();
+    private final BuildResult r1 = BuildResult.from(new ArrayList<>());
+    private final BuildResult r2 = BuildResult.from(new ArrayList<>());
+    private final BuildResult r3 = BuildResult.from(new ArrayList<>());
 
     @Test
     public void saveTest() {
         // First we ensure the persistence has no elements.
-        //assertEquals(0, dao.findAllBuildResults().size());
+        assertEquals(0, dao.findAllBuildResults().size());
 
         // Insert 1 element.
         dao.save(r1);
 
         // We check that the dao layer is storing the object correctly
         assertEquals(1, dao.findAllBuildResults().size());
-        //assertEquals(r1, dao.findBuildResultForId(1).get());
+        assertEquals(r1, dao.findBuildResultForId(r1.getId()).get());
 
         // Finally we remove the element from the dao layer.
         for(BuildResult r : dao.findAllBuildResults()) {
@@ -110,10 +104,10 @@ public class OntolociMongoDAOTest {
         // Insert 3 elements.
         dao.save(r1);
 
-        List<TestCaseResult> testCases = new ArrayList<>();
-        testCases.add(TestCaseResult.from(new TestCase("name", "", "", "", "", "")));
+        List<TestCaseResult> testResultCases = new ArrayList<>();
+        testResultCases.add(TestCaseResult.from(new TestCase("name", "", "", "", "", "")));
 
-        r1.addTestCaseResults(testCases);
+        r1.addTestCaseResults(testResultCases);
 
         dao.update(r1);
 
