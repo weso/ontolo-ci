@@ -100,14 +100,17 @@ public class Build {
             String expectedSM = t.getExpectedShapeMap();
             hubTests.add(new HubTestCase(name,ontology,instances,schema,producedSM,expectedSM));
         }
-        return HubBuild.from(hubTests);
+
+        Map<String,String> metaHub = Collections.unmodifiableMap(this.getMetadata());
+
+        return HubBuild.from(hubTests,metaHub);
     }
 
     /**
      * Returns a Build Object clone from a HubBuild
      * @return Build
      */
-    public Build fromHubBuild(HubBuild hubBuild){
+    public static Build from(HubBuild hubBuild){
         Collection<TestCase> testCases = new ArrayList<>();
         for(HubTestCase t:hubBuild.getTestCases()){
             String name = t.getName();
@@ -118,7 +121,10 @@ public class Build {
             String expectedSM = t.getExpectedShapeMap();
             testCases.add(new TestCase(name,ontology,instances,schema,producedSM,expectedSM));
         }
-        return Build.from(testCases);
+
+        Map<String,String> metaHub = Collections.unmodifiableMap(hubBuild.getMetadata());
+
+        return new Build(testCases,metaHub);
     }
 
 

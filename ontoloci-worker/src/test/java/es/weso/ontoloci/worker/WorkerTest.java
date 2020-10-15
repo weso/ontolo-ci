@@ -1,5 +1,7 @@
 package es.weso.ontoloci.worker;
 
+import es.weso.ontoloci.hub.OntolociHubImplementation;
+import es.weso.ontoloci.hub.build.HubBuild;
 import es.weso.ontoloci.hub.repository.impl.GitHubRepositoryProvider;
 import es.weso.ontoloci.worker.build.Build;
 import es.weso.ontoloci.worker.test.TestCase;
@@ -7,13 +9,17 @@ import es.weso.ontoloci.worker.test.TestCaseResult;
 import es.weso.ontoloci.worker.test.TestCaseResultStatus;
 import es.weso.ontoloci.worker.validation.ResultValidation;
 import es.weso.ontoloci.worker.validation.Validate;
+import es.weso.shapeMaps.ResultShapeMap;
+import es.weso.shapeMaps.ShapeMap;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class WorkerTest {
 
@@ -25,27 +31,23 @@ public class WorkerTest {
         @Test
         public void validationTest() {
 
-            GitHubRepositoryProvider gitHubService = GitHubRepositoryProvider.empty();
-            Collection<TestCase> testCases = gitHubService.getTestCases(owner,repo,branch);
-            Build build = Build.from(testCases);
+            Build build = Build.from(new ArrayList<>());
+            Map<String,String> metadataExample = new HashMap<>();
+            metadataExample.put("owner",owner);
+            metadataExample.put("repo",repo);
+            metadataExample.put("branch",branch);
+            build.setMetadata(metadataExample);
 
-            // Temporary array of test results
-            final Collection<TestCaseResult> testCaseResults = new ArrayList<>();
+            OntolociHubImplementation ontolocyHub = new OntolociHubImplementation();
+            //Transform the current build to a HubBuild
+            HubBuild hubBuild = build.toHubBuild();
+            //Add the tests
+            hubBuild = ontolocyHub.addTestsToBuild(hubBuild);
+            //Transform the returned HubBuild to a Build and overwrites the result
+            build = build.from(hubBuild);
 
-            // Temp variable to store each test result.
-            TestCaseResult currentTestCase = null;
 
             for(TestCase testCase : build.getTestCases()) {
-                // 1. Create the result object.
-                currentTestCase = TestCaseResult.from(testCase);
-
-                // 2. Validate the test case...
-                currentTestCase.setStatus(TestCaseResultStatus.EXECUTING);
-
-                final long initTime = System.nanoTime(); // Init counting execution time.
-                // For u peibol. Find the validate class in the validation package.
-                // Paste here the validation code from Labra, and do not show it to me please...
-
                 Validate v = new Validate();
                 ResultValidation result = v.validateStrExpected(
                         testCase.getOntology(),
@@ -53,23 +55,7 @@ public class WorkerTest {
                         testCase.getSchema(),
                         testCase.getProducedShapeMap(),
                         testCase.getExpectedShapeMap()).unsafeRunSync();
-
-
-
-                final long stopTime = System.nanoTime(); // Stop counting execution time.
-
-                final long executionTimeNS = stopTime - initTime; // Compute execution time.
-
-                // Set execution time as metadata.
-                final Map<String, String> metadata = currentTestCase.getMetadata();
-                metadata.put("execution_time", Long.toString(executionTimeNS));
-                currentTestCase.setMetadata(metadata);
-
-                // 3. If the status is possitive then...
-                currentTestCase.setStatus(TestCaseResultStatus.PASS);
-
-                // And finally add it to the collection of results.
-                testCaseResults.add(TestCaseResult.from(testCase));
+                assertTrue(result.getExpectedShapeMap().toJson().spaces2().length() > 0);
             }
 
         }

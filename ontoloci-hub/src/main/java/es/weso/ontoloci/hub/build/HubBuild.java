@@ -37,6 +37,18 @@ public class HubBuild {
     }
 
     /**
+     * Factory method that creates a build instance from a list of test cases
+     * and a Map of metada
+     *
+     * @param testCases from which to create the new build instance.
+     * @return the new build instance.
+     */
+    public static HubBuild from(final Collection<HubTestCase> testCases,Map<String,String> metadata) {
+        LOGGER.debug("Factory method creating a new build for " + testCases);
+        return new HubBuild(testCases,metadata);
+    }
+
+    /**
      * Private constructor. It creates a build instance from a collection of test cases.
      *
      * @param testCases from which to create the build.

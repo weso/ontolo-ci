@@ -34,8 +34,12 @@ public class WorkerExecutor implements Worker {
         LOGGER.debug("Executing a nre build for " + build);
 
         OntolociHubImplementation ontolocyHub = new OntolociHubImplementation();
+        //Transform the current build to a HubBuild
         HubBuild hubBuild = build.toHubBuild();
-        //build = ontolocyHub.addTestsToBuild(build);
+        //Add the tests
+        hubBuild = ontolocyHub.addTestsToBuild(hubBuild);
+        //Transform the returned HubBuild to a Build and overwrites the result
+        build = build.from(hubBuild);
         return this.worker.executeBuild(build);
     }
 }
