@@ -5,7 +5,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * The repository configuration models the YAML file that each repo that implements ontolo-ci needs to have.
- * At the moment it only contains the path to the manifest file where the test cases are defined.
+ * At the moment it only contains the path to the manifest file where the test cases are defined,
+ * the path to the ontology folder where the ontology is defined and the path to the test folder
+ * where the tests are defined
  *
  * @author Pablo Menénded Suárez
  */
@@ -16,11 +18,17 @@ public class RepositoryConfiguration {
 
     // Stores the path of the manifest file inside the repository.
     private String manifestPath;
+    // Stores the path of the ontology folder inside the repository.
+    private String ontologyFolder;
+    // Stores the path of the tests folder inside the repository.
+    private String testFolder;
 
     public RepositoryConfiguration() {} // Needed for the YAML mapper
 
-    public RepositoryConfiguration(String manifestPath) {
+    public RepositoryConfiguration(String manifestPath,String ontologyFolder,String testFolder) {
         this.manifestPath = manifestPath;
+        this.ontologyFolder = ontologyFolder;
+        this.testFolder = testFolder;
 
         LOGGER.debug("Creating a new repository configuration for " + this);
     }
@@ -33,8 +41,28 @@ public class RepositoryConfiguration {
         this.manifestPath = manifestPath;
     }
 
+    public String getOntologyFolder() {
+        return ontologyFolder;
+    }
+
+    public String getTestFolder() {
+        return testFolder;
+    }
+
+    public void setOntologyFolder(String ontologyFolder) {
+        this.ontologyFolder = ontologyFolder;
+    }
+
+    public void setTestFolder(String testFolder) {
+        this.testFolder = testFolder;
+    }
+
     @Override
     public String toString() {
-        return "RepositoryConfiguration [manifestPath=" + manifestPath + "]";
+        return "RepositoryConfiguration{" +
+                "manifestPath='" + manifestPath + '\'' +
+                ", ontologyFolder='" + ontologyFolder + '\'' +
+                ", testFolder='" + testFolder + '\'' +
+                '}';
     }
 }

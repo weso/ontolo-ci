@@ -15,8 +15,6 @@ public class HubTests {
     private final String owner = "mistermboy";
     private final String repo = "oci-test";
     private final String branch = "main";
-    private final String ontologyFolder = "src";
-    private final String testFolder = "test";
     private final int numberOfEntries = 3;
 
 
@@ -24,7 +22,7 @@ public class HubTests {
     public void getTestCasesTest() {
 
         GitHubRepositoryProvider gitHubService = GitHubRepositoryProvider.empty();
-        Collection<TestCase> testCases = gitHubService.getTestCases(owner,repo,branch,ontologyFolder,testFolder);
+        Collection<TestCase> testCases = gitHubService.getTestCases(owner,repo,branch);
         assertFalse(testCases.isEmpty());
         assertEquals(testCases.size(),numberOfEntries);
 
