@@ -3,7 +3,10 @@ import es.weso.ontoloci.worker.test.TestCase;
 
 import java.util.Collection;
 
-public interface RepositoryProviderService {
+/**
+ * TO-DO
+ */
+public interface RepositoryProvider {
 
     /**
      * Gets a collection of test cases from a concrete branch and commit of a repository service repository.
@@ -16,5 +19,11 @@ public interface RepositoryProviderService {
      *
      * @return test cases
      */
-    Collection<TestCase> getTestCases(String owner, String repo, String branch, String ontologyFolder, String testFolder);
+    Collection<TestCase> getTestCases(
+            final String owner,
+            final String repo,
+            final String branch,
+            final String ontologyFolder,
+            final String testFolder
+    );
 }

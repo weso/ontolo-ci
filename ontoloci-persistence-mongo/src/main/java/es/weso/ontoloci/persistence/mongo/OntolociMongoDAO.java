@@ -2,6 +2,7 @@ package es.weso.ontoloci.persistence.mongo;
 
 import static com.mongodb.client.model.Filters.eq;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -9,6 +10,8 @@ import es.weso.ontoloci.persistence.OntolociDAO;
 import es.weso.ontoloci.worker.build.BuildResult;
 import es.weso.ontoloci.worker.test.TestCaseResult;
 import org.bson.Document;
+import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,9 +64,23 @@ public class OntolociMongoDAO implements OntolociDAO {
     }
 
     @Override
-    public Optional<BuildResult> findBuildResultForId(long id) {
+    public Optional<BuildResult> findBuildResultForId(String id) {
         LOGGER.debug("Getting a build results from mongo persistence layer for id " + id);
-        return Optional.empty();
+        Bson filter = eq("_id", new ObjectId(id));
+        final List<Document> dbObjects = new ArrayList<>();
+        collection.find(filter).into(dbObjects);
+
+        if(dbObjects.size() > 1) {
+            throw new IllegalStateException("More than one element found for the given id");
+        } else if(dbObjects.isEmpty()) {
+            return Optional.empty();
+        } else {
+            BuildResult tmpBuildResult = BuildResult.from();
+            tmpBuildResult.setId(dbObjects.get(0).get("_id").toString());
+            tmpBuildResult.addTestCaseResults((List<TestCaseResult>) dbObjects.get(0).get("testCaseResults"));
+            return Optional.of(tmpBuildResult);
+        }
+
     }
 
     @Override
@@ -77,18 +94,30 @@ public class OntolociMongoDAO implements OntolociDAO {
     @Override
     public void update(BuildResult buildResult) {
         LOGGER.debug("Updating a build result from mongo persistence layer");
+        Bson filter = eq("_id", new ObjectId(buildResult.getId()));
+
+        BasicDBObject updateQuery = new BasicDBObject();
+        updateQuery.append("$set",
+                new BasicDBObject().append("testCaseResults", buildResult.getTestCaseResults()));
+
+        collection.updateOne(filter, updateQuery);
     }
 
     @Override
     public void remove(BuildResult buildResult) {
         LOGGER.debug("Removing a build result from mongo persistence layer for id " +buildResult.getId());
 
-        collection.deleteOne(eq("_id", buildResult.getId()));
+        if(buildResult.getId().isEmpty()) {
+            throw new IllegalStateException("The build result object must have an id in order to remove it from the collection");
+        }
+
+        collection.deleteOne(eq("_id", new ObjectId(buildResult.getId())));
     }
 
     @Override
     public void removeAll() {
         LOGGER.debug("Removing all build results from mongo persistence layer for id ");
+        collection.drop();
     }
 
 }

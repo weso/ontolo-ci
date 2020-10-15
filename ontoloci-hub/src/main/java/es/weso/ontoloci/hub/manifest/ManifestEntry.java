@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 public class ManifestEntry {
 
         // LOGGER CREATION
-        private static final Logger LOGGER = LoggerFactory.getLogger(es.weso.ontoloci.worker.test.TestCase.class);
+        private static final Logger LOGGER = LoggerFactory.getLogger(ManifestEntry.class);
 
         private final String name;
         private final String ontology;
