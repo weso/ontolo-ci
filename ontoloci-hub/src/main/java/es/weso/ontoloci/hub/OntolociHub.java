@@ -1,8 +1,9 @@
 package es.weso.ontoloci.hub;
 
-import es.weso.ontoloci.worker.build.Build;
+import es.weso.ontoloci.hub.build.HubBuild;
+
 
 public interface OntolociHub {
 
-    Build addTestsToBuild(Build build);
+    HubBuild addTestsToBuild(HubBuild hubBuild);
 }

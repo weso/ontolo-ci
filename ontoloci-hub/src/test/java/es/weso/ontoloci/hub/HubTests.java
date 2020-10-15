@@ -1,7 +1,7 @@
 package es.weso.ontoloci.hub;
 
 import es.weso.ontoloci.hub.repository.impl.GitHubRepositoryProvider;
-import es.weso.ontoloci.worker.test.TestCase;
+import es.weso.ontoloci.hub.test.HubTestCase;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
@@ -22,7 +22,7 @@ public class HubTests {
     public void getTestCasesTest() {
 
         GitHubRepositoryProvider gitHubService = GitHubRepositoryProvider.empty();
-        Collection<TestCase> testCases = gitHubService.getTestCases(owner,repo,branch);
+        Collection<HubTestCase> testCases = gitHubService.getTestCases(owner,repo,branch);
         assertFalse(testCases.isEmpty());
         assertEquals(testCases.size(),numberOfEntries);
 

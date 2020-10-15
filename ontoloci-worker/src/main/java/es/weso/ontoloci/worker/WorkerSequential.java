@@ -5,6 +5,8 @@ import es.weso.ontoloci.worker.build.BuildResult;
 import es.weso.ontoloci.worker.test.TestCase;
 import es.weso.ontoloci.worker.test.TestCaseResult;
 import es.weso.ontoloci.worker.test.TestCaseResultStatus;
+import es.weso.ontoloci.worker.validation.ResultValidation;
+import es.weso.ontoloci.worker.validation.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +41,16 @@ public class WorkerSequential implements Worker {
             final long initTime = System.nanoTime(); // Init counting execution time.
             // For u peibol. Find the validate class in the validation package.
             // Paste here the validation code from Labra, and do not show it to me please...
+
+            Validate v = new Validate();
+            ResultValidation result = v.validateStrExpected(
+                    testCase.getOntology(),
+                    testCase.getInstances(),
+                    testCase.getSchema(),
+                    testCase.getProducedShapeMap(),
+                    testCase.getExpectedShapeMap()).unsafeRunSync();
+
+
             final long stopTime = System.nanoTime(); // Stop counting execution time.
 
             final long executionTimeNS = stopTime - initTime; // Compute execution time.

@@ -9,22 +9,18 @@ import es.weso.ontoloci.hub.manifest.Manifest;
 import es.weso.ontoloci.hub.manifest.ManifestEntry;
 import es.weso.ontoloci.hub.repository.RepositoryConfiguration;
 import es.weso.ontoloci.hub.repository.RepositoryProvider;
-import es.weso.ontoloci.worker.test.TestCase;
-import org.apache.jena.base.Sys;
+import es.weso.ontoloci.hub.test.HubTestCase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * This class implements the needed methods to get a collection of TestCases
@@ -72,7 +68,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
      * @return test cases
      */
     @Override
-    public Collection<TestCase> getTestCases(String owner, String repo, String branch) {
+    public Collection<HubTestCase> getTestCases(String owner, String repo, String branch) {
         RepositoryConfiguration repositoryConfig;
         Manifest manifest;
         String ontologyFolder;
@@ -135,9 +131,9 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
      *
      * @return test cases
      */
-    private Collection<TestCase> getTestCasesFromManifest(String owner, String repo, String branch, String ontologyFolder, String testFolder, Manifest mainifest)
+    private Collection<HubTestCase> getTestCasesFromManifest(String owner, String repo, String branch, String ontologyFolder, String testFolder, Manifest mainifest)
             throws JsonMappingException, JsonProcessingException, IOException {
-        Collection<TestCase> testCases = new ArrayList<TestCase>();
+        Collection<HubTestCase> testCases = new ArrayList<HubTestCase>();
         String genericOntologyPath = getConcatenatedPath(owner, repo, branch)+ontologyFolder+SLASH_SYMBOL;
         String genericTestPath = getConcatenatedPath(owner, repo, branch)+testFolder+SLASH_SYMBOL;
         
@@ -150,7 +146,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
             String producedSM = getData(genericTestPath+entry.getProducedShapeMap());
             String expectedSM = getData(genericTestPath+entry.getExpectedShapeMap());
 
-            testCases.add(new TestCase(name,ontology,instances,schema,producedSM,expectedSM));
+            testCases.add(new HubTestCase(name,ontology,instances,schema,producedSM,expectedSM));
         }
         
         return testCases;

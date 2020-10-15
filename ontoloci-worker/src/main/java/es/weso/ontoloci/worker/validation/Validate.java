@@ -62,13 +62,28 @@ public class Validate {
 																resultShapeMap -> IO.pure(resultShapeMap))))))))));
 	}
 
-	public IO<ShapeMap> getShapeMap(String shapeMapFile, RDFReader rdf, Schema schema) {
-		return getContents(shapeMapFile)
-				.flatMap(shapeMapStr -> EitherIOUtils.eitherStr2IO(
-						ShapeMap.fromString(shapeMapStr, "Compact", none, rdf.getPrefixMap(), schema.prefixMap())))
-				.handleErrorWith(e -> IO.raiseError(new RuntimeException(
-						"Cannot parse shapeMap from file: " + shapeMapFile + ": " + e.getMessage())));
+	public IO<ResultValidation> validateStrExpected(String ontologyStr, String dataStr, String schemaStr, String shapeMapStr,String expectedShapeMapStr) {
+		return readRDFStr(dataStr, "TURTLE").flatMap(rdfData -> readRDFStr(ontologyStr, "TURTLE")
+				.flatMap(ontologyData -> rdfData.merge(ontologyData).flatMap(merged -> Schema
+						.fromString(schemaStr, "SHEXC", none, noneRDF)
+						.flatMap(schema -> EitherIOUtils
+								.eitherStr2IO(ShapeMap.fromString(shapeMapStr, "Compact", none, merged.getPrefixMap(),
+										schema.prefixMap()))
+								.flatMap(shapeMap -> ShapeMap
+										.fixShapeMap(shapeMap, merged, merged.getPrefixMap(), schema.prefixMap())
+										.flatMap(fixedShapeMap -> ResolvedSchema.resolve(schema, none).flatMap(
+												resolvedSchema ->
+														EitherIOUtils.eitherStr2IO(
+																ShapeMap.fromString(expectedShapeMapStr, "Compact", none, merged.getPrefixMap(), schema.prefixMap()))
+												.flatMap( expectedShapeMap
+														-> Validator.validate(resolvedSchema, fixedShapeMap, merged)
+														.flatMap(result -> result.toResultShapeMap().flatMap(
+																resultShapeMap -> IO.pure(
+																		new ResultValidation(resultShapeMap,expectedShapeMap)
+																)))))))))));
 	}
+
+
 
 	public IO<RDFAsJenaModel> readRDFStr(String str, String format) {
 		return RDFAsJenaModel.fromChars(str, format, none).handleErrorWith(

@@ -5,6 +5,8 @@ import es.weso.ontoloci.worker.build.BuildResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import es.weso.ontoloci.hub.OntolociHubImplementation;
+
 public class WorkerExecutor implements Worker {
 
     // LOGGER CREATION
@@ -27,11 +29,11 @@ public class WorkerExecutor implements Worker {
     }
 
     @Override
-    public BuildResult executeBuild(final Build build) {
+    public BuildResult executeBuild(Build build) {
         LOGGER.debug("Executing a nre build for " + build);
 
-        // Hub Call
-
+        OntolociHubImplementation ontolocyHub = new OntolociHubImplementation();
+        build = ontolocyHub.addTestsToBuild(build);
         return this.worker.executeBuild(build);
     }
 }

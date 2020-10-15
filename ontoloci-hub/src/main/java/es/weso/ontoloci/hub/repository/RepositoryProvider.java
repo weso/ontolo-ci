@@ -1,6 +1,6 @@
 package es.weso.ontoloci.hub.repository;
 import es.weso.ontoloci.hub.manifest.Manifest;
-import es.weso.ontoloci.worker.test.TestCase;
+import es.weso.ontoloci.hub.test.HubTestCase;
 
 import java.util.Collection;
 
@@ -18,7 +18,7 @@ public interface RepositoryProvider {
      *
      * @return test cases
      */
-    Collection<TestCase> getTestCases(
+    Collection<HubTestCase> getTestCases(
             final String owner,
             final String repo,
             final String branch
