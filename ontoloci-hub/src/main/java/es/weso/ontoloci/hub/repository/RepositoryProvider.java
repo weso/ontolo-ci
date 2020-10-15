@@ -1,4 +1,5 @@
 package es.weso.ontoloci.hub.repository;
+import es.weso.ontoloci.hub.manifest.Manifest;
 import es.weso.ontoloci.worker.test.TestCase;
 
 import java.util.Collection;
@@ -26,4 +27,5 @@ public interface RepositoryProvider {
             final String ontologyFolder,
             final String testFolder
     );
+    
 }
