@@ -7,7 +7,10 @@ import es.weso.ontoloci.hub.repository.impl.GitHubRepositoryProvider;
 import es.weso.ontoloci.worker.test.TestCase;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collection;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class HubTests {
 
@@ -17,15 +20,16 @@ public class HubTests {
     private final String branch = "main";
     private final String ontologyFolder = "src";
     private final String testFolder = "test";
+    private final int numberOfEntries = 3;
 
 
     @Test
     public void getTestCasesTest() {
 
         GitHubRepositoryProvider gitHubService = GitHubRepositoryProvider.empty();
-        for(TestCase t:gitHubService.getTestCases(owner,repo,branch,ontologyFolder,testFolder)) {
+        Collection<TestCase> testCases = gitHubService.getTestCases(owner,repo,branch,ontologyFolder,testFolder);
+        assertFalse(testCases.isEmpty());
+        assertEquals(testCases.size(),numberOfEntries);
 
-            assertEquals("",t.toString());
-        }
     }
 }

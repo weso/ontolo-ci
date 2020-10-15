@@ -26,7 +26,7 @@ public class Manifest {
      * @param manifestEntries is the manifest entries collection to initialize the manifest.
      */
     public Manifest(Collection manifestEntries) {
-        this.manifestEntries = new ArrayList<>();
+        this.manifestEntries = new ArrayList<>(manifestEntries);
 
         LOGGER.debug("Creating a new manifest " + this.toString());
     }

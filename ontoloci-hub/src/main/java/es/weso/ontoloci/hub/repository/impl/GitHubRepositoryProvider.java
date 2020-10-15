@@ -10,6 +10,7 @@ import es.weso.ontoloci.hub.manifest.ManifestEntry;
 import es.weso.ontoloci.hub.repository.RepositoryConfiguration;
 import es.weso.ontoloci.hub.repository.RepositoryProvider;
 import es.weso.ontoloci.worker.test.TestCase;
+import org.apache.jena.base.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
