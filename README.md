@@ -27,3 +27,22 @@ Ontolo-CI is shipped as a Docker container so that anyone can deploy its own ins
  - **Ontolo-CI API:** The API provides an access layer for thrid party services that need to explore the data from an Ontolo-CI instance. It is also used by the web service. It only allows reading data at the time.
 
  - **Ontolo-CI Web:** Is a Web interface that stores the results of all executions schedulled, under execution and executed.
+
+## Deploy
+
+As previously seen, Ontolo-CI is a docker based system. Therefore the only important requirement is that you have Docker installed and running on your computer.
+Then, you just need to follow these steps.
+
+1. Download the latest version of the repository, either as a ZIP file or by cloning the master branch.
+```shell
+git clone https://github.com/weso/ontolo-ci
+```
+
+2. Then move to the docker folder from inside Ontolo-CI. For that:
+```shell
+cd ontolo-ci/docker
+```
+
+3. Finally, execute `docker-compose up`. This will generate the corresponding images, deploy the containers and expose the posrts.
+
+> **Ports Configuration:** Ontolo-CI uses port 80 for serving the web UI, port 10010 for its API and port 10011 for listening to GitHub. 
