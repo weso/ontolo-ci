@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import es.weso.ontoloci.hub.manifest.Manifest;
 import es.weso.ontoloci.hub.manifest.ManifestEntry;
-import es.weso.ontoloci.hub.oci.OCI;
-import es.weso.ontoloci.hub.repository.RepositoryProviderService;
+import es.weso.ontoloci.hub.repository.RepositoryConfiguration;
+import es.weso.ontoloci.hub.repository.RepositoryProvider;
 import es.weso.ontoloci.worker.test.TestCase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,17 +28,35 @@ import java.util.Collection;
  *
  * @author Pablo Menéndez
  */
-public class GitHubService implements RepositoryProviderService {
+public class GitHubRepositoryProvider implements RepositoryProvider {
 
     // LOGGER CREATION
-    private static final Logger LOGGER = LoggerFactory.getLogger(es.weso.ontoloci.worker.test.TestCase.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GitHubRepositoryProvider.class);
 
-    private final static ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
-    private final static ObjectMapper jsonMapper = new ObjectMapper(new JsonFactory());
     private final static String API_REQUEST = "https://raw.githubusercontent.com/";
     private final static String YAML_FILE_NAME = ".oci.yml";
     private final static String SLASH_SYMBOL = "/";
 
+    private final ObjectMapper yamlMapper;
+    private final ObjectMapper jsonMapper;
+
+    public static GitHubRepositoryProvider empty() {
+        return new GitHubRepositoryProvider();
+    }
+
+    public static GitHubRepositoryProvider with(ObjectMapper yamlMapper, ObjectMapper jsonMapper) {
+        return new GitHubRepositoryProvider(yamlMapper, jsonMapper);
+    }
+
+    private GitHubRepositoryProvider() {
+        this.yamlMapper = new ObjectMapper(new YAMLFactory());
+        this.jsonMapper = new ObjectMapper(new JsonFactory());
+    }
+
+    private GitHubRepositoryProvider(ObjectMapper yamlMapper, ObjectMapper jsonMapper) {
+        this.yamlMapper = yamlMapper;
+        this.jsonMapper = jsonMapper;
+    }
 
     /**
      * Gets a collection of test cases from a concrete branch and commit of a GitHub repository.
@@ -53,7 +71,7 @@ public class GitHubService implements RepositoryProviderService {
      */
     @Override
     public Collection<TestCase> getTestCases(String owner, String repo, String branch, String ontologyFolder, String testFolder) {
-        OCI oci;
+        RepositoryConfiguration oci;
         Manifest manifest;
         try {
             oci = getOCI(getConcatenatedPath(owner,repo,branch)+YAML_FILE_NAME);
@@ -75,8 +93,8 @@ public class GitHubService implements RepositoryProviderService {
      *
      * @return oci
      */
-    private OCI getOCI(String path) throws JsonMappingException, JsonProcessingException, IOException {
-        return yamlMapper.readValue(getData(path), OCI.class);
+    private RepositoryConfiguration getOCI(String path) throws JsonMappingException, JsonProcessingException, IOException {
+        return yamlMapper.readValue(getData(path), RepositoryConfiguration.class);
     }
 
     /**
