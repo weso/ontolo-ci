@@ -20,8 +20,9 @@ public class HubTestCase {
     private final String ontology;
     private final String instances;
     private final String schema;
-    private final String expectedShapeMap;
     private final String producedShapeMap;
+    private final String expectedShapeMap;
+
 
     /**
      * The default constructor is a basic all-args constructor. All the arguments
@@ -42,14 +43,14 @@ public class HubTestCase {
      *                                 map.
      */
     public HubTestCase(final String name, final String ontology, final String instances,
-                    final String schema, final String expectedShapeMap,
-                    final String producedShapeMap) {
+                    final String schema,final String producedShapeMap,
+                       final String expectedShapeMap) {
         this.name = name;
         this.ontology = ontology;
         this.instances = instances;
         this.schema = schema;
-        this.expectedShapeMap = expectedShapeMap;
         this.producedShapeMap = producedShapeMap;
+        this.expectedShapeMap = expectedShapeMap;
 
         LOGGER.debug("Creating a test case " + this.toString());
     }

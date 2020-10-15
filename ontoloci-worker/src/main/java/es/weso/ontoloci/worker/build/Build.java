@@ -1,5 +1,7 @@
 package es.weso.ontoloci.worker.build;
 
+import es.weso.ontoloci.hub.build.HubBuild;
+import es.weso.ontoloci.hub.test.HubTestCase;
 import es.weso.ontoloci.worker.test.TestCase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,6 +82,43 @@ public class Build {
 
     public void setMetadata(Map<String, String> metadata) {
         this.metadata = metadata;
+    }
+
+
+    /**
+     * Returns a HubBuild object clone
+     * @return HubBuild
+     */
+    public HubBuild toHubBuild(){
+        Collection<HubTestCase> hubTests = new ArrayList<>();
+        for(TestCase t:this.getTestCases()){
+            String name = t.getName();
+            String ontology = t.getOntology();
+            String instances = t.getInstances();
+            String schema = t.getSchema();
+            String producedSM = t.getProducedShapeMap();
+            String expectedSM = t.getExpectedShapeMap();
+            hubTests.add(new HubTestCase(name,ontology,instances,schema,producedSM,expectedSM));
+        }
+        return HubBuild.from(hubTests);
+    }
+
+    /**
+     * Returns a Build Object clone from a HubBuild
+     * @return Build
+     */
+    public Build fromHubBuild(HubBuild hubBuild){
+        Collection<TestCase> testCases = new ArrayList<>();
+        for(HubTestCase t:hubBuild.getTestCases()){
+            String name = t.getName();
+            String ontology = t.getOntology();
+            String instances = t.getInstances();
+            String schema = t.getSchema();
+            String producedSM = t.getProducedShapeMap();
+            String expectedSM = t.getExpectedShapeMap();
+            testCases.add(new TestCase(name,ontology,instances,schema,producedSM,expectedSM));
+        }
+        return Build.from(testCases);
     }
 
 
