@@ -1,8 +1,5 @@
 package es.weso.ontoloci.hub;
 
-
-import es.weso.ontoloci.hub.manifest.Manifest;
-import es.weso.ontoloci.hub.manifest.ManifestEntry;
 import es.weso.ontoloci.hub.repository.impl.GitHubRepositoryProvider;
 import es.weso.ontoloci.worker.test.TestCase;
 import org.junit.jupiter.api.Test;
