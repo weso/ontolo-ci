@@ -1,5 +1,7 @@
 package es.weso.ontoloci.hub.manifest;
 
+import com.fasterxml.jackson.annotation.JacksonAnnotation;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,12 +18,20 @@ public class ManifestEntry {
         // LOGGER CREATION
         private static final Logger LOGGER = LoggerFactory.getLogger(ManifestEntry.class);
 
-        private final String name;
-        private final String ontology;
-        private final String instances;
-        private final String schema;
-        private final String expectedShapeMap;
-        private final String producedShapeMap;
+        @JsonProperty("test_name")
+        private String name;
+        @JsonProperty("ontology")
+        private String ontology;
+        @JsonProperty("data")
+        private String instances;
+        @JsonProperty("schema")
+        private String schema;
+        @JsonProperty("in_shape_map")
+        private String producedShapeMap;
+        @JsonProperty("out_shape_map")
+        private String expectedShapeMap;
+
+        public ManifestEntry(){}
 
         /**
          * The default constructor is a basic all-args constructor. All the arguments
@@ -42,17 +52,18 @@ public class ManifestEntry {
          *                                 map.
          */
         public ManifestEntry(final String name, final String ontology, final String instances,
-                        final String schema, final String expectedShapeMap,
-                        final String producedShapeMap) {
+                        final String schema, final String producedShapeMap,
+                        final String expectedShapeMap) {
             this.name = name;
             this.ontology = ontology;
             this.instances = instances;
             this.schema = schema;
-            this.expectedShapeMap = expectedShapeMap;
             this.producedShapeMap = producedShapeMap;
+            this.expectedShapeMap = expectedShapeMap;
 
             LOGGER.debug("Creating a test case " + this.toString());
         }
+
 
         /**
          * Gets name.

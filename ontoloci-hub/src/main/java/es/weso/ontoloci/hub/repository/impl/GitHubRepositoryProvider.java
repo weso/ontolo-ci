@@ -10,6 +10,7 @@ import es.weso.ontoloci.hub.manifest.ManifestEntry;
 import es.weso.ontoloci.hub.repository.RepositoryConfiguration;
 import es.weso.ontoloci.hub.repository.RepositoryProvider;
 import es.weso.ontoloci.worker.test.TestCase;
+import org.apache.jena.base.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,10 +18,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * This class implements the needed methods to get a collection of TestCases
@@ -64,18 +68,20 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
      * @param owner                 of the repository
      * @param repo                  name of the repository
      * @param branch                of the repository
-     * @param ontologyFolder        repository folder that contains the ontology
-     * @param testFolder            repository folder that contains the tests
-
+     *
      * @return test cases
      */
     @Override
-    public Collection<TestCase> getTestCases(String owner, String repo, String branch, String ontologyFolder, String testFolder) {
-        RepositoryConfiguration oci;
+    public Collection<TestCase> getTestCases(String owner, String repo, String branch) {
+        RepositoryConfiguration repositoryConfig;
         Manifest manifest;
+        String ontologyFolder;
+        String testFolder;
         try {
-            oci = getOCI(getConcatenatedPath(owner,repo,branch)+YAML_FILE_NAME);
-            manifest = getManifest(getConcatenatedPath(owner,repo,branch) + oci.getManifestPath());
+            repositoryConfig = getRepositoryConfiguration(getConcatenatedPath(owner,repo,branch)+YAML_FILE_NAME);
+            manifest = getManifest(getConcatenatedPath(owner,repo,branch) + repositoryConfig.getManifestPath());
+            ontologyFolder = repositoryConfig.getOntologyFolder();
+            testFolder = repositoryConfig.getTestFolder();
             return getTestCasesFromManifest(owner,repo,branch,ontologyFolder,testFolder,manifest);
         } catch (IOException e) {
             e.printStackTrace();
@@ -93,8 +99,8 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
      *
      * @return oci
      */
-    private RepositoryConfiguration getOCI(String path) throws JsonMappingException, JsonProcessingException, IOException {
-        return yamlMapper.readValue(getData(path), RepositoryConfiguration.class);
+    private RepositoryConfiguration getRepositoryConfiguration(String path) throws JsonMappingException, JsonProcessingException, IOException {
+       return yamlMapper.readValue(getData(path), RepositoryConfiguration.class);
     }
 
     /**
@@ -108,7 +114,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
      */
     private Manifest getManifest(String path)
             throws JsonMappingException, JsonProcessingException, IOException {
-        return jsonMapper.readValue(getData(path), Manifest.class);
+        return new Manifest(Arrays.asList(jsonMapper.readValue(getData(path), ManifestEntry[].class)));
     }
 
 
@@ -179,7 +185,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
         StringBuilder result = new StringBuilder();
         String line;
         while ((line = rd.readLine()) != null) {
-            result.append(line);
+            result.append(line+'\n');
         }
         rd.close();
         return result.toString();
