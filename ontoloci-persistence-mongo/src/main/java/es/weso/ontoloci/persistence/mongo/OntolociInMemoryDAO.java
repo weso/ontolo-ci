@@ -16,7 +16,7 @@ public class OntolociInMemoryDAO implements OntolociDAO {
 
     @Override
     public Optional<BuildResult> findBuildResultForId(String id) {
-        return Optional.of(db.get(id));
+        return Optional.ofNullable(db.get(id));
     }
 
     @Override

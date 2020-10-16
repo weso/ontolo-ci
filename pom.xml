@@ -25,6 +25,8 @@
 		<module>ontoloci-hub</module>
 		<module>ontoloci-persistence-mongo</module>
         <module>ontoloci-persistence</module>
+        <module>ontoloci-api</module>
+        <module>ontoloci-server-igniter</module>
     </modules>
 
 	<dependencies>
