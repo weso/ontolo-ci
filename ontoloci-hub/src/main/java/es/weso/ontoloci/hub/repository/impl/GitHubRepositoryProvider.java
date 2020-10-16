@@ -138,7 +138,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
         String genericTestPath = getConcatenatedPath(owner, repo, branch)+testFolder+SLASH_SYMBOL;
         
         
-        for(ManifestEntry entry:mainifest.getmanifestEntries()){
+        for(ManifestEntry entry:mainifest.getManifestEntries()){
             String name = entry.getName();
             String ontology = getData(genericOntologyPath+entry.getOntology());
             String instances = getData(genericTestPath+entry.getInstances());

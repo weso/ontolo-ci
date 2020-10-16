@@ -2,14 +2,8 @@ package es.weso.ontoloci.persistence;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.mongodb.MongoCredential;
-import es.weso.ontoloci.persistence.mongo.BuildResultMongoObjectRepository;
 import es.weso.ontoloci.persistence.mongo.OntolociInMemoryDAO;
-import es.weso.ontoloci.worker.build.BuildResult;
-import es.weso.ontoloci.worker.test.TestCase;
-import es.weso.ontoloci.worker.test.TestCaseResult;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 
 import java.util.ArrayList;
@@ -18,20 +12,15 @@ import java.util.List;
 
 public class OntolociMongoDAOTest {
 
-    @Autowired
-    private BuildResultMongoObjectRepository repo;
-
-    // Mongo credentials for mlab
-    private final MongoCredential credential = MongoCredential.createCredential("root", "ontoloci", "a123456".toCharArray());
 
     // DAO to test.
-    private final OntolociDAO dao = new OntolociInMemoryDAO(); //new OntolociMongoSprinbootDAO(repo);
+    private final OntolociDAO dao = OntolociInMemoryDAO.instance(); //new OntolociMongoSprinbootDAO(repo);
         //new OntolociMongoDAO(new MongoClient(new ServerAddress("ds241489.mlab.com", 41489), Arrays.asList(credential)));
 
     // Test instances.
-    private final BuildResult r1 = BuildResult.from(new ArrayList<>());
-    private final BuildResult r2 = BuildResult.from(new ArrayList<>());
-    private final BuildResult r3 = BuildResult.from(new ArrayList<>());
+    private final PersistedBuildResult r1 = PersistedBuildResult.from(new ArrayList<>());
+    private final PersistedBuildResult r2 = PersistedBuildResult.from(new ArrayList<>());
+    private final PersistedBuildResult r3 = PersistedBuildResult.from(new ArrayList<>());
 
     @Test
     public void saveTest() {
@@ -46,7 +35,7 @@ public class OntolociMongoDAOTest {
         assertEquals(r1, dao.findBuildResultForId(r1.getId()).get());
 
         // Finally we remove the element from the dao layer.
-        for(BuildResult r : dao.findAllBuildResults()) {
+        for(PersistedBuildResult r : dao.findAllBuildResults()) {
             System.out.println(r);
             dao.remove(r);
         }
@@ -87,7 +76,7 @@ public class OntolociMongoDAOTest {
 
         assertEquals(3, dao.findAllBuildResults().size());
 
-        List<BuildResult> dbResults = dao.findAllBuildResults();
+        List<PersistedBuildResult> dbResults = dao.findAllBuildResults();
         assertEquals(dbResults.get(0).getId(), dao.findBuildResultForId(dbResults.get(0).getId()).get().getId());
         assertEquals(dbResults.get(1).getId(), dao.findBuildResultForId(dbResults.get(1).getId()).get().getId());
         assertEquals(dbResults.get(2).getId(), dao.findBuildResultForId(dbResults.get(2).getId()).get().getId());
@@ -104,14 +93,14 @@ public class OntolociMongoDAOTest {
         // Insert 3 elements.
         dao.save(r1);
 
-        List<TestCaseResult> testResultCases = new ArrayList<>();
-        testResultCases.add(TestCaseResult.from(new TestCase("name", "", "", "", "", "")));
+        List<PersistedTestCaseResult> testResultCases = new ArrayList<>();
+        testResultCases.add(PersistedTestCaseResult.from(new PersistedTestCase("name", "", "", "", "", "")));
 
         r1.addTestCaseResults(testResultCases);
 
         dao.update(r1);
 
-        for(BuildResult buildResult: dao.findAllBuildResults()) {
+        for(PersistedBuildResult buildResult: dao.findAllBuildResults()) {
             System.out.println(buildResult);
         }
 

@@ -1,7 +1,5 @@
-package es.weso.ontoloci.worker.test;
+package es.weso.ontoloci.persistence;
 
-import es.weso.ontoloci.persistence.PersistedBuildResult;
-import es.weso.ontoloci.persistence.PersistedTestCaseResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,35 +15,17 @@ import java.util.Map;
  * @author Guillermo Facundo Colunga
  * @version 20201007
  */
-public class TestCaseResult {
+public class PersistedTestCaseResult {
 
     // LOGGER CREATION
-    private static final Logger LOGGER = LoggerFactory.getLogger(TestCaseResultStatus.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PersistedTestCaseResult.class);
 
     // Final fields
-    private final TestCase testCase;
+    private final PersistedTestCase testCase;
 
     // Non final fields.
-    private TestCaseResultStatus status;
+    private PersistedTestCaseResultStatus status;
     private Map<String, String> metadata;
-
-    public static PersistedTestCaseResult toPersistedTestCaseResult(TestCaseResult testCaseResult) {
-        PersistedTestCaseResult ptestCaseR = PersistedTestCaseResult.from(
-                TestCase.toPersistedTestCase(testCaseResult.getTestCase())
-        );
-        ptestCaseR.setMetadata(testCaseResult.getMetadata());
-        LOGGER.error("Changing the test result status from " + ptestCaseR.getStatus() + " to " + testCaseResult.getStatus());
-        ptestCaseR.setStatus(TestCaseResultStatus.toPersistedTestCaseResultStatus(testCaseResult.getStatus()));
-        return  ptestCaseR;
-    }
-
-    public static TestCaseResult from(PersistedTestCaseResult persistedTestCaseResult) {
-        return new TestCaseResult(
-                TestCase.from(persistedTestCaseResult.getTestCase()),
-                TestCaseResultStatus.fromPersistedTestCaseResultStatus(persistedTestCaseResult.getStatus()),
-                persistedTestCaseResult.getMetadata()
-        );
-    }
 
     /**
      * Factory method to create new instances of the test case result from the test case.
@@ -54,9 +34,9 @@ public class TestCaseResult {
      * @param testCase from which to create the test case result.
      * @return the new instance of the rest case result.
      */
-    public static TestCaseResult from(TestCase testCase) {
-        LOGGER.debug("Static factory for creating a new test case result");
-        return new TestCaseResult(testCase, TestCaseResultStatus.WAITING, new HashMap<>());
+    public static PersistedTestCaseResult from(PersistedTestCase testCase) {
+        LOGGER.debug("Static factory for creating a new test case result for ");
+        return new PersistedTestCaseResult(testCase, PersistedTestCaseResultStatus.WAITING, new HashMap<>());
     }
 
     /**
@@ -67,12 +47,12 @@ public class TestCaseResult {
      * @param status of the test case execution.
      * @param metadata is a map with the test execution metadata.
      */
-    private TestCaseResult(TestCase testCase, TestCaseResultStatus status, Map<String, String> metadata) {
+    private PersistedTestCaseResult(PersistedTestCase testCase, PersistedTestCaseResultStatus status, Map<String, String> metadata) {
         this.testCase = testCase;
         this.status = status;
         this.metadata = metadata;
 
-        LOGGER.debug("Creating new test case result for");
+        LOGGER.debug("Creating new test case result for ");
     }
 
     /**
@@ -80,7 +60,7 @@ public class TestCaseResult {
      *
      * @return the test case linked with this result test case.
      */
-    public TestCase getTestCase() {
+    public PersistedTestCase getTestCase() {
         LOGGER.debug("Getting the value of the test case");
 
         return this.testCase;
@@ -91,8 +71,8 @@ public class TestCaseResult {
      *
      * @return the status of the execution of the linked tests case.
      */
-    public TestCaseResultStatus getStatus() {
-        LOGGER.debug("Getting the value of the test case result status");
+    public PersistedTestCaseResultStatus getStatus() {
+        LOGGER.debug("Getting the value of the test case result status ");
 
         return status;
     }
@@ -102,8 +82,10 @@ public class TestCaseResult {
      *
      * @param status to set.
      */
-    public void setStatus(TestCaseResultStatus status) {
-        LOGGER.debug("Setting the value of the test case result status from " + this.status + " to " + status);
+    public void setStatus(PersistedTestCaseResultStatus status) {
+        LOGGER.debug("Setting the value of the test case result status from " + this.status.toString() + " to "
+                + status
+                + " from ");
 
         this.status = status;
     }
@@ -114,7 +96,7 @@ public class TestCaseResult {
      * @return the metadata map.
      */
     public Map<String, String> getMetadata() {
-        LOGGER.debug("Getting the metadata of the test case result");
+        LOGGER.debug("Getting the metadata of the test case result ");
 
         return Collections.unmodifiableMap(this.metadata);
     }

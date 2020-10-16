@@ -18,9 +18,10 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="ontoloci-worker" />
     <orderEntry type="module" module-name="ontoloci-hub" />
+    <orderEntry type="module" module-name="ontoloci-persistence" />
+    <orderEntry type="module" module-name="persistence-mongo" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:2.0.0-alpha1" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:slf4j-log4j12:2.0.0-alpha1" level="project" />
-    <orderEntry type="library" name="Maven: log4j:log4j:1.2.17" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-simple:2.0.0-alpha1" level="project" />
     <orderEntry type="library" name="Maven: org.scala-lang:scala-library:2.12.11" level="project" />
     <orderEntry type="library" name="Maven: es.weso:schemainfer_2.12:0.1.59" level="project" />
     <orderEntry type="library" name="Maven: es.weso:srdf_2.12:0.1.63" level="project" />

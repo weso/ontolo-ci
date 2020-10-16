@@ -2,6 +2,8 @@ package es.weso.ontoloci.listener;
 
 import es.weso.ontoloci.scheduler.Scheduler;
 import es.weso.ontoloci.worker.build.Build;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +17,9 @@ import java.util.Objects;
 @RequestMapping("/api/v1/github")
 public class GitHubRestListener {
 
+    // LOGGER CREATION
+    private static final Logger LOGGER = LoggerFactory.getLogger(GitHubRestListener.class);
+
     private static final String GITHUB_PUSH_EVENT = "push";
     private static final String GITHUB_PULL_REQUEST_EVENT = "pull_request";
     private static final String REPO_KEY = "repository";
@@ -23,8 +28,9 @@ public class GitHubRestListener {
 
     @RequestMapping("/")
     public void listen(@RequestHeader("X-GitHub-Event") String event, @RequestBody Map<String, Object> payload) {
+        LOGGER.debug("New github event received with event ["+event+"] and body ["+payload+"].");
         // We only listen to these two type of events.
-        if(Objects.equals(event, GITHUB_PUSH_EVENT) && Objects.equals(event, GITHUB_PULL_REQUEST_EVENT)) {
+        if(Objects.equals(event, GITHUB_PUSH_EVENT) || Objects.equals(event, GITHUB_PULL_REQUEST_EVENT)) {
             final Build build = Build.from();
             // Parse the content and create the test cases array.
             final String owner = "";

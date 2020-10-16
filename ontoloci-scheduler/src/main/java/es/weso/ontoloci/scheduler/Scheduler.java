@@ -47,6 +47,7 @@ public class Scheduler {
      * @param build to add to the build stack.
      */
     public void scheduleBuild(Build build) {
+        LOGGER.debug("New build scheduled " + build);
         this.buildStack.addLast(build);
         this.cron();
     }
@@ -55,8 +56,11 @@ public class Scheduler {
      * This cron task shoud be asynchronos but we need to be carefull with the accessed data structure.
      */
     private void cron() {
+        LOGGER.debug("Scheduler cron task executed");
         while(!this.buildStack.isEmpty()) {
+            LOGGER.debug("Scheduler consuming " + this.buildStack.getFirst());
             this.workerExecutor.executeBuild(this.buildStack.getFirst());
+            this.buildStack.removeFirst();
         }
     }
 }

@@ -1,6 +1,4 @@
-package es.weso.ontoloci.worker.test;
-
-import es.weso.ontoloci.persistence.PersistedTestCaseResultStatus;
+package es.weso.ontoloci.persistence;
 
 /**
  * Represents the values that the test result status may take.
@@ -14,7 +12,7 @@ import es.weso.ontoloci.persistence.PersistedTestCaseResultStatus;
  * @author Guillermo Facundo Colunga
  * @version 20201007
  */
-public enum TestCaseResultStatus {
+public enum PersistedTestCaseResultStatus {
 
     /**
      * Represents that the test case has not been executed yet.
@@ -46,7 +44,7 @@ public enum TestCaseResultStatus {
      *
      * @param value corresponds to the string value for the enum.
      */
-    TestCaseResultStatus(String value) {
+    PersistedTestCaseResultStatus(String value) {
         this.value = value;
     }
 
@@ -64,31 +62,5 @@ public enum TestCaseResultStatus {
         return "TestCaseResultStatus{" +
                     "value='" + value + '\'' +
                 '}';
-    }
-
-    public static PersistedTestCaseResultStatus toPersistedTestCaseResultStatus(TestCaseResultStatus status) {
-        if(status.equals(EXECUTING))
-            return PersistedTestCaseResultStatus.EXECUTING;
-        else if(status.equals(WAITING))
-            return PersistedTestCaseResultStatus.WAITING;
-        else if(status.equals(FAIL))
-            return PersistedTestCaseResultStatus.FAIL;
-        else if(status.equals(PASS))
-            return PersistedTestCaseResultStatus.PASS;
-        else
-            return PersistedTestCaseResultStatus.FAIL;
-    }
-
-    public static TestCaseResultStatus fromPersistedTestCaseResultStatus(PersistedTestCaseResultStatus persistedStatus) {
-        if(persistedStatus.equals(PersistedTestCaseResultStatus.EXECUTING))
-            return EXECUTING;
-        else if(persistedStatus.equals(PersistedTestCaseResultStatus.WAITING))
-            return WAITING;
-        else if(persistedStatus.equals(PersistedTestCaseResultStatus.FAIL))
-            return FAIL;
-        else if(persistedStatus.equals(PersistedTestCaseResultStatus.PASS))
-            return PASS;
-        else
-            return FAIL;
     }
 }
