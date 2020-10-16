@@ -13,13 +13,5 @@
     <artifactId>persistence</artifactId>
     <version>0.0.1</version>
 
-    <dependencies>
-        <dependency>
-            <groupId>es.weso.ontoloci</groupId>
-            <artifactId>worker</artifactId>
-            <version>0.0.1</version>
-        </dependency>
-    </dependencies>
-
 
 </project>

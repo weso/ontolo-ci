@@ -1,26 +1,34 @@
 package es.weso.ontoloci.persistence.mongo;
 
 import es.weso.ontoloci.persistence.OntolociDAO;
-import es.weso.ontoloci.worker.build.BuildResult;
+import es.weso.ontoloci.persistence.PersistedBuildResult;
 
 import java.util.*;
 
 public class OntolociInMemoryDAO implements OntolociDAO {
 
-    private final Map<String, BuildResult> db = new HashMap<>();
+    private static final OntolociInMemoryDAO INSTANCE = new OntolociInMemoryDAO();
+
+    private final Map<String, PersistedBuildResult> db = new HashMap<>();
+
+    public static OntolociInMemoryDAO instance() {
+        return INSTANCE;
+    }
+
+    private OntolociInMemoryDAO() {}
 
     @Override
-    public List<BuildResult> findAllBuildResults() {
+    public List<PersistedBuildResult> findAllBuildResults() {
         return new ArrayList<>(db.values());
     }
 
     @Override
-    public Optional<BuildResult> findBuildResultForId(String id) {
+    public Optional<PersistedBuildResult> findBuildResultForId(String id) {
         return Optional.ofNullable(db.get(id));
     }
 
     @Override
-    public void save(BuildResult buildResult) {
+    public void save(PersistedBuildResult buildResult) {
         if(Objects.isNull(buildResult.getId())) {
             buildResult.setId(Long.toString(System.nanoTime()));
         }
@@ -28,12 +36,12 @@ public class OntolociInMemoryDAO implements OntolociDAO {
     }
 
     @Override
-    public void update(BuildResult buildResult) {
+    public void update(PersistedBuildResult buildResult) {
         this.save(buildResult);
     }
 
     @Override
-    public void remove(BuildResult buildResult) {
+    public void remove(PersistedBuildResult buildResult) {
         db.remove(buildResult.getId());
     }
 

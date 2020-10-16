@@ -1,6 +1,8 @@
 package es.weso.ontoloci.worker;
 
 import es.weso.ontoloci.hub.build.HubBuild;
+import es.weso.ontoloci.persistence.OntolociDAO;
+import es.weso.ontoloci.persistence.mongo.OntolociInMemoryDAO;
 import es.weso.ontoloci.worker.build.Build;
 import es.weso.ontoloci.worker.build.BuildResult;
 import org.slf4j.Logger;
@@ -12,6 +14,8 @@ public class WorkerExecutor implements Worker {
 
     // LOGGER CREATION
     private static final Logger LOGGER = LoggerFactory.getLogger(BuildResult.class);
+
+    private final OntolociDAO persistence = OntolociInMemoryDAO.instance();
 
     private final Worker worker;
 
@@ -40,6 +44,12 @@ public class WorkerExecutor implements Worker {
         hubBuild = ontolocyHub.addTestsToBuild(hubBuild);
         //Transform the returned HubBuild to a Build and overwrites the result
         build = build.from(hubBuild);
-        return this.worker.executeBuild(build);
+
+        // Store the result of the build.
+        final BuildResult buildResult = this.worker.executeBuild(build);
+
+        persistence.save(BuildResult.toPersistedBuildResult(buildResult));
+
+        return buildResult;
     }
 }

@@ -1,6 +1,5 @@
 package es.weso.ontoloci.persistence;
 
-import es.weso.ontoloci.worker.build.BuildResult;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +17,7 @@ public interface OntolociDAO {
      *
      * @return all the existing build results in the persistence layer.
      */
-    List<BuildResult> findAllBuildResults();
+    List<PersistedBuildResult> findAllBuildResults();
 
     /**
      * Finds a build result for each unique id. It returns an optional so if none found
@@ -27,28 +26,28 @@ public interface OntolociDAO {
      * @param id of the build result to find.
      * @return an optional that might contain the build result.
      */
-    Optional<BuildResult> findBuildResultForId(String id);
+    Optional<PersistedBuildResult> findBuildResultForId(String id);
 
     /**
      * Saves a build result.
      *
      * @param buildResult to save.
      */
-    void save(BuildResult buildResult);
+    void save(PersistedBuildResult buildResult);
 
     /**
      * Updates a build result. It will persist the values from the passed buildResult to the passed id.
      *
      * @param buildResult to attach.
      */
-    void update(BuildResult buildResult);
+    void update(PersistedBuildResult buildResult);
 
     /**
      * Removes the element that matches the id from the persistence.
      *
      * @param buildResult to remove
      */
-    void remove(BuildResult buildResult);
+    void remove(PersistedBuildResult buildResult);
 
     /**
      * Removes all the build results in the persistence layer.

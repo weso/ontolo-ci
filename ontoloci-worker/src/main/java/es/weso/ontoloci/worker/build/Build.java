@@ -23,7 +23,7 @@ public class Build {
      * @return the new build instance.
      */
     public static Build from(final TestCase... testCases) {
-        LOGGER.debug("Factory method creating a new build for " + testCases);
+        LOGGER.debug("Factory method creating a new build for ");
         return new Build(Arrays.asList(testCases),new HashMap<>());
     }
 

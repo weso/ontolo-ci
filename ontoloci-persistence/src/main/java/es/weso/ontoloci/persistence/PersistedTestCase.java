@@ -1,4 +1,4 @@
-package es.weso.ontoloci.hub.test;
+package es.weso.ontoloci.persistence;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,10 +11,10 @@ import org.slf4j.LoggerFactory;
  *
  * @author Pablo Menéndez
  */
-public class HubTestCase {
+public class PersistedTestCase {
 
     // LOGGER CREATION
-    private static final Logger LOGGER = LoggerFactory.getLogger(HubTestCase.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PersistedTestCase.class);
 
     private final String name;
     private final String ontology;
@@ -22,7 +22,6 @@ public class HubTestCase {
     private final String schema;
     private final String producedShapeMap;
     private final String expectedShapeMap;
-
 
     /**
      * The default constructor is a basic all-args constructor. All the arguments
@@ -42,9 +41,9 @@ public class HubTestCase {
      * @param producedShapeMap is the content of the expected result shape
      *                                 map.
      */
-    public HubTestCase(final String name, final String ontology, final String instances,
-                    final String schema,final String producedShapeMap,
-                       final String expectedShapeMap) {
+    public PersistedTestCase(final String name, final String ontology, final String instances,
+                             final String schema, final String producedShapeMap,
+                             final String expectedShapeMap) {
         this.name = name;
         this.ontology = ontology;
         this.instances = instances;
@@ -111,9 +110,8 @@ public class HubTestCase {
 
     @Override
     public String toString() {
-        return "HubTestCase [test_name=" + name + ", ontology=" + ontology + ", data=" + instances + ", schema="
+        return "TestCase [test_name=" + name + ", ontology=" + ontology + ", data=" + instances + ", schema="
                 + schema + ", in_shape_map=" + expectedShapeMap + ", out_shape_map="
                 + producedShapeMap + "]";
     }
-    
 }

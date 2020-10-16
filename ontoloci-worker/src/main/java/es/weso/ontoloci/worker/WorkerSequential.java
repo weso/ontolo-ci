@@ -44,12 +44,12 @@ public class WorkerSequential implements Worker {
             // Paste here the validation code from Labra, and do not show it to me please...
 
             Validate v = new Validate();
-            ResultValidation result = v.validateStrExpected(
+            /*ResultValidation result = v.validateStrExpected(
                     testCase.getOntology(),
                     testCase.getInstances(),
                     testCase.getSchema(),
                     testCase.getProducedShapeMap(),
-                    testCase.getExpectedShapeMap()).unsafeRunSync();
+                    testCase.getExpectedShapeMap()).unsafeRunSync();*/
 
 
             final long stopTime = System.nanoTime(); // Stop counting execution time.

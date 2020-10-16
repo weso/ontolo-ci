@@ -1,6 +1,6 @@
 package es.weso.ontoloci.api;
 
-import es.weso.ontoloci.worker.build.BuildResult;
+import es.weso.ontoloci.persistence.PersistedBuildResult;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public interface OntolociAPI {
      *
      * @return a list containing all the build results as a JSON array.
      */
-    List<BuildResult> getAllBuildResults();
+    List<PersistedBuildResult> getAllBuildResults();
 
     /**
      * Gets a build result for a given id. If the id does not exist then an empty build result is return.
@@ -28,5 +28,5 @@ public interface OntolociAPI {
      * @param id of the build result that you want to retrieve.
      * @return the build result if exists, an empty one else.
      */
-    BuildResult getBuildResult(String id);
+    PersistedBuildResult getBuildResult(String id);
 }

@@ -1,10 +1,12 @@
 package es.weso.ontoloci.worker.build;
 
+import es.weso.ontoloci.persistence.PersistedBuildResult;
 import es.weso.ontoloci.worker.test.TestCaseResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class BuildResult {
 
@@ -13,6 +15,24 @@ public class BuildResult {
 
     private String id;
     private Collection<TestCaseResult> testCaseResults;
+
+    public static BuildResult from(PersistedBuildResult persistedBuildResult) {
+        return new BuildResult(
+                persistedBuildResult.getId(),
+                persistedBuildResult.getTestCaseResults().stream()
+                        .map(item -> TestCaseResult.from(item))
+                        .collect(Collectors.toCollection(ArrayList::new))
+        );
+    }
+
+    public static PersistedBuildResult toPersistedBuildResult(BuildResult buildResult) {
+        return new PersistedBuildResult(
+                buildResult.getId(),
+                buildResult.getTestCaseResults().stream()
+                        .map(item -> TestCaseResult.toPersistedTestCaseResult(item))
+                        .collect(Collectors.toCollection(ArrayList::new))
+        );
+    }
 
     /**
      * Factory method that creates a new instance of build result from an array of test case results.
@@ -42,7 +62,7 @@ public class BuildResult {
     private BuildResult(final String id, final Collection<TestCaseResult> testCaseResults) {
         this.testCaseResults = testCaseResults;
 
-        LOGGER.debug("Creating a new build result for " + testCaseResults);
+        LOGGER.debug("Creating a new build result for ");
     }
 
     public void setId(final String id) {

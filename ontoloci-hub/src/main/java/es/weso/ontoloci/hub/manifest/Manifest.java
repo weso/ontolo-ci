@@ -28,15 +28,28 @@ public class Manifest {
     public Manifest(Collection manifestEntries) {
         this.manifestEntries = new ArrayList<>(manifestEntries);
 
-        LOGGER.debug("Creating a new manifest " + this.toString());
+        LOGGER.debug(
+                String.format(
+                        "Creating new Manifest from the public constructor with [%s] manifest entries ",
+                        manifestEntries.size()
+                )
+        );
     }
+
+    // YOU STOP HERE WILLY !!!!! ----
 
     /**
      * Gets a copy of the manifest entries collection.
      *
      * @return a copy of the manifest entries collection.
      */
-    public Collection<ManifestEntry> getmanifestEntries() {
+    public Collection<ManifestEntry> getManifestEntries() {
+        LOGGER.debug(
+                String.format(
+                        "GET reading the manifest entries of the Manifest, returning [%s] elements",
+                        this.manifestEntries.size()
+                )
+        );
         return Collections.unmodifiableCollection(manifestEntries);
     }
 
@@ -45,7 +58,13 @@ public class Manifest {
      *
      * @param manifestEntries is the collection that will substitute the existing one.
      */
-    public void setManifestEntries(Collection manifestEntries) {
+    public void setManifestEntries(Collection<ManifestEntry> manifestEntries) {
+        LOGGER.debug(
+                String.format(
+                        "SET writing the manifest entries of the Manifest, new collections has size of [%s]",
+                        manifestEntries.size()
+                )
+        );
         this.manifestEntries = manifestEntries;
     }
 
@@ -56,6 +75,13 @@ public class Manifest {
      * @return the number of manifest entries that the manifest contains.
      */
     public int getNumberOfManifestEntries() {
+        LOGGER.debug(
+                String.format(
+                        "GET reading the number of manifest entries of the Manifest, returning [%s]",
+                        this.manifestEntries.size()
+                )
+        );
+
         return this.manifestEntries.size();
     }
 
