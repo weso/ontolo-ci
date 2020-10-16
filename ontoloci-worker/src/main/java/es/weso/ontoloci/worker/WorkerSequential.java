@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -56,7 +57,7 @@ public class WorkerSequential implements Worker {
             final long executionTimeNS = stopTime - initTime; // Compute execution time.
 
             // Set execution time as metadata.
-            final Map<String, String> metadata = currentTestCase.getMetadata();
+            final Map<String, String> metadata = new HashMap<>(currentTestCase.getMetadata());
             metadata.put("execution_time", Long.toString(executionTimeNS));
             currentTestCase.setMetadata(metadata);
 
