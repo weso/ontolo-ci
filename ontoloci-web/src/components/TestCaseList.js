@@ -20,6 +20,15 @@ function TestCaseList() {
                           data="weso:JoseEmilioLabraGayo"
                           shape="weso:Researcher"
                           status="Confortmant"
+                          pass={false}  
+                          executionTime="3 min 12 sec"
+                          date="28 days ago"/>
+
+        <TestCase 
+                          testName= "Researcher Test"
+                          data="weso:JoseEmilioLabraGayo"
+                          shape="weso:Researcher"
+                          status="Confortmant"
                           pass={true}  
                           executionTime="3 min 12 sec"
                           date="28 days ago"/>
@@ -30,6 +39,15 @@ function TestCaseList() {
                           shape="weso:Researcher"
                           status="Confortmant"
                           pass={true}  
+                          executionTime="3 min 12 sec"
+                          date="28 days ago"/>
+                          
+        <TestCase 
+                          testName= "Researcher Test"
+                          data="weso:JoseEmilioLabraGayo"
+                          shape="weso:Researcher"
+                          status="Confortmant"
+                          pass={false}  
                           executionTime="3 min 12 sec"
                           date="28 days ago"/>
 

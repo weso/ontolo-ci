@@ -12,7 +12,8 @@ function Repo(props){
 
 
     return (
-    <div className="dashboard-element">
+
+    <Link to={`/tests/${props.repo}`} className={"dashboard-element"+" dashboard-element-"+getPassClass()}>
         <div className={"dashboard-element-logo dashboard-element-logo-"+getPassClass()}
         title="Public repository">
             <svg    xmlns="http://www.w3.org/2000/svg" 
@@ -33,9 +34,7 @@ function Repo(props){
         </div>
         <div className="dashboard-element-info">
             <a className={getPassClass()}>{props.owner}</a>
-            <Link to={`/tests/${props.repo}`} className={getPassClass()}>
-               {props.repo}
-            </Link>
+            <a className={getPassClass()}>{props.repo}</a>
         </div>
 
         <div className="dashboard-element-info">
@@ -80,7 +79,7 @@ function Repo(props){
         
    
         
-    </div>);
+        </Link>);
 }
 
 export default Repo;

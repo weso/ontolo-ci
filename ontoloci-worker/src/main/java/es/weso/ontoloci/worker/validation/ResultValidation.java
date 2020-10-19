@@ -12,10 +12,12 @@ import es.weso.shapeMaps.ShapeMap;
  */
 public class ResultValidation {
 
-    private final ResultShapeMap resultShapeMap;
-    private final ShapeMap expectedShapeMap;
+    private ResultShapeMap resultShapeMap;
+    private ShapeMap expectedShapeMap;
 
-    public ResultValidation(final ResultShapeMap resultShapeMap, final ShapeMap expectedShapeMap) {
+    public ResultValidation(){}
+
+    public ResultValidation(ResultShapeMap resultShapeMap,ShapeMap expectedShapeMap) {
         this.resultShapeMap = resultShapeMap;
         this.expectedShapeMap = expectedShapeMap;
     }

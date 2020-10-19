@@ -1,5 +1,8 @@
 package es.weso.ontoloci.worker;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import es.weso.ontoloci.hub.OntolociHubImplementation;
 import es.weso.ontoloci.hub.build.HubBuild;
 import es.weso.ontoloci.worker.build.Build;
@@ -8,16 +11,14 @@ import es.weso.ontoloci.worker.test.TestCase;
 import es.weso.ontoloci.worker.test.TestCaseResult;
 import es.weso.ontoloci.worker.test.TestCaseResultStatus;
 import es.weso.ontoloci.worker.validation.ResultValidation;
+import es.weso.ontoloci.worker.validation.ShapeMapResultValidation;
 import es.weso.ontoloci.worker.validation.Validate;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class WorkerTest {
 
@@ -47,18 +48,21 @@ public class WorkerTest {
         }
 
         @Test
-        public void validationTest() {
+        public void validationTest() throws JsonProcessingException {
 
             for(TestCase testCase : build.getTestCases()) {
-                Validate v = new Validate();
-                ResultValidation result = v.validateStrExpected(
-                        testCase.getOntology(),
-                        testCase.getInstances(),
-                        testCase.getSchema(),
-                        testCase.getProducedShapeMap(),
-                        testCase.getExpectedShapeMap()).unsafeRunSync();
-
+                ResultValidation result = validate(testCase);
                 assertTrue(result.getExpectedShapeMap().toJson().spaces2().length() > 0);
+
+                ObjectMapper jsonMapper = new ObjectMapper(new JsonFactory());
+                List<ShapeMapResultValidation> produced = Arrays
+                        .asList(jsonMapper.readValue(result.getResultShapeMap().toJson().spaces2(), ShapeMapResultValidation[].class));
+                List<ShapeMapResultValidation> expected = Arrays
+                        .asList(jsonMapper.readValue(result.getExpectedShapeMap().toJson().spaces2(), ShapeMapResultValidation[].class));
+
+
+                assertTrue(expected.get(0).equals(produced.get(0)));
+
             }
 
         }
@@ -122,9 +126,9 @@ public class WorkerTest {
     }
 
 
-    private void validate(TestCase testCase){
+    private ResultValidation validate(TestCase testCase){
         Validate v = new Validate();
-        ResultValidation result = v.validateStrExpected(
+        return  v.validateStrExpected(
                 testCase.getOntology(),
                 testCase.getInstances(),
                 testCase.getSchema(),
