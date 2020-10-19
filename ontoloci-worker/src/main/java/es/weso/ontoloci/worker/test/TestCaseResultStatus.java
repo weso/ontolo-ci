@@ -1,6 +1,9 @@
 package es.weso.ontoloci.worker.test;
 
+import es.weso.ontoloci.persistence.PersistedTestCaseResult;
 import es.weso.ontoloci.persistence.PersistedTestCaseResultStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Represents the values that the test result status may take.
@@ -36,6 +39,9 @@ public enum TestCaseResultStatus {
      */
     FAIL("fail");
 
+    // LOGGER CREATION
+    private static final Logger LOGGER = LoggerFactory.getLogger(PersistedTestCaseResult.class);
+
     /**
      * Stores the string value of the enum.
      */
@@ -67,6 +73,11 @@ public enum TestCaseResultStatus {
     }
 
     public static PersistedTestCaseResultStatus toPersistedTestCaseResultStatus(TestCaseResultStatus status) {
+        LOGGER.debug(
+                String.format("NEW creating a new PersistedTestCaseResultStatus from the static factory for TestCaseResultStatus with status=[%s]",
+                    status.getValue()
+                )
+        );
         if(status.equals(EXECUTING))
             return PersistedTestCaseResultStatus.EXECUTING;
         else if(status.equals(WAITING))

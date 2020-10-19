@@ -1,7 +1,8 @@
 package es.weso.ontoloci.worker.test;
 
-import es.weso.ontoloci.persistence.PersistedBuildResult;
+import es.weso.ontoloci.persistence.PersistedTestCase;
 import es.weso.ontoloci.persistence.PersistedTestCaseResult;
+import es.weso.ontoloci.persistence.PersistedTestCaseResultStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +21,7 @@ import java.util.Map;
 public class TestCaseResult {
 
     // LOGGER CREATION
-    private static final Logger LOGGER = LoggerFactory.getLogger(TestCaseResultStatus.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestCaseResult.class);
 
     // Final fields
     private final TestCase testCase;
@@ -30,16 +31,42 @@ public class TestCaseResult {
     private Map<String, String> metadata;
 
     public static PersistedTestCaseResult toPersistedTestCaseResult(TestCaseResult testCaseResult) {
-        PersistedTestCaseResult ptestCaseR = PersistedTestCaseResult.from(
-                TestCase.toPersistedTestCase(testCaseResult.getTestCase())
-        );
+
+        LOGGER.debug(String.format("NEW creating a new PersistedTestCaseResult from a static factory and from a TestCaseResult"));
+
+        LOGGER.debug(String.format("INTERNAL invoking the translation from TestCase to PersistedTestCase"));
+        final PersistedTestCase persistedTestCase = TestCase.toPersistedTestCase(testCaseResult.getTestCase());
+
+        LOGGER.debug(String.format("INTERNAL invoking the translation from TestCaseResult to PersistedTestCaseResult"));
+
+        final PersistedTestCaseResult ptestCaseR = PersistedTestCaseResult.from(persistedTestCase);
+
         ptestCaseR.setMetadata(testCaseResult.getMetadata());
-        LOGGER.error("Changing the test result status from " + ptestCaseR.getStatus() + " to " + testCaseResult.getStatus());
-        ptestCaseR.setStatus(TestCaseResultStatus.toPersistedTestCaseResultStatus(testCaseResult.getStatus()));
+
+        LOGGER.debug(String.format("INTERNAL invoking the change of state of the PersistedTestCaseResult with name=[%s] from [%s] to [%s]",
+                ptestCaseR.getTestCase().getName(),
+                ptestCaseR.getStatus(),
+                testCaseResult.getStatus())
+        );
+        final PersistedTestCaseResultStatus persistedStatus = TestCaseResultStatus.toPersistedTestCaseResultStatus(testCaseResult.getStatus());
+
+        LOGGER.debug(String.format("INTERNAL created PersistedTestCaseResultStatus with status=[%s] form a TestCaseResultStatus with status=[%s]",
+                ptestCaseR.getStatus(),
+                testCaseResult.getStatus())
+        );
+
+        ptestCaseR.setStatus(persistedStatus);
+
         return  ptestCaseR;
     }
 
     public static TestCaseResult from(PersistedTestCaseResult persistedTestCaseResult) {
+
+        LOGGER.debug(
+                String.format("NEW creating a new TestCaseResult from a static factory and from a" +
+                        " PersistedTestCaseResult")
+        );
+
         return new TestCaseResult(
                 TestCase.from(persistedTestCaseResult.getTestCase()),
                 TestCaseResultStatus.fromPersistedTestCaseResultStatus(persistedTestCaseResult.getStatus()),

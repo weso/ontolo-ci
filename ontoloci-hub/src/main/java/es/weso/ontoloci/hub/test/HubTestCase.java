@@ -52,7 +52,12 @@ public class HubTestCase {
         this.producedShapeMap = producedShapeMap;
         this.expectedShapeMap = expectedShapeMap;
 
-        LOGGER.debug("Creating a test case ");
+        LOGGER.debug(
+                String.format(
+                        "Creating new HubTestCase from the public constructor with name=[%s]",
+                        this.name
+                )
+        );
     }
 
     /**

@@ -35,7 +35,14 @@ public class PersistedTestCaseResult {
      * @return the new instance of the rest case result.
      */
     public static PersistedTestCaseResult from(PersistedTestCase testCase) {
-        LOGGER.debug("Static factory for creating a new test case result for ");
+        LOGGER.debug(
+                String.format(
+                    "NEW creating a new PersistedTestCaseResult from the static factory for PersistedTestCase with name=[%s], status=[%s] and an empty HashMap<String, String> for the metadata.",
+                    testCase.getName(),
+                    PersistedTestCaseResultStatus.WAITING
+                )
+        );
+
         return new PersistedTestCaseResult(testCase, PersistedTestCaseResultStatus.WAITING, new HashMap<>());
     }
 
@@ -52,7 +59,12 @@ public class PersistedTestCaseResult {
         this.status = status;
         this.metadata = metadata;
 
-        LOGGER.debug("Creating new test case result for ");
+        LOGGER.debug(
+                "Creating a new PersistedTestCaseResult from the static factory for test with name=[%s], status=[%s] and metadata zise=[%s]",
+                testCase.getName(),
+                this.status,
+                this.metadata.size()
+        );
     }
 
     /**
@@ -83,9 +95,12 @@ public class PersistedTestCaseResult {
      * @param status to set.
      */
     public void setStatus(PersistedTestCaseResultStatus status) {
-        LOGGER.debug("Setting the value of the test case result status from " + this.status.toString() + " to "
-                + status
-                + " from ");
+        LOGGER.debug(
+                "SET writing the status of the persisted test case result with name=[%s] from [%s] to [%s]",
+                this.testCase.getName(),
+                this.status,
+                status
+        );
 
         this.status = status;
     }

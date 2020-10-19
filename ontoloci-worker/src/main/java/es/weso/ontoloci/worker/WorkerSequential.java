@@ -65,7 +65,7 @@ public class WorkerSequential implements Worker {
             currentTestCase.setStatus(TestCaseResultStatus.PASS);
 
             // And finally add it to the collection of results.
-            testCaseResults.add(TestCaseResult.from(testCase));
+            testCaseResults.add(currentTestCase);
         }
 
         // Finally return the Build result.
