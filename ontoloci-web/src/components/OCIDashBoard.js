@@ -1,5 +1,5 @@
 import React from 'react';
-import Repo from './Repo';
+import OCIRepo from './OCIRepo';
 
 
 function OCIDashBoard() {
@@ -7,7 +7,7 @@ function OCIDashBoard() {
     <div className="main">
       <h2><a>Builds</a></h2>
       <div className="dashboard-elements-list">
-        <Repo owner="weso" 
+        <OCIRepo owner="weso" 
               repo="hercules-ontology" 
               pass={true}
               commitName="Ontology Update"
@@ -16,7 +16,7 @@ function OCIDashBoard() {
               commitId="f920308"
               executionTime="3 min 12 sec"
               date="28 days ago"/>
-        <Repo owner="weso" 
+        <OCIRepo owner="weso" 
               repo="cidoc-ontology" 
               pass={false}
               commitName="Ontology Update"
@@ -25,7 +25,7 @@ function OCIDashBoard() {
               commitId="f920308"
               executionTime="3 min 12 sec"
               date="28 days ago"/>
-        <Repo owner="weso" 
+        <OCIRepo owner="weso" 
               repo="asio-ontology" 
               pass={true}
               commitName="Ontology Update"
@@ -34,33 +34,7 @@ function OCIDashBoard() {
               commitId="f920308"
               executionTime="3 min 12 sec"
               date="28 days ago"/>
-        <Repo owner="mistermboy" 
-              repo="hercules-ontology" 
-              pass={true}
-              commitName="Ontology Update"
-              branchName="emilio_ontology"
-              prId="#71 passed"
-              commitId="f920308"
-              executionTime="3 min 12 sec"
-              date="28 days ago"/>
-        <Repo owner="mistermboy" 
-              repo="cidoc-ontology" 
-              pass={false}
-              commitName="Ontology Update"
-              branchName="ontology_update"
-              prId="#71 passed"
-              commitId="f920308"
-              executionTime="3 min 12 sec"
-              date="28 days ago"/>
-        <Repo owner="mistermboy" 
-              repo="asio-ontology" 
-              pass={true}
-              commitName="Ontology Update"
-              branchName="master"
-              prId="#71 passed"
-              commitId="f920308"
-              executionTime="3 min 12 sec"
-              date="28 days ago"/>
+       
       </div>
     </div>
   );

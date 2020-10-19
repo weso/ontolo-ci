@@ -24,8 +24,9 @@
 
 .dashboard-elements-list{
     display: grid;
-    grid-template-rows: repeat(auto-fit,8vh);
-    gap:1vh
+    grid-template-rows: repeat(500,auto);
+    grid-template-columns: 100%;
+    align-items: start;
 }
 
 .dashboard-element{
@@ -36,6 +37,9 @@
     padding-left: 1vh;
     border: 1px solid #dfdcdc;
     cursor: pointer;
+    min-height: 8vh;
+    max-height: 10vh;
+    margin-bottom: 1vh;
 }
 
 .dashboard-element-passed:hover{

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 
-function Repo(props){
+function OCIRepo(props){
 
     const getPassClass = ()=>{
         if(props.pass)
@@ -82,4 +82,4 @@ function Repo(props){
         </Link>);
 }
 
-export default Repo;
+export default OCIRepo;

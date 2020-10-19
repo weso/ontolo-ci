@@ -1,12 +1,9 @@
 .test-elements-list{
     display: grid;
-    grid-template-rows: repeat(30,auto);
+    grid-template-rows: repeat(1000,auto);
     grid-template-columns: 100%;
     align-items: start;
 }
-
-
-
 
 .test-element{
     display: grid;
@@ -19,6 +16,7 @@
     min-height: 8vh;
     max-height: 10vh;
     height: 100%;
+    margin-bottom: 1vh;
 }
 
 .test-element-passed{
