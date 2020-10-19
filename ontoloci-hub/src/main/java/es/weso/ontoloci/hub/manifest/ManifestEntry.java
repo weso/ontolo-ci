@@ -61,9 +61,13 @@ public class ManifestEntry {
             this.producedShapeMap = producedShapeMap;
             this.expectedShapeMap = expectedShapeMap;
 
-            LOGGER.debug("Creating a test case " + this.toString());
+            LOGGER.debug(
+                    String.format(
+                            "Creating new ManifestEntry from the public constructor with name=[%s]",
+                            this.name
+                    )
+            );
         }
-
 
         /**
          * Gets name.
@@ -71,6 +75,14 @@ public class ManifestEntry {
          * @return name
          */
         public String getName() {
+
+            LOGGER.debug(
+                    String.format(
+                            "GET reading the manifest entry name of a ManifestEntry, returning [%s]",
+                            this.name
+                    )
+            );
+
             return name;
         }
 
@@ -80,6 +92,14 @@ public class ManifestEntry {
          * @return ontology file path
          */
         public String getOntology() {
+
+            LOGGER.debug(
+                    String.format(
+                            "GET reading the ontology of the Manifest, returning an ontology with length [%s]",
+                            this.ontology.length()
+                    )
+            );
+
             return ontology;
         }
 
@@ -89,6 +109,14 @@ public class ManifestEntry {
          * @return data file path
          */
         public String getInstances() {
+
+            LOGGER.debug(
+                    String.format(
+                            "GET reading the instances of the Manifest, returning an instance with length [%s]",
+                            this.instances.length()
+                    )
+            );
+
             return instances;
         }
 
@@ -98,6 +126,14 @@ public class ManifestEntry {
          * @return test schema file path
          */
         public String getSchema() {
+
+            LOGGER.debug(
+                    String.format(
+                            "GET reading the schema of the Manifest, returning an schema with length [%s]",
+                            this.schema.length()
+                    )
+            );
+
             return schema;
         }
 
@@ -107,6 +143,14 @@ public class ManifestEntry {
          * @return test shape map file path
          */
         public String getExpectedShapeMap() {
+
+            LOGGER.debug(
+                    String.format(
+                            "GET reading the expected Shape Map of the Manifest, returning a shape map with length [%s]",
+                            this.expectedShapeMap.length()
+                    )
+            );
+
             return expectedShapeMap;
         }
 
@@ -116,6 +160,14 @@ public class ManifestEntry {
          * @return the expected shape map file path
          */
         public String getProducedShapeMap() {
+
+            LOGGER.debug(
+                    String.format(
+                            "GET reading the produced shape map of the Manifest, returning a shape map with length [%s]",
+                            this.producedShapeMap.length()
+                    )
+            );
+
             return producedShapeMap;
         }
 

@@ -40,20 +40,61 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
     private final ObjectMapper yamlMapper;
     private final ObjectMapper jsonMapper;
 
+    /**
+     * Creates an empty default github repository provider object.
+     * It initializes both YAML and JSON mappers to the default values.
+     *
+     * @return a new GitHubRepositoryProvider object with default configurations.
+     */
     public static GitHubRepositoryProvider empty() {
+
+        LOGGER.debug(
+                String.format(
+                        "NEW Creating new GitHubRepositoryProvider from the static factory with default YAML and JSON mappers"
+                )
+        );
+
         return new GitHubRepositoryProvider();
     }
 
-    public static GitHubRepositoryProvider with(ObjectMapper yamlMapper, ObjectMapper jsonMapper) {
+    /**
+     * Creates a nre GitHubRepositoryProvider with the given object mappers both for YAML and JSON.
+     *
+     * @param yamlMapper to assign tho the object.
+     * @param jsonMapper to assign to the object
+     * @return a new GitHubRepositoryProvider object with the given configuration.
+     */
+    public static GitHubRepositoryProvider with(final ObjectMapper yamlMapper, final ObjectMapper jsonMapper) {
+
+        LOGGER.debug(
+                String.format(
+                        "NEW Creating new GitHubRepositoryProvider from the static factory with a custom YAML and JSON mappers"
+                )
+        );
+
         return new GitHubRepositoryProvider(yamlMapper, jsonMapper);
     }
 
     private GitHubRepositoryProvider() {
+
+        LOGGER.debug(
+                String.format(
+                        "NEW Creating new GitHubRepositoryProvider from the public constructor with default YAML and JSON mappers"
+                )
+        );
+
         this.yamlMapper = new ObjectMapper(new YAMLFactory());
         this.jsonMapper = new ObjectMapper(new JsonFactory());
     }
 
-    private GitHubRepositoryProvider(ObjectMapper yamlMapper, ObjectMapper jsonMapper) {
+    private GitHubRepositoryProvider(final ObjectMapper yamlMapper, final ObjectMapper jsonMapper) {
+
+        LOGGER.debug(
+                String.format(
+                        "NEW Creating new GitHubRepositoryProvider from the public constructor with a custom YAML and JSON mappers"
+                )
+        );
+
         this.yamlMapper = yamlMapper;
         this.jsonMapper = jsonMapper;
     }
@@ -68,22 +109,55 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
      * @return test cases
      */
     @Override
-    public Collection<HubTestCase> getTestCases(String owner, String repo, String branch) {
-        RepositoryConfiguration repositoryConfig;
-        Manifest manifest;
-        String ontologyFolder;
-        String testFolder;
+    public Collection<HubTestCase> getTestCases(final String owner, final String repo, final String branch) {
+
+        LOGGER.debug(
+                String.format(
+                        "GET Computing the collection of HubTestCase for user=[%s], repo =[%s] and branch=[%s]",
+                        owner,
+                        repo,
+                        branch
+                )
+        );
+
+        // Result collection, initialized to empty one so not null is returned.
+        final Collection<HubTestCase> hubTestCases = new ArrayList<>();
+
         try {
-            repositoryConfig = getRepositoryConfiguration(getConcatenatedPath(owner,repo,branch)+YAML_FILE_NAME);
-            manifest = getManifest(getConcatenatedPath(owner,repo,branch) + repositoryConfig.getManifestPath());
-            ontologyFolder = repositoryConfig.getOntologyFolder();
-            testFolder = repositoryConfig.getTestFolder();
-            return getTestCasesFromManifest(owner,repo,branch,ontologyFolder,testFolder,manifest);
+            // Get the repository configuration file.
+            final RepositoryConfiguration repositoryConfig =
+                    getRepositoryConfiguration(getConcatenatedPath(owner,repo,branch) + YAML_FILE_NAME);
+
+            // Parse the repository configuration file and create a manifest object
+            final Manifest manifest =
+                    getManifest(getConcatenatedPath(owner,repo,branch) + repositoryConfig.getManifestPath());
+
+            // Get the ontology folder
+            final String ontologyFolder = repositoryConfig.getOntologyFolder();
+
+            // Get the tests folder
+            final String testsFolder = repositoryConfig.getTestFolder();
+
+            // Get collection of generated test cases from the manifest file.
+            final Collection<HubTestCase> parsedTestCases = getTestCasesFromManifest(owner,repo,branch,ontologyFolder,testsFolder,manifest);
+
+            LOGGER.debug(
+                    String.format(
+                    "INTERNAL parsed test cases [%s]",
+                    parsedTestCases.size())
+            );
+
+            // Add all the test cases to the result collection.
+            hubTestCases.addAll(parsedTestCases);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(
+                    String.format(
+                    "ERROR while getting the HubTestCases at getTestCases from GitHubRepositoryProvider: %s",
+                    e.getMessage())
+                    );
         }
 
-        return null;
+        return hubTestCases;
     }
 
     /**

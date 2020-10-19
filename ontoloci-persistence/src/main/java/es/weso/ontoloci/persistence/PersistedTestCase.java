@@ -51,7 +51,7 @@ public class PersistedTestCase {
         this.producedShapeMap = producedShapeMap;
         this.expectedShapeMap = expectedShapeMap;
 
-        LOGGER.debug("Creating a test case ");
+        LOGGER.debug("Creating a PersistedTestCase from the public constructor with name=[%]", this.name);
     }
 
     /**

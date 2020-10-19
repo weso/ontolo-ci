@@ -1,5 +1,4 @@
 package es.weso.ontoloci.hub.repository;
-import es.weso.ontoloci.hub.manifest.Manifest;
 import es.weso.ontoloci.hub.test.HubTestCase;
 
 import java.util.Collection;

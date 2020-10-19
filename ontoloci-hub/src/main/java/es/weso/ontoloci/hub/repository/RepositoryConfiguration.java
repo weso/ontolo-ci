@@ -25,12 +25,18 @@ public class RepositoryConfiguration {
 
     public RepositoryConfiguration() {} // Needed for the YAML mapper
 
-    public RepositoryConfiguration(String manifestPath,String ontologyFolder,String testFolder) {
+    public RepositoryConfiguration(final String manifestPath, final String ontologyFolder, final String testsFolder) {
         this.manifestPath = manifestPath;
         this.ontologyFolder = ontologyFolder;
-        this.testFolder = testFolder;
+        this.testFolder = testsFolder;
 
-        LOGGER.debug("Creating a new repository configuration for " + this);
+        LOGGER.debug(
+                "Creating a new RepositoryConfiguration from the public constructor with manifest path=[%s], " +
+                        "ontology folder=[%s] and tests folder=[%s]",
+                manifestPath,
+                ontologyFolder,
+                testsFolder
+        );
     }
 
     public String getManifestPath() {

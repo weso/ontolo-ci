@@ -30,13 +30,11 @@ public class Manifest {
 
         LOGGER.debug(
                 String.format(
-                        "Creating new Manifest from the public constructor with [%s] manifest entries ",
+                        "Creating new Manifest from the public constructor with [%s] manifest entries",
                         manifestEntries.size()
                 )
         );
     }
-
-    // YOU STOP HERE WILLY !!!!! ----
 
     /**
      * Gets a copy of the manifest entries collection.
@@ -44,12 +42,14 @@ public class Manifest {
      * @return a copy of the manifest entries collection.
      */
     public Collection<ManifestEntry> getManifestEntries() {
+
         LOGGER.debug(
                 String.format(
                         "GET reading the manifest entries of the Manifest, returning [%s] elements",
                         this.manifestEntries.size()
                 )
         );
+
         return Collections.unmodifiableCollection(manifestEntries);
     }
 

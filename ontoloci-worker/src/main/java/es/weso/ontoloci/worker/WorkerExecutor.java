@@ -5,6 +5,7 @@ import es.weso.ontoloci.persistence.OntolociDAO;
 import es.weso.ontoloci.persistence.mongo.OntolociInMemoryDAO;
 import es.weso.ontoloci.worker.build.Build;
 import es.weso.ontoloci.worker.build.BuildResult;
+import es.weso.ontoloci.worker.test.TestCaseResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +49,11 @@ public class WorkerExecutor implements Worker {
         // Store the result of the build.
         final BuildResult buildResult = this.worker.executeBuild(build);
 
+        for(TestCaseResult tcr : buildResult.getTestCaseResults()) {
+            System.out.println(tcr.getTestCase().getName() + " -> " + tcr.getStatus());
+        }
+
+        LOGGER.debug("INTERNAL validation finished, storing results in persistence layer");
         persistence.save(BuildResult.toPersistedBuildResult(buildResult));
 
         return buildResult;

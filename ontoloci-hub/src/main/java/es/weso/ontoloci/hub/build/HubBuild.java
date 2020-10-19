@@ -23,7 +23,7 @@ public class HubBuild {
     public static HubBuild from(final HubTestCase... testCases) {
         LOGGER.debug(
                 String.format(
-                        "Creating new HubBuild from the static factory with [%s] hub test cases" +
+                        "NEW Creating new HubBuild from the static factory with [%s] hub test cases" +
                         "and an empty HashMap<>()",
                         testCases.length
                 )
@@ -41,7 +41,7 @@ public class HubBuild {
     public static HubBuild from(final Collection<HubTestCase> testCases) {
         LOGGER.debug(
                 String.format(
-                        "Creating new HubBuild from the static factory with [%s] hub test cases" +
+                        "NEW Creating new HubBuild from the static factory with [%s] hub test cases" +
                         "and an empty HashMap<>()", testCases.size()
                 )
         );
@@ -59,7 +59,7 @@ public class HubBuild {
     public static HubBuild from(final Collection<HubTestCase> testCases, final Map<String,String> metadata) {
         LOGGER.debug(
                 String.format(
-                        "Creating new HubBuild from the static factory with [%s] hub test cases " +
+                        "NEW Creating new HubBuild from the static factory with [%s] hub test cases " +
                         "and [%s] metadata", testCases.size(), metadata
                 )
         );
@@ -78,7 +78,7 @@ public class HubBuild {
 
         LOGGER.debug(
                 String.format(
-                        "Creating new HubBuild from the public constructor with [%s] hub test cases " +
+                        "NEW Creating new HubBuild from the public constructor with [%s] hub test cases " +
                         "and [%s] metadata", testCases.size(), metadata
                 )
         );
