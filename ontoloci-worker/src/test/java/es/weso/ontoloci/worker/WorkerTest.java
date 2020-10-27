@@ -54,17 +54,11 @@ public class WorkerTest {
                 ResultValidation result = validate(testCase);
                 assertTrue(result.getExpectedShapeMap().toJson().spaces2().length() > 0);
 
-                ObjectMapper jsonMapper = new ObjectMapper(new JsonFactory());
-                List<ShapeMapResultValidation> produced = Arrays
-                        .asList(jsonMapper.readValue(result.getResultShapeMap().toJson().spaces2(), ShapeMapResultValidation[].class));
-                List<ShapeMapResultValidation> expected = Arrays
-                        .asList(jsonMapper.readValue(result.getExpectedShapeMap().toJson().spaces2(), ShapeMapResultValidation[].class));
-
+                List<ShapeMapResultValidation> produced = getProducedShapeMap(result);
+                List<ShapeMapResultValidation> expected = getExpectedShapeMap(result);
 
                 assertTrue(expected.get(0).equals(produced.get(0)));
-
             }
-
         }
 
 
@@ -79,13 +73,11 @@ public class WorkerTest {
 
             final long executionTimeNS = stopTime - initTime; // Compute execution time.
             assertTrue(executionTimeNS>0);
-
         }
-
     }
 
     @Test
-    public void testCaseResultTest() {
+    public void testCaseResultPassedTest() {
 
         TestCaseResult currentTestCase = null;
         for(TestCase testCase : build.getTestCases()) {
@@ -95,10 +87,38 @@ public class WorkerTest {
             currentTestCase.setStatus(TestCaseResultStatus.EXECUTING);
             assertEquals(TestCaseResultStatus.EXECUTING,currentTestCase.getStatus());
 
-            validate(testCase);
+            ResultValidation result = validate(testCase);
+            List<ShapeMapResultValidation> produced = getProducedShapeMap(result);
+            List<ShapeMapResultValidation> expected = getExpectedShapeMap(result);
+
+            assertTrue(expected.get(0).equals(produced.get(0)));
 
             currentTestCase.setStatus(TestCaseResultStatus.PASS);
             assertEquals(TestCaseResultStatus.PASS,currentTestCase.getStatus());
+        }
+
+    }
+
+    @Test
+    public void testCaseResultFailedTest() {
+
+        TestCaseResult currentTestCase = null;
+        for(TestCase testCase : build.getTestCases()) {
+            currentTestCase = TestCaseResult.from(testCase);
+            assertEquals(TestCaseResultStatus.WAITING,currentTestCase.getStatus());
+
+            currentTestCase.setStatus(TestCaseResultStatus.EXECUTING);
+            assertEquals(TestCaseResultStatus.EXECUTING,currentTestCase.getStatus());
+
+            ResultValidation result = validate(testCase);
+            List<ShapeMapResultValidation> produced = getProducedShapeMap(result);
+            List<ShapeMapResultValidation> expected = getExpectedShapeMap(result);
+            expected.set(0,new ShapeMapResultValidation("","","","",""));
+
+            assertFalse(expected.get(0).equals(produced.get(0)));
+
+            currentTestCase.setStatus(TestCaseResultStatus.FAIL);
+            assertEquals(TestCaseResultStatus.FAIL,currentTestCase.getStatus());
         }
 
     }
@@ -116,8 +136,14 @@ public class WorkerTest {
         for(TestCase testCase : build.getTestCases()) {
             currentTestCase = TestCaseResult.from(testCase);
             currentTestCase.setStatus(TestCaseResultStatus.EXECUTING);
-            validate(testCase);
-            currentTestCase.setStatus(TestCaseResultStatus.PASS);
+            ResultValidation result = validate(testCase);
+            List<ShapeMapResultValidation> produced = getProducedShapeMap(result);
+            List<ShapeMapResultValidation> expected = getExpectedShapeMap(result);
+            if(expected.get(0).equals(produced.get(0))){
+                currentTestCase.setStatus(TestCaseResultStatus.PASS);
+            }else{
+                currentTestCase.setStatus(TestCaseResultStatus.FAIL);
+            }
             testCaseResults.add(TestCaseResult.from(testCase));
         }
 
@@ -134,6 +160,28 @@ public class WorkerTest {
                 testCase.getSchema(),
                 testCase.getProducedShapeMap(),
                 testCase.getExpectedShapeMap()).unsafeRunSync();
+    }
+
+    private List<ShapeMapResultValidation> getProducedShapeMap(ResultValidation result){
+        ObjectMapper jsonMapper = new ObjectMapper(new JsonFactory());
+        try {
+            return Arrays.asList(
+                    jsonMapper.readValue(result.getResultShapeMap().toJson().spaces2(), ShapeMapResultValidation[].class));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private List<ShapeMapResultValidation> getExpectedShapeMap(ResultValidation result){
+        ObjectMapper jsonMapper = new ObjectMapper(new JsonFactory());
+        try {
+            return Arrays.asList(
+                    jsonMapper.readValue(result.getExpectedShapeMap().toJson().spaces2(), ShapeMapResultValidation[].class));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }
