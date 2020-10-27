@@ -16,9 +16,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="ontoloci-persistence" />
-    <orderEntry type="module" module-name="ontoloci-worker" />
-    <orderEntry type="module" module-name="ontoloci-hub" />
+    <orderEntry type="module" module-name="persistence" />
+    <orderEntry type="module" module-name="worker" />
+    <orderEntry type="module" module-name="hub" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-data-mongodb:2.3.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter:2.3.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot:2.3.4.RELEASE" level="project" />

@@ -4,7 +4,7 @@ import OCIRepo from './OCIRepo';
 
 function OCIDashBoard() {
   return (
-    <div className="main">
+    <div className="main-2">
       <h2><a>Builds</a></h2>
       <div className="dashboard-elements-list">
         <OCIRepo owner="weso" 

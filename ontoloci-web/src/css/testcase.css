@@ -5,6 +5,12 @@
     align-items: start;
 }
 
+.test-element-container{
+   display: grid;
+   grid-template-columns: 100%;
+   margin-bottom: 1vh;
+}
+
 .test-element{
     display: grid;
     grid-template-columns: 3% 20% 25% 15% 12% 18% 10% ;
@@ -16,7 +22,6 @@
     min-height: 8vh;
     max-height: 10vh;
     height: 100%;
-    margin-bottom: 1vh;
 }
 
 .test-element-passed{
