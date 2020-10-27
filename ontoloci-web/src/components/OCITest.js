@@ -4,7 +4,7 @@ import { LazyLog } from 'react-lazylog';
 import '../css/testcase.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-function TestCase(props){
+function OCITest(props){
 
     const [isOpen, setIsOpen] = useState(false);
 
@@ -20,11 +20,7 @@ function TestCase(props){
 
     return (
     <div className="test-element-container">
-        <div className="test-element">
-            <div className="test-element-status">
-                <svg xmlns="http://www.w3.org/2000/svg" className={"icon-check-"+getPassClass()} height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-            </div>
-    
+        <div className={"test-element" + " test-element-"+getPassClass()}>
             <div className="test-element-name">
                 <h3>TEST NAME</h3>
                 <a>{props.testName}</a>
@@ -74,26 +70,4 @@ function TestCase(props){
 </div>) 
 }
 
-export default TestCase;
-
-/**
- * <code>
-{
-    "ResultShapeMap: [ \n"+
-    "{\n"+
-    "'node' : '<http://purl.org/hercules/asio/modules#ES_SUBJECT_AREA_LEVEL_2_PIN>',\n"+
-    "'shape' : '<http://purl.org/hercules/asio/core#ResearchFieldShape>',\n"+
-    "'status' : 'conformant',\n"+
-    "'appInfo' : 'Shaclex',\n"+
-    "'reason' : '<http://purl.org/hercules/asio/modules#ES_SUBJECT_AREA_LEVEL_2_PIN> passes OR \n"+
-    "}\n"+
-    "{\n"+
-    "'node' : '<http://purl.org/hercules/asio/modules#ES_SUBJECT_AREA_LEVEL_2_PIN>',\n"+
-    " 'shape' : '<http://purl.org/hercules/asio/core#ESSubjectAreas3rdListShape>',\n"+
-    " 'status' : 'conformant',\n"+
-    " 'appInfo' : 'Shaclex',\n"+
-    " 'reason' : ''\n"+
-    "}\n"
-}
-</code>
- */
+export default OCITest;

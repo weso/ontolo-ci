@@ -1,13 +1,72 @@
+
 .main{
     display: grid;
     justify-content: center;
     grid-template-columns: 55%;
-    grid-template-rows: 10% 90%;
+    grid-template-rows: 20% 10%  auto;
     height: 80vh;
+    overflow-y: scroll;
+    margin-left: 5vh;
+    gap:1vh;
 }
 
 
-.main > h2 >a{
+.main-2{
+    display: grid;
+    justify-content: center;
+    grid-template-columns: 55%;
+    grid-template-rows: 10%  auto;
+    height: 80vh;
+    overflow-y: scroll;
+    margin-left: 5vh;
+    gap:1vh;
+}
+
+
+
+.build-panel{
+    display: grid;
+    grid-template-rows: 30% auto;
+    grid-template-columns: 100%;
+    height: 100%;
+    border-left: 1.2vh solid #db4545;
+    border-top: 1px solid #dfdcdc;
+    border-bottom: 1px solid #dfdcdc;
+    border-right: 1px solid #dfdcdc;
+    margin-top: 1.5vh;
+}
+
+.top-panel{
+    display: grid;
+    grid-template-columns: 5% auto;
+    align-content: center;
+}
+
+.bottom-panel{
+    display: grid;
+    padding-left: 4vh;
+}
+
+.build-cross{
+    fill: #db4545;
+    transform: scale(1.5);
+    margin-left: 20px;
+    margin-top: 6px;
+}
+
+.top-panel > h3{
+    font-size: 18px !important;
+    margin-top: 5px;
+    color: #db4545 !important;
+}
+
+
+
+ h2 {
+    margin-top: 2vh;
+}
+
+h2 >a{
     font-size: 0.8em;
     font-weight: 400;
     font-style: normal;
@@ -17,8 +76,9 @@
 
 .dashboard-elements-list{
     display: grid;
-    grid-template-rows: repeat(auto-fit,8vh);
-    gap:1.5vh
+    grid-template-rows: repeat(500,auto);
+    grid-template-columns: 100%;
+    align-items: start;
 }
 
 .dashboard-element{
@@ -28,7 +88,21 @@
     justify-content: flex-start;
     padding-left: 1vh;
     border: 1px solid #dfdcdc;
+    cursor: pointer;
+    min-height: 8vh;
+    max-height: 10vh;
+    margin-bottom: 1vh;
 }
+
+.dashboard-element-passed:hover{
+    border: 1px solid #39aa56;
+}
+
+
+.dashboard-element-failed:hover{
+    border: 1px solid #db4545;
+}
+
 
 .dashboard-element-info{
     list-style-type: none;
@@ -40,6 +114,7 @@
 
 a{
     color: #9e9e9e;
+    text-decoration: none !important;
 }
 
 .passed{
