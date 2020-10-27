@@ -1,19 +1,21 @@
 package es.weso.ontoloci.worker;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import es.weso.ontoloci.worker.build.Build;
 import es.weso.ontoloci.worker.build.BuildResult;
 import es.weso.ontoloci.worker.test.TestCase;
 import es.weso.ontoloci.worker.test.TestCaseResult;
 import es.weso.ontoloci.worker.test.TestCaseResultStatus;
 import es.weso.ontoloci.worker.validation.ResultValidation;
+import es.weso.ontoloci.worker.validation.ShapeMapResultValidation;
 import es.weso.ontoloci.worker.validation.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * The sequantial worker
@@ -40,16 +42,32 @@ public class WorkerSequential implements Worker {
             currentTestCase.setStatus(TestCaseResultStatus.EXECUTING);
 
             final long initTime = System.nanoTime(); // Init counting execution time.
-            // For u peibol. Find the validate class in the validation package.
-            // Paste here the validation code from Labra, and do not show it to me please...
 
             Validate v = new Validate();
-            /*ResultValidation result = v.validateStrExpected(
+            ResultValidation resultValidation = v.validateStrExpected(
                     testCase.getOntology(),
                     testCase.getInstances(),
                     testCase.getSchema(),
                     testCase.getProducedShapeMap(),
-                    testCase.getExpectedShapeMap()).unsafeRunSync();*/
+                    testCase.getExpectedShapeMap()).unsafeRunSync();
+
+
+            try {
+
+                ObjectMapper jsonMapper  = new ObjectMapper(new JsonFactory());
+                List<ShapeMapResultValidation> produced = Arrays.asList(jsonMapper.readValue(resultValidation.getResultShapeMap().toJson().spaces2(), ShapeMapResultValidation[].class));
+                List<ShapeMapResultValidation> expected = Arrays.asList(jsonMapper.readValue(resultValidation.getExpectedShapeMap().toJson().spaces2(), ShapeMapResultValidation[].class));
+
+                TestCaseResult finalCurrentTestCase = currentTestCase;
+                if(expected.get(0).equals(produced.get(0))){
+                    currentTestCase.setStatus(TestCaseResultStatus.PASS);
+                }else{
+                    currentTestCase.setStatus(TestCaseResultStatus.FAIL);
+                }
+
+            }catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
 
 
             final long stopTime = System.nanoTime(); // Stop counting execution time.
@@ -61,14 +79,13 @@ public class WorkerSequential implements Worker {
             metadata.put("execution_time", Long.toString(executionTimeNS));
             currentTestCase.setMetadata(metadata);
 
-            // 3. If the status is possitive then...
-            currentTestCase.setStatus(TestCaseResultStatus.PASS);
-
             // And finally add it to the collection of results.
-            testCaseResults.add(currentTestCase);
+            testCaseResults.add(TestCaseResult.from(testCase));
         }
 
         // Finally return the Build result.
         return BuildResult.from(testCaseResults);
     }
+
+
 }
