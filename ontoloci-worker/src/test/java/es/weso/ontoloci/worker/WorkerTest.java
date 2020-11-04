@@ -126,7 +126,7 @@ public class WorkerTest {
 
     @Test
     public void buildResultTest() {
-        BuildResult buildResult =  BuildResult.from(new ArrayList<>());
+        BuildResult buildResult =  BuildResult.from(new HashMap<>(),new ArrayList<>());
         final Collection<TestCaseResult> testCaseResults = new ArrayList<>();
         TestCaseResult currentTestCase = null;
 
@@ -147,7 +147,7 @@ public class WorkerTest {
             testCaseResults.add(TestCaseResult.from(testCase));
         }
 
-        buildResult =  BuildResult.from(testCaseResults);
+        buildResult =  BuildResult.from(new HashMap<>(),testCaseResults);
         assertTrue(buildResult.getTestCaseResults().size()>0);
     }
 

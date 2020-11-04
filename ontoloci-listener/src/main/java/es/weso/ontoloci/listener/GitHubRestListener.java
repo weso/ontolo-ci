@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -28,17 +29,23 @@ public class GitHubRestListener {
     public void pushListener(@RequestBody Map<String, Object> payload) {
             Map<String, Object> repositoryData = (Map<String, Object>) payload.get("repository");
             Map<String, Object> ownerData = (Map<String, Object>) repositoryData.get("owner");
+            ArrayList<Map<String, Object>> commitData = (ArrayList<Map<String, Object>>) payload.get("commits");
 
             final Build build = Build.from();
             // Parse the content and create the test cases array.
             final String owner = (String) ownerData.get("name");
             final String repo = (String) repositoryData.get("name");
             final String branch = "main";
+            final String commmitId = String.valueOf(commitData.get(0).get("id")).substring(0,6);
+            final String commmitName = (String) commitData.get(0).get("message");
+
             // Add the metadata.
             Map<String, String> metadata = new HashMap<>();
             metadata.put("owner", owner);
             metadata.put("repo", repo);
             metadata.put("branch", branch);
+            metadata.put("commmitId", commmitId);
+            metadata.put("commmitName", commmitName);
 
             // We set the metadata.
             build.setMetadata(metadata);

@@ -84,7 +84,7 @@ public class WorkerSequential implements Worker {
         }
 
         // Finally return the Build result.
-        return BuildResult.from(testCaseResults);
+        return BuildResult.from(build.getMetadata(),testCaseResults);
     }
 
 
