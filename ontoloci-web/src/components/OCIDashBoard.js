@@ -12,6 +12,7 @@ function OCIDashBoard() {
       url: 'http://localhost/api/v1/buildResults',
       config: { headers: {'Access-Control-Allow-Origin': '*' }}
   }).then(function(response){
+    console.log(response.data)
         setBuilds(response.data)
     })
     .catch(function (response) {

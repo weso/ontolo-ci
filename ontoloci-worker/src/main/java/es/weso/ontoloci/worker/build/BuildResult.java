@@ -14,6 +14,7 @@ public class BuildResult {
     private static final Logger LOGGER = LoggerFactory.getLogger(BuildResult.class);
 
     private String id;
+    private Map<String, String> metadata;
     private Collection<TestCaseResult> testCaseResults;
 
     public static BuildResult from(PersistedBuildResult persistedBuildResult) {
@@ -40,8 +41,8 @@ public class BuildResult {
      * @param testCaseResults from which to create the build result instance.
      * @return a new instance of build result from an array of test case results.
      */
-    public static BuildResult from(final TestCaseResult... testCaseResults) {
-        return new BuildResult("", Arrays.asList(testCaseResults));
+    public static BuildResult from(final Map<String, String> metadata,final TestCaseResult... testCaseResults) {
+        return new BuildResult("",metadata, Arrays.asList(testCaseResults));
     }
 
     /**
@@ -50,8 +51,20 @@ public class BuildResult {
      * @param testCaseResults from which to create the build result instance.
      * @return a new instance of build result from an array of test case results.
      */
-    public static BuildResult from(final Collection<TestCaseResult> testCaseResults) {
-        return new BuildResult("", testCaseResults);
+    public static BuildResult from(final Map<String, String> metadata,final Collection<TestCaseResult> testCaseResults) {
+        return new BuildResult("", metadata, testCaseResults);
+    }
+
+    /**
+     * Private constructor for build results. It takes a map of metadata and a collection of the test results.
+     *
+     * @param metadata from which to create the build result.
+     * @param testCaseResults from which to create the build result.
+     */
+    private BuildResult(final String id,final Map<String, String> metadata, final Collection<TestCaseResult> testCaseResults) {
+        this.testCaseResults = testCaseResults;
+        this.metadata = metadata;
+        LOGGER.debug("Creating a new build result for ");
     }
 
     /**
@@ -61,7 +74,6 @@ public class BuildResult {
      */
     private BuildResult(final String id, final Collection<TestCaseResult> testCaseResults) {
         this.testCaseResults = testCaseResults;
-
         LOGGER.debug("Creating a new build result for ");
     }
 
