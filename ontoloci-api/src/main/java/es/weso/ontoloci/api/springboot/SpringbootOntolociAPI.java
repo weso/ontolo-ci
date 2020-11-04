@@ -6,10 +6,7 @@ import es.weso.ontoloci.persistence.PersistedBuildResult;
 import es.weso.ontoloci.persistence.mongo.OntolociInMemoryDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
@@ -23,6 +20,7 @@ public class SpringbootOntolociAPI implements OntolociAPI {
 
     private final OntolociDAO persistence = OntolociInMemoryDAO.instance();
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/buildResults")
     @Override
     public List<PersistedBuildResult> getAllBuildResults() {
@@ -36,6 +34,7 @@ public class SpringbootOntolociAPI implements OntolociAPI {
         return persistence.findAllBuildResults();
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/buildResults/{buildId}")
     @Override
     public PersistedBuildResult getBuildResult(@PathVariable String buildId) {

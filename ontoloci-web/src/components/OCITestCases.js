@@ -1,8 +1,37 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
+import axios from 'axios';
 import OCITest from './OCITest';
+import {
+  useParams
+} from "react-router-dom";
 
 
-function OCITestCases() {
+
+function OCITestCases(props) {
+
+  let { id } = useParams();
+  const [tests,setTests] = useState([]);
+  let endpoint = 'http://localhost/api/v1/buildResults/'+id
+  const getTestCases = function(){
+    axios({
+      method: 'get',
+      url: endpoint,
+      config: { headers: {'Access-Control-Allow-Origin': '*' }}
+  }).then(function(response){
+    console.log(response)
+      setTests(response.data.testCaseResults)
+    })
+    .catch(function (response) {
+        console.log('error')
+        console.log(response);
+    });
+  
+  }
+
+  useEffect(() => {
+      getTestCases();
+  });
+
   return (
     <div className="main">
       <div className="build-panel">
@@ -42,7 +71,8 @@ function OCITestCases() {
       </div>
       <h2><a>Test Cases</a></h2>
       <div className="test-elements-list">
-        <OCITest 
+        {tests.map(test =>{
+          return <OCITest 
                   testName= "Researcher Test"
                   data="weso:JoseEmilioLabraGayo"
                   shape="weso:Researcher"
@@ -50,203 +80,7 @@ function OCITestCases() {
                   pass={true}  
                   executionTime="3 min 12 sec"
                   date="28 days ago"/>
-        <OCITest 
-                          testName= "Researcher Test"
-                          data="weso:JoseEmilioLabraGayo"
-                          shape="weso:Researcher"
-                          status="Confortmant"
-                          pass={false}  
-                          executionTime="3 min 12 sec"
-                          date="28 days ago"/>
-
-        <OCITest 
-                          testName= "Researcher Test"
-                          data="weso:JoseEmilioLabraGayo"
-                          shape="weso:Researcher"
-                          status="Confortmant"
-                          pass={true}  
-                          executionTime="3 min 12 sec"
-                          date="28 days ago"/>
-
-        <OCITest 
-                          testName= "Researcher Test"
-                          data="weso:JoseEmilioLabraGayo"
-                          shape="weso:Researcher"
-                          status="Confortmant"
-                          pass={true}  
-                          executionTime="3 min 12 sec"
-                          date="28 days ago"/>
-                          
-        <OCITest 
-                          testName= "Researcher Test"
-                          data="weso:JoseEmilioLabraGayo"
-                          shape="weso:Researcher"
-                          status="Confortmant"
-                          pass={false}  
-                          executionTime="3 min 12 sec"
-                          date="28 days ago"/>
-
-        <OCITest 
-                          testName= "Researcher Test"
-                          data="weso:JoseEmilioLabraGayo"
-                          shape="weso:Researcher"
-                          status="Confortmant"
-                          pass={true}  
-                          executionTime="3 min 12 sec"
-                          date="28 days ago"/> <OCITest 
-                          testName= "Researcher Test"
-                          data="weso:JoseEmilioLabraGayo"
-                          shape="weso:Researcher"
-                          status="Confortmant"
-                          pass={true}  
-                          executionTime="3 min 12 sec"
-                          date="28 days ago"/>
-                <OCITest 
-                                  testName= "Researcher Test"
-                                  data="weso:JoseEmilioLabraGayo"
-                                  shape="weso:Researcher"
-                                  status="Confortmant"
-                                  pass={false}  
-                                  executionTime="3 min 12 sec"
-                                  date="28 days ago"/>
-        
-                <OCITest 
-                                  testName= "Researcher Test"
-                                  data="weso:JoseEmilioLabraGayo"
-                                  shape="weso:Researcher"
-                                  status="Confortmant"
-                                  pass={true}  
-                                  executionTime="3 min 12 sec"
-                                  date="28 days ago"/>
-        
-                <OCITest 
-                                  testName= "Researcher Test"
-                                  data="weso:JoseEmilioLabraGayo"
-                                  shape="weso:Researcher"
-                                  status="Confortmant"
-                                  pass={true}  
-                                  executionTime="3 min 12 sec"
-                                  date="28 days ago"/>
-                                  
-                <OCITest 
-                                  testName= "Researcher Test"
-                                  data="weso:JoseEmilioLabraGayo"
-                                  shape="weso:Researcher"
-                                  status="Confortmant"
-                                  pass={false}  
-                                  executionTime="3 min 12 sec"
-                                  date="28 days ago"/>
-        
-                <OCITest 
-                                  testName= "Researcher Test"
-                                  data="weso:JoseEmilioLabraGayo"
-                                  shape="weso:Researcher"
-                                  status="Confortmant"
-                                  pass={true}  
-                                  executionTime="3 min 12 sec"
-                                  date="28 days ago"/> <OCITest 
-                                  testName= "Researcher Test"
-                                  data="weso:JoseEmilioLabraGayo"
-                                  shape="weso:Researcher"
-                                  status="Confortmant"
-                                  pass={true}  
-                                  executionTime="3 min 12 sec"
-                                  date="28 days ago"/>
-                        <OCITest 
-                                          testName= "Researcher Test"
-                                          data="weso:JoseEmilioLabraGayo"
-                                          shape="weso:Researcher"
-                                          status="Confortmant"
-                                          pass={false}  
-                                          executionTime="3 min 12 sec"
-                                          date="28 days ago"/>
-                
-                        <OCITest 
-                                          testName= "Researcher Test"
-                                          data="weso:JoseEmilioLabraGayo"
-                                          shape="weso:Researcher"
-                                          status="Confortmant"
-                                          pass={true}  
-                                          executionTime="3 min 12 sec"
-                                          date="28 days ago"/>
-                
-                        <OCITest 
-                                          testName= "Researcher Test"
-                                          data="weso:JoseEmilioLabraGayo"
-                                          shape="weso:Researcher"
-                                          status="Confortmant"
-                                          pass={true}  
-                                          executionTime="3 min 12 sec"
-                                          date="28 days ago"/>
-                                          
-                        <OCITest 
-                                          testName= "Researcher Test"
-                                          data="weso:JoseEmilioLabraGayo"
-                                          shape="weso:Researcher"
-                                          status="Confortmant"
-                                          pass={false}  
-                                          executionTime="3 min 12 sec"
-                                          date="28 days ago"/>
-                
-                        <OCITest 
-                                          testName= "Researcher Test"
-                                          data="weso:JoseEmilioLabraGayo"
-                                          shape="weso:Researcher"
-                                          status="Confortmant"
-                                          pass={true}  
-                                          executionTime="3 min 12 sec"
-                                          date="28 days ago"/> <OCITest 
-                                          testName= "Researcher Test"
-                                          data="weso:JoseEmilioLabraGayo"
-                                          shape="weso:Researcher"
-                                          status="Confortmant"
-                                          pass={true}  
-                                          executionTime="3 min 12 sec"
-                                          date="28 days ago"/>
-                                <OCITest 
-                                                  testName= "Researcher Test"
-                                                  data="weso:JoseEmilioLabraGayo"
-                                                  shape="weso:Researcher"
-                                                  status="Confortmant"
-                                                  pass={false}  
-                                                  executionTime="3 min 12 sec"
-                                                  date="28 days ago"/>
-                        
-                                <OCITest 
-                                                  testName= "Researcher Test"
-                                                  data="weso:JoseEmilioLabraGayo"
-                                                  shape="weso:Researcher"
-                                                  status="Confortmant"
-                                                  pass={true}  
-                                                  executionTime="3 min 12 sec"
-                                                  date="28 days ago"/>
-                        
-                                <OCITest 
-                                                  testName= "Researcher Test"
-                                                  data="weso:JoseEmilioLabraGayo"
-                                                  shape="weso:Researcher"
-                                                  status="Confortmant"
-                                                  pass={true}  
-                                                  executionTime="3 min 12 sec"
-                                                  date="28 days ago"/>
-                                                  
-                                <OCITest 
-                                                  testName= "Researcher Test"
-                                                  data="weso:JoseEmilioLabraGayo"
-                                                  shape="weso:Researcher"
-                                                  status="Confortmant"
-                                                  pass={false}  
-                                                  executionTime="3 min 12 sec"
-                                                  date="28 days ago"/>
-                        
-                                <OCITest 
-                                                  testName= "Researcher Test"
-                                                  data="weso:JoseEmilioLabraGayo"
-                                                  shape="weso:Researcher"
-                                                  status="Confortmant"
-                                                  pass={true}  
-                                                  executionTime="3 min 12 sec"
-                                                  date="28 days ago"/>
+        })}
 
                                     
       </div>

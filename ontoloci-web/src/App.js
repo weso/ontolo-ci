@@ -11,12 +11,14 @@ import './css/header.css'
 import './css/footer.css'
 import './css/dashboard.css'
 
+
 function App() {
+
   return (
     <Router>
     <OCIHeader/>
       <Switch>
-        <Route path="/tests/:repo">
+        <Route path="/tests/:id">
           <OCITestCases/>
         </Route>
         <Route path="/">
