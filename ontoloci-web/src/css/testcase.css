@@ -24,11 +24,11 @@
     height: 100%;
 }
 
-.test-element-passed{
+.test-element-pass{
     border-left: 1vh solid #39aa56;
 }
 
-.test-element-failed{
+.test-element-fail{
     border-left: 1vh solid #db4545;
 }
 

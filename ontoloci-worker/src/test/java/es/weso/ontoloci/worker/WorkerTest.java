@@ -16,7 +16,11 @@ import es.weso.ontoloci.worker.validation.Validate;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -52,6 +56,7 @@ public class WorkerTest {
 
             for(TestCase testCase : build.getTestCases()) {
                 ResultValidation result = validate(testCase);
+
                 assertTrue(result.getExpectedShapeMap().toJson().spaces2().length() > 0);
 
                 List<ShapeMapResultValidation> produced = getProducedShapeMap(result);
@@ -72,6 +77,16 @@ public class WorkerTest {
             final long stopTime = System.nanoTime(); // Stop counting execution time.
 
             final long executionTimeNS = stopTime - initTime; // Compute execution time.
+
+            final long minutes = TimeUnit.NANOSECONDS.toMinutes(executionTimeNS);
+            final long seconds = TimeUnit.NANOSECONDS.toSeconds(executionTimeNS) -  TimeUnit.NANOSECONDS.toSeconds(minutes);
+            final long millis =  TimeUnit.NANOSECONDS.toMillis(executionTimeNS)  -  TimeUnit.NANOSECONDS.toMillis(seconds);
+            final float finalSects = Float.parseFloat(seconds+"."+millis);
+            DecimalFormat df = new DecimalFormat("##.##");
+            System.out.println(df.format(finalSects));
+
+            String executionTimeFormated = String.format("%2d min, %2d sec",minutes,finalSects);
+
             assertTrue(executionTimeNS>0);
         }
     }

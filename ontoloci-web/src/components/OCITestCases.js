@@ -18,7 +18,7 @@ function OCITestCases(props) {
       url: endpoint,
       config: { headers: {'Access-Control-Allow-Origin': '*' }}
   }).then(function(response){
-    console.log(response)
+    console.log(response.data)
       setTests(response.data.testCaseResults)
     })
     .catch(function (response) {
@@ -32,7 +32,8 @@ function OCITestCases(props) {
     getTestCases()
   }, []);
 
-  
+
+
   return (
     <div className="main">
       <div className="build-panel">
@@ -74,13 +75,12 @@ function OCITestCases(props) {
       <div className="test-elements-list">
         {tests.map(test =>{
           return <OCITest 
-                  testName= "Researcher Test"
-                  data="weso:JoseEmilioLabraGayo"
-                  shape="weso:Researcher"
-                  status="Confortmant"
-                  pass={true}  
-                  executionTime="3 min 12 sec"
-                  date="28 days ago"/>
+                  testName= {test.testCase.name}
+                  status = {test.status.toLowerCase()}
+                  dataNode={test.testCase.expectedShapeMap.split("@")[0]}
+                  shape={test.testCase.expectedShapeMap.split("@")[1]}
+                  validationStatus={test.metadata.validation_status}
+                  executionTime={test.metadata.execution_time}/>
         })}
 
                                     
