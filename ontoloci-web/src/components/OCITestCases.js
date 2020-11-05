@@ -29,9 +29,10 @@ function OCITestCases(props) {
   }
 
   useEffect(() => {
-      getTestCases();
-  });
+    getTestCases()
+  }, []);
 
+  
   return (
     <div className="main">
       <div className="build-panel">

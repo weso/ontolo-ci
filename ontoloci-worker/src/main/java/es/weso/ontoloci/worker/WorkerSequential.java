@@ -60,8 +60,10 @@ public class WorkerSequential implements Worker {
 
                 TestCaseResult finalCurrentTestCase = currentTestCase;
                 if(expected.get(0).equals(produced.get(0))){
+                    LOGGER.debug("PASS ");
                     currentTestCase.setStatus(TestCaseResultStatus.PASS);
                 }else{
+                    LOGGER.debug("FAIL ");
                     currentTestCase.setStatus(TestCaseResultStatus.FAIL);
                 }
 
@@ -80,7 +82,7 @@ public class WorkerSequential implements Worker {
             currentTestCase.setMetadata(metadata);
 
             // And finally add it to the collection of results.
-            testCaseResults.add(TestCaseResult.from(testCase));
+            testCaseResults.add(currentTestCase);
         }
 
         // Finally return the Build result.

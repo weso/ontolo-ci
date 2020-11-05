@@ -2,10 +2,12 @@ import React,{useState,useEffect} from 'react';
 import axios from 'axios';
 import OCIRepo from './OCIRepo';
 
+
+
 function OCIDashBoard() {
 
   const [builds,setBuilds] = useState([]);
-  const getTestCases = function(){
+  const getBuilds = function(){
 
     axios({
       method: 'get',
@@ -23,10 +25,9 @@ function OCIDashBoard() {
   }
 
   useEffect(() => {
-      getTestCases();
-  });
-
-
+    getBuilds()
+  }, []);
+ 
 
   return (
     <div className="main-2">
@@ -37,13 +38,13 @@ function OCIDashBoard() {
           return <OCIRepo 
                       key={build.id}
                       build={build}
-                      owner="weso" 
-                      repo="hercules-ontology" 
+                      owner={build.metadata.owner}
+                      repo={build.metadata.repo}
+                      branchName={build.metadata.branch}
+                      commitName={build.metadata.commmitName}
+                      commitId={build.metadata.commmitId}
                       pass={true}
-                      commitName="Ontology Update"
-                      branchName="master"
-                      prId="#71 passed"
-                      commitId="f920308"
+                      prId=""
                       executionTime="3 min 12 sec"
                       date="28 days ago"/>
         })}
