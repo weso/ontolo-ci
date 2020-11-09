@@ -11,6 +11,7 @@ import es.weso.ontoloci.worker.test.TestCaseResultStatus;
 import es.weso.ontoloci.worker.validation.ResultValidation;
 import es.weso.ontoloci.worker.validation.ShapeMapResultValidation;
 import es.weso.ontoloci.worker.validation.Validate;
+import org.apache.jena.base.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,10 +85,8 @@ public class WorkerSequential implements Worker {
             final long stopTime = System.nanoTime(); // Stop counting execution time.
 
             final long executionTimeNS = stopTime - initTime; // Compute execution time.
-            final long seconds = TimeUnit.NANOSECONDS.toSeconds(executionTimeNS);
-            final long millis =  TimeUnit.NANOSECONDS.toMillis(executionTimeNS)  -  TimeUnit.NANOSECONDS.toMillis(seconds);
-            String executionTimeFormated = String.format("%2d,%2d sec",seconds,millis);
-
+            final double seconds = (double)executionTimeNS/ 1_000_000_000;
+            String executionTimeFormated = String.format("%f sec",seconds);
 
             // Set execution time as metadata.
             final Map<String, String> metadata = new HashMap<>(currentTestCase.getMetadata());
@@ -101,8 +100,12 @@ public class WorkerSequential implements Worker {
 
         final long stopBuildTime = System.nanoTime(); // Stop counting execution time of the build.
         final long executionBuildTimeNS = stopBuildTime - initBuildTime; // Compute execution time of the build.
+
+        final double buildSeconds = (double)executionBuildTimeNS/ 1_000_000_000;
+        String executionBuildTimeFormated = String.format("%f sec",buildSeconds);
+
         final Map<String, String> buildMetadata = new HashMap<>(build.getMetadata());
-        buildMetadata.put("execution_time",String.valueOf(executionBuildTimeNS));
+        buildMetadata.put("execution_time",executionBuildTimeFormated);
         buildMetadata.put("execution_date", String.valueOf(System.currentTimeMillis()));
         buildMetadata.put("buildResult", buildResult);
         build.setMetadata(buildMetadata);

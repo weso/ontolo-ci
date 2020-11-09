@@ -81,8 +81,7 @@ function OCIDashBoard() {
                       commitName={build.metadata.commitName}
                       commitId={build.metadata.commitId}
                       buildResult={build.metadata.buildResult.toLowerCase()}
-                      prId=""
-                      executionTime="3 min 12 sec"
+                      executionTime={build.metadata.execution_time}
                       date={getDate(build.metadata.execution_date)}/>
         })}
        

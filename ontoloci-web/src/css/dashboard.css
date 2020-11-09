@@ -78,15 +78,6 @@
     margin-bottom: 1vh;
 }
 
-.dashboard-element-pass:hover{
-    border: 1px solid #39aa56;
-}
-
-
-.dashboard-element-fail:hover{
-    border: 1px solid #db4545;
-}
-
 
 .dashboard-element-info{
     list-style-type: none;
@@ -145,7 +136,6 @@ a:hover{
 
 .icon-check-fail{
     margin-top: 0.5vh;
-    
     height: 2.5vh;
     fill:  #db4545;
 }
