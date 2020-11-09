@@ -15,6 +15,7 @@ function OCIDashBoard() {
       config: { headers: {'Access-Control-Allow-Origin': '*' }}
   }).then(function(response){
     console.log(response.data)
+    console.log(response.data)
         setBuilds(response.data)
     })
     .catch(function (response) {
@@ -66,7 +67,7 @@ function OCIDashBoard() {
 
   return (
     <div className="main-2">
-      <h2><a>Builds</a></h2>
+      <h2><a class="subtitle">Builds</a></h2>
       <div className="dashboard-elements-list">
 
         {builds.map(build =>{
@@ -76,8 +77,8 @@ function OCIDashBoard() {
                       owner={build.metadata.owner}
                       repo={build.metadata.repo}
                       branchName={build.metadata.branch}
-                      commitName={build.metadata.commmitName}
-                      commitId={build.metadata.commmitId}
+                      commitName={build.metadata.commitName}
+                      commitId={build.metadata.commitId}
                       pass={true}
                       prId=""
                       executionTime="3 min 12 sec"

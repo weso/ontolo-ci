@@ -35,8 +35,9 @@ public class GitHubRestListener {
             // Parse the content and create the test cases array.
             final String owner = (String) ownerData.get("name");
             final String repo = (String) repositoryData.get("name");
-            final String branch = "main";
-            final String commmitId = String.valueOf(commitData.get(0).get("id")).substring(0,6);
+            final String branch = ((String) payload.get("ref")).split("refs/heads/")[1];
+            final String commit = (String) commitData.get(0).get("id");
+            final String commmitId = String.valueOf(commit).substring(0,6);
             final String commmitName = (String) commitData.get(0).get("message");
 
             // Add the metadata.
@@ -44,8 +45,9 @@ public class GitHubRestListener {
             metadata.put("owner", owner);
             metadata.put("repo", repo);
             metadata.put("branch", branch);
-            metadata.put("commmitId", commmitId);
-            metadata.put("commmitName", commmitName);
+            metadata.put("commit", commit);
+            metadata.put("commitId", commmitId);
+            metadata.put("commitName", commmitName);
 
             // We set the metadata.
             build.setMetadata(metadata);

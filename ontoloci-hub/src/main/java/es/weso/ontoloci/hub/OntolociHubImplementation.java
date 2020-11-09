@@ -37,17 +37,17 @@ public class OntolociHubImplementation implements OntolociHub {
         // Parse the data from the build.
         final String owner = hubBuild.getMetadata().get("owner");
         final String repo = hubBuild.getMetadata().get("repo");
-        final String branch = hubBuild.getMetadata().get("branch");
+        final String commit = hubBuild.getMetadata().get("commit");
 
         LOGGER.debug(
                 "Calling the GitHub Service with [%s,%s,%s] for the collection of HubTestCase from the OntolociHubImplementation",
                 owner,
                 repo,
-                branch
+                commit
         );
 
         // Create the tests collection from the owner+repo+branch.
-        final Collection<HubTestCase> testsCases = gitHubService.getTestCases(owner,repo,branch);
+        final Collection<HubTestCase> testsCases = gitHubService.getTestCases(owner,repo,commit);
 
         // Populate the hub build with the computed test cases.
         hubBuild.setTestCases(testsCases);

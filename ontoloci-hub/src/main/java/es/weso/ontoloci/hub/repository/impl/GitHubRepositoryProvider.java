@@ -24,7 +24,7 @@ import java.util.Collection;
 
 /**
  * This class implements the needed methods to get a collection of TestCases
- * from a concrete branch and commit of a GitHub repository.
+ * from a concrete commit of a GitHub repository.
  *
  * @author Pablo Menéndez
  */
@@ -100,23 +100,23 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
     }
 
     /**
-     * Gets a collection of test cases from a concrete branch and commit of a GitHub repository.
+     * Gets a collection of test cases from a concrete commit of a GitHub repository.
      *
      * @param owner                 of the repository
      * @param repo                  name of the repository
-     * @param branch                of the repository
+     * @param commit                of the repository
      *
      * @return test cases
      */
     @Override
-    public Collection<HubTestCase> getTestCases(final String owner, final String repo, final String branch) {
+    public Collection<HubTestCase> getTestCases(final String owner, final String repo,final String commit) {
 
         LOGGER.debug(
                 String.format(
-                        "GET Computing the collection of HubTestCase for user=[%s], repo =[%s] and branch=[%s]",
+                        "GET Computing the collection of HubTestCase for user=[%s], repo =[%s] and commit=[%s]",
                         owner,
                         repo,
-                        branch
+                        commit
                 )
         );
 
@@ -126,11 +126,11 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
         try {
             // Get the repository configuration file.
             final RepositoryConfiguration repositoryConfig =
-                    getRepositoryConfiguration(getConcatenatedPath(owner,repo,branch) + YAML_FILE_NAME);
+                    getRepositoryConfiguration(getConcatenatedPath(owner,repo,commit) + YAML_FILE_NAME);
 
             // Parse the repository configuration file and create a manifest object
             final Manifest manifest =
-                    getManifest(getConcatenatedPath(owner,repo,branch) + repositoryConfig.getManifestPath());
+                    getManifest(getConcatenatedPath(owner,repo,commit) + repositoryConfig.getManifestPath());
 
             // Get the ontology folder
             final String ontologyFolder = repositoryConfig.getOntologyFolder();
@@ -139,7 +139,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
             final String testsFolder = repositoryConfig.getTestFolder();
 
             // Get collection of generated test cases from the manifest file.
-            final Collection<HubTestCase> parsedTestCases = getTestCasesFromManifest(owner,repo,branch,ontologyFolder,testsFolder,manifest);
+            final Collection<HubTestCase> parsedTestCases = getTestCasesFromManifest(owner,repo,commit,ontologyFolder,testsFolder,manifest);
 
             LOGGER.debug(
                     String.format(
@@ -161,7 +161,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
     }
 
     /**
-     * Gets the Manifest from the .oci.yml file of a concrete branch and commit of a GitHub repository
+     * Gets the Manifest from the .oci.yml file of a concrete commit of a GitHub repository
      * @param path .oci.yml file path
      * @throws JsonMappingException
      * @throws JsonProcessingException
@@ -174,7 +174,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
     }
 
     /**
-     * Gets the Manifest from the manifest.json file of a concrete branch and commit of a GitHub repository
+     * Gets the Manifest from the manifest.json file of a concrete commit of a GitHub repository
      * @param path manifest.json file path
      * @throws JsonMappingException
      * @throws JsonProcessingException
@@ -189,12 +189,12 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
 
 
     /**
-     * Gets a collection of test cases from manifest of a concrete branch and commit of a GitHub repository.
+     * Gets a collection of test cases from manifest of a concrete commit of a GitHub repository.
      * For each manifest entry, gets the proper data needed for the creation of a new TestCase
      *
      * @param owner                 of the repository
      * @param repo                  name of the repository
-     * @param branch                of the repository
+     * @param commit                of the repository
      * @param ontologyFolder        repository folder that contains the ontology
      * @param testFolder            repository folder that contains the tests
      * @param mainifest             manifest of the repository
@@ -205,11 +205,11 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
      *
      * @return test cases
      */
-    private Collection<HubTestCase> getTestCasesFromManifest(String owner, String repo, String branch, String ontologyFolder, String testFolder, Manifest mainifest)
+    private Collection<HubTestCase> getTestCasesFromManifest(String owner, String repo, String commit, String ontologyFolder, String testFolder, Manifest mainifest)
             throws JsonMappingException, JsonProcessingException, IOException {
         Collection<HubTestCase> testCases = new ArrayList<HubTestCase>();
-        String genericOntologyPath = getConcatenatedPath(owner, repo, branch)+ontologyFolder+SLASH_SYMBOL;
-        String genericTestPath = getConcatenatedPath(owner, repo, branch)+testFolder+SLASH_SYMBOL;
+        String genericOntologyPath = getConcatenatedPath(owner, repo, commit)+ontologyFolder+SLASH_SYMBOL;
+        String genericTestPath = getConcatenatedPath(owner, repo, commit)+testFolder+SLASH_SYMBOL;
         
         
         for(ManifestEntry entry:mainifest.getManifestEntries()){
@@ -261,8 +261,8 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
         return result.toString();
     }
 
-    private String getConcatenatedPath(String owner,String repo, String branch) {
-        return API_REQUEST+owner+SLASH_SYMBOL+repo+SLASH_SYMBOL+branch+SLASH_SYMBOL;
+    private String getConcatenatedPath(final String owner,final String repo,final String commit) {
+        return API_REQUEST+owner+SLASH_SYMBOL+repo+SLASH_SYMBOL+commit+SLASH_SYMBOL;
     }
 
 }
