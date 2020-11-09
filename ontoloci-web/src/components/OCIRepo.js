@@ -3,18 +3,16 @@ import { Link } from "react-router-dom";
 
 function OCIRepo(props){
 
-    const getPassClass = ()=>{
-        if(props.pass)
-            return 'passed';
-        else
-            return 'failed'
-    }
-
+    const getSvgStatus = function(){
+        if(props.buildResult=='pass')
+          return <svg className="icon-check-pass" data-name="Layer 1" id="Layer_1" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><title/><path d="M21.33,57.82,0,36.53l5.87-5.87L21.33,46.09,58.13,9.36,64,15.23,21.33,57.82" data-name="&lt;Compound Path&gt;" id="_Compound_Path_"/></svg> 
+        return <svg className="icon-check-fail" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" ><path d="M0 0h24v24H0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+      }
 
     return (
 
-    <Link to={`/tests/${props.build.id}`} className={"dashboard-element"+" dashboard-element-"+getPassClass()}>
-        <div className={"dashboard-element-logo dashboard-element-logo-"+getPassClass()}
+    <Link to={`/tests/${props.build.id}`} className={"dashboard-element"+" dashboard-element-"+props.buildResult}>
+        <div className={"dashboard-element-logo dashboard-element-logo-"+props.buildResult}
         title="Public repository">
             <svg    xmlns="http://www.w3.org/2000/svg" 
                     viewBox="0 0 16 16" 
@@ -30,11 +28,11 @@ function OCIRepo(props){
             </svg>
         </div>
         <div className="dashboard-element-status">
-            <svg xmlns="http://www.w3.org/2000/svg" className={"icon-check-"+getPassClass()} height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+        {getSvgStatus()}
         </div>
         <div className="dashboard-element-info">
-            <span className={getPassClass()}>{props.owner}</span>
-            <span className={getPassClass()}>{props.repo}</span>
+            <span className={props.buildResult}>{props.owner}</span>
+            <span className={props.buildResult}>{props.repo}</span>
         </div>
 
         <div className="dashboard-element-info">
@@ -52,7 +50,7 @@ function OCIRepo(props){
                 <div className="logo">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 17" className="icon"><circle cx="8.51" cy="8.5" r="3.5" fill="none" stroke="#9d9d9d" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10"></circle><path d="M16.5 8.5h-4.49m-7 0H.5" fill="none" stroke="#9d9d9d" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10"></path></svg>
                 </div>
-                <span href="#" className={getPassClass()+" pr-id"}>{props.prId}</span>
+                <span href="#" className={props.buildResult+" pr-id"}>{props.prId}</span>
             </div>
             <div className="logo-container">
                 <div className="logo">

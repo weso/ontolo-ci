@@ -70,7 +70,7 @@ public class WorkerSequential implements Worker {
                 if(expected.get(0).equals(produced.get(0))){
                     currentTestCase.setStatus(TestCaseResultStatus.PASS);
                 }else{
-                    buildResult = TestCaseResultStatus.FAIL.toString();
+                    buildResult = "fail";
                     currentTestCase.setStatus(TestCaseResultStatus.FAIL);
                 }
 

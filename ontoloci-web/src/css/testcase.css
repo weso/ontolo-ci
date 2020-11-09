@@ -76,10 +76,12 @@ span{
 
 .pass{
     color: #39aa56 !important;
+    fill: #39aa56 !important;
 }
 
 .fail{
     color: #db4545 !important;
+    fill: #db4545 !important;
 }
 
 .top-panel{
@@ -91,5 +93,21 @@ span{
 
 .top-panel > h3{
     font-size: 18px !important;
-    margin-top: 5px;
+    margin-top: 10px;
+    margin-left: 0.3vh;
+}
+
+
+.build-cross{
+    fill: #db4545;
+    transform: scale(1.5);
+    margin-left: 20px;
+    margin-top: 6px;
+}
+
+.build-status-icon{
+    margin-left: 10px;
+    height: 4vh;
+    width: 3vh;
+    margin-top: 0px;
 }

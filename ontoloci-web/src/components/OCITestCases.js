@@ -36,12 +36,17 @@ function OCITestCases(props) {
   }, []);
 
 
+  const getSvgStatus = function(){
+    if(status=='pass')
+      return <svg className="build-status-icon pass" data-name="Layer 1" id="Layer_1" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><title/><path d="M21.33,57.82,0,36.53l5.87-5.87L21.33,46.09,58.13,9.36,64,15.23,21.33,57.82" data-name="&lt;Compound Path&gt;" id="_Compound_Path_"/></svg> 
+    return <svg className="build-status-icon fail" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" ><path d="M0 0h24v24H0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+  }
 
   return (
     <div className="main">
       <div className={"build-panel border-"+status}>
           <div className="top-panel">
-            <svg className="build-cross" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="18px" height="18px"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            {getSvgStatus()}
             <h3 class={status}>Push <a class={"commit-link "+status} href={"https://github.com/"+metadata.owner+"/"+metadata.repo+"/tree/"+metadata.commit}>[{metadata.commitId}]</a> {metadata.commitName}</h3>
           </div>
           <div className="bottom-panel">

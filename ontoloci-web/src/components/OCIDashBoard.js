@@ -16,6 +16,7 @@ function OCIDashBoard() {
   }).then(function(response){
     console.log(response.data)
     console.log(response.data)
+    console.log(response.data)
         setBuilds(response.data)
     })
     .catch(function (response) {
@@ -79,7 +80,7 @@ function OCIDashBoard() {
                       branchName={build.metadata.branch}
                       commitName={build.metadata.commitName}
                       commitId={build.metadata.commitId}
-                      pass={true}
+                      buildResult={build.metadata.buildResult.toLowerCase()}
                       prId=""
                       executionTime="3 min 12 sec"
                       date={getDate(build.metadata.execution_date)}/>
