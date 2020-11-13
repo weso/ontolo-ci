@@ -183,6 +183,31 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
         return null;
     }
 
+
+    public String authenticateByInstallation() throws Exception {
+        String jwt = KeyUtils.getJWT();
+        String installationId = "12948343";
+        URL url;
+        HttpURLConnection con;
+        try {
+            url = new URL("https://api.github.com/app/installations/"+installationId+"/access_tokens");
+            con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("POST");
+            con.setDoOutput(true);
+            con.setRequestProperty("Accept", "application/vnd.github.v3+json");
+            con.setRequestProperty("Authorization", "Bearer "+jwt);
+
+            String content =  getFileContent(con.getInputStream());
+            Map<String,Object> response = this.jsonMapper.readValue(content,Map.class);
+            return (String) response.get("token");
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     /**
      * Gets a collection of test cases from a concrete commit of a GitHub repository.
      *

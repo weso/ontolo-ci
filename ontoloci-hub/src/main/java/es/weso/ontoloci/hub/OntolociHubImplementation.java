@@ -13,6 +13,8 @@ import org.apache.jena.base.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
@@ -74,13 +76,17 @@ public class OntolociHubImplementation implements OntolociHub {
         GitHubRepositoryProvider gh = GitHubRepositoryProvider.empty();
         String auth = gh.getPersonalAccessToken(code);
         installations.put(owner,gh.getInstallationId(auth));
-        System.out.print(installations.get("mistermbot"));
     }
 
 
+
+
     public static void main(String[] args) throws Exception {
-        OntolociHubImplementation o = new OntolociHubImplementation();
-        o.saveInstallation("mistermbot","3147d7e5513b16e1be87");
+       // OntolociHubImplementation o = new OntolociHubImplementation();
+       // o.saveInstallation("mistermbot","3147d7e5513b16e1be87");
+        GitHubRepositoryProvider gh = GitHubRepositoryProvider.empty();
+        String token = gh.authenticateByInstallation();
+        System.out.print(token);
     }
 
 
