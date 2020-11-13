@@ -1,5 +1,6 @@
 package es.weso.ontoloci.hub.utils;
 
+import fansi.Str;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.commons.io.FileUtils;
@@ -18,16 +19,20 @@ import java.util.Scanner;
 
 public class KeyUtils {
 
-    // APP ID PATH
+    // APP ID
     private static final String PRIVATE_KEY_PAHT = "secrets/server-pkcs8.key";
-    // PRIVATE KEY PATH
+    // PRIVATE KEY
     private static final String APP_ID_PATH = "secrets/ocitest.appid";
+    // CLIENT ID
+    private static final String CLIENT_ID_PATH = "secrets/client.id";
+    // CLIENT SECRET
+    private static final String CLIENT_SECRET_PATH = "secrets/client.secret";
 
     public static String getJWT() throws Exception {
 
         //The JWT signature algorithm we will be using to sign the token
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.RS256;
-        String appId = KeyUtils.getAppId(APP_ID_PATH);
+        String appId = getAppId();
         Instant now = Instant.now();
 
         PrivateKey privateKey = KeyUtils.loadPrivateKey(PRIVATE_KEY_PAHT);
@@ -42,7 +47,20 @@ public class KeyUtils {
         return jwt;
     }
 
-    public static String getAppId(String path){
+
+    public static String getClientId(){
+        return getSecret(CLIENT_ID_PATH);
+    }
+
+    public static String getClientSecret(){
+        return getSecret(CLIENT_SECRET_PATH);
+    }
+
+    private static String getAppId(){
+        return getSecret(APP_ID_PATH);
+    }
+
+    private static String getSecret(String path){
         String appId = "";
         try {
             File myObj = new File(path);

@@ -27,4 +27,11 @@ public class HubTests {
         assertEquals(testCases.size(),numberOfEntries);
 
     }
+
+
+    @Test
+    public void getPersonalTokenTest(){
+        GitHubRepositoryProvider gitHubService = GitHubRepositoryProvider.empty();
+        gitHubService.getPersonalAccessToken("");
+    }
 }

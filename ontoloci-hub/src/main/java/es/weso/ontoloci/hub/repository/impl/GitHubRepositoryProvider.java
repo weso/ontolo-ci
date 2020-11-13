@@ -2,6 +2,7 @@ package es.weso.ontoloci.hub.repository.impl;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -10,17 +11,26 @@ import es.weso.ontoloci.hub.manifest.ManifestEntry;
 import es.weso.ontoloci.hub.repository.RepositoryConfiguration;
 import es.weso.ontoloci.hub.repository.RepositoryProvider;
 import es.weso.ontoloci.hub.test.HubTestCase;
+import es.weso.ontoloci.hub.utils.KeyUtils;
+import fansi.Str;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.jena.base.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.*;
 
 /**
  * This class implements the needed methods to get a collection of TestCases
@@ -100,7 +110,87 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
     }
 
 
-    public void get(){}
+
+    public static void main(String[] args) throws JsonProcessingException {
+        GitHubRepositoryProvider gh = new GitHubRepositoryProvider();
+        String auth = gh.getPersonalAccessToken("8287020c4b2ad113ca02");
+        System.out.println(auth);
+        System.out.println(gh.getInstallationId(auth));
+
+    }
+
+    public String getPersonalAccessToken(String code){
+        String access_token = "";
+        String clientId = KeyUtils.getClientId();
+        String clientSecret = KeyUtils.getClientSecret();
+
+        System.out.println(clientId);
+        System.out.println(clientSecret);
+
+        HttpClient httpclient = HttpClients.createDefault();
+        HttpPost httppost = new HttpPost("https://github.com/login/oauth/access_token");
+
+        // Request parameters and other properties.
+        List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+        params.add(new BasicNameValuePair("client_id", clientId));
+        params.add(new BasicNameValuePair("client_secret", clientSecret));
+        params.add(new BasicNameValuePair("code", code));
+        try {
+            httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+
+
+        //Execute and get the response.
+        HttpResponse response = httpclient.execute(httppost);
+        HttpEntity entity = response.getEntity();
+
+
+            if (entity != null) {
+                try (InputStream instream = entity.getContent()) {
+                    // do something useful
+                    String content = IOUtils.toString(instream, "UTF-8");
+                    access_token =content.split("access_token=")[1].split("&expires_in=")[0];
+                }
+            }
+
+        }catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return access_token;
+    }
+
+
+    public String getInstallationId(String authToken){
+        URL url;
+        HttpURLConnection con;
+        try {
+            url = new URL("https://api.github.com/user/installations");
+            con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            con.setDoOutput(true);
+            con.setRequestProperty("Accept", "application/vnd.github.v3+json");
+            con.setRequestProperty("Authorization", "token "+authToken);
+
+            String content =  getFileContent(con.getInputStream());
+            Map<String,Object> installationsResponse = this.jsonMapper.readValue(content,Map.class);
+            List<Map<String,Object>> installations = (List<Map<String, Object>>) installationsResponse.get("installations");
+            for(Map<String,Object> installation: installations) {
+                String appName = (String) installations.get(0).get("app_slug");
+                if(appName=="oci-test"){
+                    return String.valueOf(installations.get(0).get("id"));
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 
     /**
      * Gets a collection of test cases from a concrete commit of a GitHub repository.
