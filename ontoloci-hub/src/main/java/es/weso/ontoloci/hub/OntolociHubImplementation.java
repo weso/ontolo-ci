@@ -37,6 +37,11 @@ public class OntolociHubImplementation implements OntolociHub {
 
     private Map<String,String> installations;
 
+    private String currentOwner;
+    private String currentRepo;
+    private String currentCommit;
+    private String currentCheckRunId;
+
     public OntolociHubImplementation() {
 
         LOGGER.debug(
@@ -52,23 +57,33 @@ public class OntolociHubImplementation implements OntolociHub {
     public HubBuild addTestsToBuild(HubBuild hubBuild) {
 
         // Parse the data from the build.
-        final String owner = hubBuild.getMetadata().get("owner");
-        final String repo = hubBuild.getMetadata().get("repo");
-        final String commit = hubBuild.getMetadata().get("commit");
+        currentOwner = hubBuild.getMetadata().get("owner");
+        currentRepo = hubBuild.getMetadata().get("repo");
+        currentCommit = hubBuild.getMetadata().get("commit");
 
         LOGGER.debug(
                 "Calling the GitHub Service with [%s,%s,%s] for the collection of HubTestCase from the OntolociHubImplementation",
-                owner,
-                repo,
-                commit
+                currentOwner,
+                currentRepo,
+                currentCommit
         );
 
+        // Create the check run
+        String token = gitHubService.authenticateByInstallation();
+        currentCheckRunId = gitHubService.createCheckRun(token,currentOwner,currentRepo,currentCommit);
+
         // Create the tests collection from the owner+repo+branch.
-        final Collection<HubTestCase> testsCases = gitHubService.getTestCases(owner,repo,commit);
+        final Collection<HubTestCase> testsCases = gitHubService.getTestCases(currentOwner,currentRepo,currentCommit);
 
         // Populate the hub build with the computed test cases.
         hubBuild.setTestCases(testsCases);
         return hubBuild;
+    }
+
+    @Override
+    public void updateCheckRun(boolean hasPassed){
+        String token = gitHubService.authenticateByInstallation();
+        gitHubService.updateCheckRun(token,currentCheckRunId,hasPassed,currentOwner,currentRepo);
     }
 
 
@@ -86,7 +101,8 @@ public class OntolociHubImplementation implements OntolociHub {
        // o.saveInstallation("mistermbot","3147d7e5513b16e1be87");
         GitHubRepositoryProvider gh = GitHubRepositoryProvider.empty();
         String token = gh.authenticateByInstallation();
-        System.out.print(token);
+        //System.out.print(token);
+        gh.createCheckRun(token,"mistermbot","oci","ef52987b8f54edff135702172e36b67355428670");
     }
 
 

@@ -23,4 +23,6 @@ public interface RepositoryProvider {
             final String commit
     );
 
+
+    void updateCheckRun(String authToken, String checkRunId, boolean hasPassed, String owner, String repo);
 }

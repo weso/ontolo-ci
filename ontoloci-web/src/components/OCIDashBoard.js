@@ -69,7 +69,6 @@ function OCIDashBoard() {
   return (
    
     <div className="main-2">
-       <a href="https://github.com/login/oauth/authorize">GITHUB</a>
       <h2><a class="subtitle">Builds</a></h2>
       <div className="dashboard-elements-list">
 

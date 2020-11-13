@@ -7,9 +7,12 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -28,7 +31,7 @@ public class KeyUtils {
     // CLIENT SECRET
     private static final String CLIENT_SECRET_PATH = "secrets/client.secret";
 
-    public static String getJWT() throws Exception {
+    public static String getJWT() {
 
         //The JWT signature algorithm we will be using to sign the token
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.RS256;
@@ -76,21 +79,31 @@ public class KeyUtils {
         return appId;
     }
 
-    public static PrivateKey loadPrivateKey(String path) throws Exception {
-        String privateKeyPEM = FileUtils.readFileToString(new File(path), StandardCharsets.UTF_8);
+    public static PrivateKey loadPrivateKey(String path)  {
+        String privateKeyPEM = null;
+        try {
+            privateKeyPEM = FileUtils.readFileToString(new File(path), StandardCharsets.UTF_8);
 
-        // strip of header, footer, newlines, whitespaces
-        privateKeyPEM = privateKeyPEM
-                .replace("-----BEGIN PRIVATE KEY-----", "")
-                .replace("-----END PRIVATE KEY-----", "")
-                .replaceAll("\\s", "");
+            // strip of header, footer, newlines, whitespaces
+            privateKeyPEM = privateKeyPEM
+                    .replace("-----BEGIN PRIVATE KEY-----", "")
+                    .replace("-----END PRIVATE KEY-----", "")
+                    .replaceAll("\\s", "");
 
-        // decode to get the binary DER representation
-        byte[] privateKeyDER = Base64.getDecoder().decode(privateKeyPEM);
+            // decode to get the binary DER representation
+            byte[] privateKeyDER = Base64.getDecoder().decode(privateKeyPEM);
 
-        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        PrivateKey privateKey = keyFactory.generatePrivate(new PKCS8EncodedKeySpec(privateKeyDER));
-        return privateKey;
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            PrivateKey privateKey = keyFactory.generatePrivate(new PKCS8EncodedKeySpec(privateKeyDER));
+
+            return privateKey;
+
+        } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException e) {
+            e.printStackTrace();
+        }
+
+        return  null;
+
     }
 
 

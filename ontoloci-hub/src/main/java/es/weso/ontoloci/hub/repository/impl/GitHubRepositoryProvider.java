@@ -20,7 +20,9 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.jena.base.Sys;
@@ -184,9 +186,9 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
     }
 
 
-    public String authenticateByInstallation() throws Exception {
+    public String authenticateByInstallation()  {
         String jwt = KeyUtils.getJWT();
-        String installationId = "12948343";
+        String installationId = "12647096";
         URL url;
         HttpURLConnection con;
         try {
@@ -206,6 +208,84 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public String createCheckRun(String authToken,String owner,String repo,String headSha){
+        HttpClient httpclient = HttpClients.createDefault();
+        HttpPost httppost = new HttpPost("https://api.github.com/repos/"+owner+"/"+repo+"/check-runs");
+
+        httppost.addHeader("Accept", "application/vnd.github.v3+json");
+        httppost.addHeader("Authorization", "token "+authToken);
+        httppost.addHeader("content-type", "application/json");
+
+        try {
+            // Request parameters and other properties.
+            StringEntity params = new StringEntity("{\"name\":\"ontolo-ci\",\"head_sha\":\""+headSha+"\"}");
+            httppost.setEntity(params);
+
+            //Execute and get the response.
+            HttpResponse response = httpclient.execute(httppost);
+            HttpEntity entity = response.getEntity();
+
+
+            if (entity != null) {
+                try (InputStream instream = entity.getContent()) {
+                    // do something useful
+                    String content = IOUtils.toString(instream, "UTF-8");
+                    Map<String,Object> checkResponse = this.jsonMapper.readValue(content,Map.class);
+                    return String.valueOf(checkResponse.get("id"));
+                }
+            }
+
+        }catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public void updateCheckRun(String authToken, String checkRunId, boolean hasPassed, String owner, String repo) {
+        HttpClient httpclient = HttpClients.createDefault();
+        HttpPatch httpatch = new HttpPatch("https://api.github.com/repos/"+owner+"/"+repo+"/check-runs/"+checkRunId);
+
+        httpatch.addHeader("Accept", "application/vnd.github.v3+json");
+        httpatch.addHeader("Authorization", "token "+authToken);
+        httpatch.addHeader("content-type", "application/json");
+
+
+        String conclusion = hasPassed ? "success": "failure";
+
+        try {
+            // Request parameters and other properties.
+            StringEntity params = new StringEntity("{\"conclusion\":\""+conclusion+"\"}");
+            httpatch.setEntity(params);
+
+            //Execute and get the response.
+            HttpResponse response = httpclient.execute(httpatch);
+            HttpEntity entity = response.getEntity();
+
+
+            if (entity != null) {
+                try (InputStream instream = entity.getContent()) {
+                    // do something useful
+                    String content = IOUtils.toString(instream, "UTF-8");
+                    System.out.println(content);
+
+                }
+            }
+
+        }catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**

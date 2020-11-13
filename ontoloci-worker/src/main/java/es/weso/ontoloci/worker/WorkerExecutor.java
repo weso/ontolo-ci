@@ -48,6 +48,7 @@ public class WorkerExecutor implements Worker {
 
         // Store the result of the build.
         final BuildResult buildResult = this.worker.executeBuild(build);
+        ontolocyHub.updateCheckRun(buildResult.getMetadata().get("buildResult").equals("PASS"));
 
         for(TestCaseResult tcr : buildResult.getTestCaseResults()) {
             System.out.println(tcr.getTestCase().getName() + " -> " + tcr.getStatus());
