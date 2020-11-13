@@ -157,25 +157,24 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
     }
 
 
-    public String getInstallationId(String authToken){
+    public String getInstallationId(String owner){
         URL url;
         HttpURLConnection con;
         try {
-            url = new URL("https://api.github.com/user/installations");
+            url = new URL("https://api.github.com/app/installations");
             con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
             con.setDoOutput(true);
             con.setRequestProperty("Accept", "application/vnd.github.v3+json");
-            con.setRequestProperty("Authorization", "token "+authToken);
+            con.setRequestProperty("Authorization", "Bearer "+KeyUtils.getJWT());
 
             String content =  getFileContent(con.getInputStream());
-            Map<String,Object> installationsResponse = this.jsonMapper.readValue(content,Map.class);
-            List<Map<String,Object>> installations = (List<Map<String, Object>>) installationsResponse.get("installations");
+            List<Map<String,Object>> installations = this.jsonMapper.readValue(content,List.class);
             for(Map<String,Object> installation: installations) {
-                String appName = (String) installations.get(0).get("app_slug");
-                if(appName.equals("oci-test")){
-                    return String.valueOf(installations.get(0).get("id"));
-                }
+                String accountData = (String) ((Map<String, Object>) installation.get("account")).get("login");
+                if (accountData.equals(owner))
+                    return String.valueOf(installation.get("id"));
+
             }
 
         } catch (IOException e) {
@@ -186,9 +185,8 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
     }
 
 
-    public String authenticateByInstallation()  {
+    public String authenticateByInstallation(String installationId)  {
         String jwt = KeyUtils.getJWT();
-        String installationId = "12647096";
         URL url;
         HttpURLConnection con;
         try {

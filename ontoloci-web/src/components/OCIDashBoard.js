@@ -14,9 +14,9 @@ function OCIDashBoard() {
       url: 'http://localhost/api/v1/buildResults',
       config: { headers: {'Access-Control-Allow-Origin': '*' }}
   }).then(function(response){
-    console.log(response.data)
-    console.log(response.data)
-    console.log(response.data)
+        console.log(response.data)
+        console.log(response.data)
+        console.log(response.data)
         setBuilds(response.data)
     })
     .catch(function (response) {
@@ -69,7 +69,7 @@ function OCIDashBoard() {
   return (
    
     <div className="main-2">
-      <h2><a class="subtitle">Builds</a></h2>
+      <h2><a className="subtitle">Builds</a></h2>
       <div className="dashboard-elements-list">
 
         {builds.map(build =>{

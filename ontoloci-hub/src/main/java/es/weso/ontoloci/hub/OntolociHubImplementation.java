@@ -69,7 +69,8 @@ public class OntolociHubImplementation implements OntolociHub {
         );
 
         // Create the check run
-        String token = gitHubService.authenticateByInstallation();
+        String installationId = gitHubService.getInstallationId(currentOwner);
+        String token = gitHubService.authenticateByInstallation(installationId);
         currentCheckRunId = gitHubService.createCheckRun(token,currentOwner,currentRepo,currentCommit);
 
         // Create the tests collection from the owner+repo+branch.
@@ -82,28 +83,12 @@ public class OntolociHubImplementation implements OntolociHub {
 
     @Override
     public void updateCheckRun(boolean hasPassed){
-        String token = gitHubService.authenticateByInstallation();
+        String installationId = gitHubService.getInstallationId(currentOwner);
+        String token = gitHubService.authenticateByInstallation(installationId);
         gitHubService.updateCheckRun(token,currentCheckRunId,hasPassed,currentOwner,currentRepo);
     }
 
 
-    public void saveInstallation(String owner, String code){
-        GitHubRepositoryProvider gh = GitHubRepositoryProvider.empty();
-        String auth = gh.getPersonalAccessToken(code);
-        installations.put(owner,gh.getInstallationId(auth));
-    }
-
-
-
-
-    public static void main(String[] args) throws Exception {
-       // OntolociHubImplementation o = new OntolociHubImplementation();
-       // o.saveInstallation("mistermbot","3147d7e5513b16e1be87");
-        GitHubRepositoryProvider gh = GitHubRepositoryProvider.empty();
-        String token = gh.authenticateByInstallation();
-        //System.out.print(token);
-        gh.createCheckRun(token,"mistermbot","oci","ef52987b8f54edff135702172e36b67355428670");
-    }
 
 
 
