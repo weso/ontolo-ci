@@ -19,9 +19,9 @@ import java.util.Scanner;
 public class KeyUtils {
 
     // APP ID PATH
-    private static final String PRIVATE_KEY_PAHT = "ontoloci-hub/secrets/server-pkcs8.key";
+    private static final String PRIVATE_KEY_PAHT = "secrets/server-pkcs8.key";
     // PRIVATE KEY PATH
-    private static final String APP_ID_PATH = "ontoloci-hub/secrets/ocitest.appid";
+    private static final String APP_ID_PATH = "secrets/ocitest.appid";
 
     public static String getJWT() throws Exception {
 
