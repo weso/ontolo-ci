@@ -16,4 +16,8 @@ public interface OntolociHub {
      * @return the populated hub build.
      */
     HubBuild addTestsToBuild(HubBuild hubBuild);
+
+
+    void updateCheckRun(boolean hasPassed);
+
 }

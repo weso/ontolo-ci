@@ -24,13 +24,22 @@
     height: 100%;
 }
 
-.test-element-passed{
+.test-element-pass{
     border-left: 1vh solid #39aa56;
 }
 
-.test-element-failed{
+.test-element-fail{
     border-left: 1vh solid #db4545;
 }
+
+.border-pass{
+    border-left: 1.2vh solid #39aa56;
+}
+
+.border-fail{
+    border-left: 1.2vh solid #db4545;
+}
+
 
 .test-element-name{
    grid-column: 2/3;
@@ -55,7 +64,7 @@ h3{
     color: #7a7a7a !important;
 }
 
-a{
+span{
     color: #9e9e9e !important;
 }
 
@@ -65,3 +74,40 @@ a{
 }
 
 
+.pass{
+    color: #39aa56 !important;
+    fill: #39aa56 !important;
+}
+
+.fail{
+    color: #db4545 !important;
+    fill: #db4545 !important;
+}
+
+.top-panel{
+    display: grid;
+    grid-template-columns: 5% auto;
+    align-content: center;
+}
+
+
+.top-panel > h3{
+    font-size: 18px !important;
+    margin-top: 10px;
+    margin-left: 0.3vh;
+}
+
+
+.build-cross{
+    fill: #db4545;
+    transform: scale(1.5);
+    margin-left: 20px;
+    margin-top: 6px;
+}
+
+.build-status-icon{
+    margin-left: 10px;
+    height: 4vh;
+    width: 3vh;
+    margin-top: 0px;
+}

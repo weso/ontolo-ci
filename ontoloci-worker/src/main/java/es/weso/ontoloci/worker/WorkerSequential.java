@@ -11,10 +11,14 @@ import es.weso.ontoloci.worker.test.TestCaseResultStatus;
 import es.weso.ontoloci.worker.validation.ResultValidation;
 import es.weso.ontoloci.worker.validation.ShapeMapResultValidation;
 import es.weso.ontoloci.worker.validation.Validate;
+import org.apache.jena.base.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -33,6 +37,12 @@ public class WorkerSequential implements Worker {
 
         // Temp variable to store each test result.
         TestCaseResult currentTestCase = null;
+        // Temp variable to store if the build passes or not (PASS by default)
+        String buildResult = "PASS";
+        // Temp variable to store each result validation test
+        String resultVaLidation = "";
+
+        final long initBuildTime = System.nanoTime(); // Init counting execution time of the build
 
         for(TestCase testCase : build.getTestCases()) {
             // 1. Create the result object.
@@ -51,7 +61,6 @@ public class WorkerSequential implements Worker {
                     testCase.getProducedShapeMap(),
                     testCase.getExpectedShapeMap()).unsafeRunSync();
 
-
             try {
 
                 ObjectMapper jsonMapper  = new ObjectMapper(new JsonFactory());
@@ -62,8 +71,11 @@ public class WorkerSequential implements Worker {
                 if(expected.get(0).equals(produced.get(0))){
                     currentTestCase.setStatus(TestCaseResultStatus.PASS);
                 }else{
+                    buildResult = "fail";
                     currentTestCase.setStatus(TestCaseResultStatus.FAIL);
                 }
+
+                resultVaLidation = expected.get(0).getStatus();
 
             }catch (JsonProcessingException e) {
                 e.printStackTrace();
@@ -73,16 +85,30 @@ public class WorkerSequential implements Worker {
             final long stopTime = System.nanoTime(); // Stop counting execution time.
 
             final long executionTimeNS = stopTime - initTime; // Compute execution time.
+            final double seconds = (double)executionTimeNS/ 1_000_000_000;
+            String executionTimeFormated = String.format("%f sec",seconds);
 
             // Set execution time as metadata.
             final Map<String, String> metadata = new HashMap<>(currentTestCase.getMetadata());
-            metadata.put("execution_time", Long.toString(executionTimeNS));
+            metadata.put("execution_time", executionTimeFormated);
+            metadata.put("validation_status",resultVaLidation);
             currentTestCase.setMetadata(metadata);
 
             // And finally add it to the collection of results.
-            testCaseResults.add(TestCaseResult.from(testCase));
+            testCaseResults.add(currentTestCase);
         }
 
+        final long stopBuildTime = System.nanoTime(); // Stop counting execution time of the build.
+        final long executionBuildTimeNS = stopBuildTime - initBuildTime; // Compute execution time of the build.
+
+        final double buildSeconds = (double)executionBuildTimeNS/ 1_000_000_000;
+        String executionBuildTimeFormated = String.format("%f sec",buildSeconds);
+
+        final Map<String, String> buildMetadata = new HashMap<>(build.getMetadata());
+        buildMetadata.put("execution_time",executionBuildTimeFormated);
+        buildMetadata.put("execution_date", String.valueOf(System.currentTimeMillis()));
+        buildMetadata.put("buildResult", buildResult);
+        build.setMetadata(buildMetadata);
         // Finally return the Build result.
         return BuildResult.from(build.getMetadata(),testCaseResults);
     }

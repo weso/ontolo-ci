@@ -25,7 +25,7 @@ public class GitHubRestListener {
     private static final String OWNER_KEY = "owner";
     private static final String BRANCH_KEY = "branch";
 
-    @RequestMapping(value = "/push",method = RequestMethod.POST)
+    /*@RequestMapping(value = "/push",method = RequestMethod.POST)
     public void pushListener(@RequestBody Map<String, Object> payload) {
             Map<String, Object> repositoryData = (Map<String, Object>) payload.get("repository");
             Map<String, Object> ownerData = (Map<String, Object>) repositoryData.get("owner");
@@ -35,8 +35,9 @@ public class GitHubRestListener {
             // Parse the content and create the test cases array.
             final String owner = (String) ownerData.get("name");
             final String repo = (String) repositoryData.get("name");
-            final String branch = "main";
-            final String commmitId = String.valueOf(commitData.get(0).get("id")).substring(0,6);
+            final String branch = ((String) payload.get("ref")).split("refs/heads/")[1];
+            final String commit = (String) commitData.get(0).get("id");
+            final String commmitId = String.valueOf(commit).substring(0,6);
             final String commmitName = (String) commitData.get(0).get("message");
 
             // Add the metadata.
@@ -44,8 +45,9 @@ public class GitHubRestListener {
             metadata.put("owner", owner);
             metadata.put("repo", repo);
             metadata.put("branch", branch);
-            metadata.put("commmitId", commmitId);
-            metadata.put("commmitName", commmitName);
+            metadata.put("commit", commit);
+            metadata.put("commitId", commmitId);
+            metadata.put("commitName", commmitName);
 
             // We set the metadata.
             build.setMetadata(metadata);
@@ -54,10 +56,40 @@ public class GitHubRestListener {
             Scheduler.getInstance().scheduleBuild(build);
 
             System.out.println("PUSH WORKS!");
-    }
+    }*/
 
     @RequestMapping(value = "/pull_request",method = RequestMethod.POST)
     public void pullRequestListener(@RequestBody Map<String, Object> payload) {
         System.out.println("PULL REQUEST WORKS!");
+
+        Map<String, Object> pullRequest = (Map<String, Object>) payload.get("pull_request");
+        Map<String, Object> userData = (Map<String, Object>) pullRequest.get("user");
+        Map<String, Object> headData = (Map<String, Object>) pullRequest.get("head");
+        Map<String, Object> repoData = (Map<String, Object>) headData.get("repo");
+
+        final Build build = Build.from();
+        // Parse the content and create the test cases array.
+        final String owner = (String) userData.get("login");
+        final String repo = (String) repoData.get("name");
+        final String branch = (String) headData.get("ref");
+        final String commit =  (String) headData.get("sha");
+        final String commmitId = String.valueOf(commit).substring(0,6);
+        final String commmitName = (String) pullRequest.get("title");
+
+        // Add the metadata.
+        Map<String, String> metadata = new HashMap<>();
+        metadata.put("owner", owner);
+        metadata.put("repo", repo);
+        metadata.put("branch", branch);
+        metadata.put("commit", commit);
+        metadata.put("commitId", commmitId);
+        metadata.put("commitName", commmitName);
+
+        // We set the metadata.
+        build.setMetadata(metadata);
+
+        // Instantiate the scheduler.
+        Scheduler.getInstance().scheduleBuild(build);
+
     }
 }

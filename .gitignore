@@ -42,3 +42,6 @@ pids
 *.tgz
 
 *~
+
+# Secrets
+secrets/
