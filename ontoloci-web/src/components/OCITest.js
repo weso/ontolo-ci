@@ -15,7 +15,10 @@ function OCITest(props){
         <div className={"test-element" + " test-element-"+props.status}>
             <div className="test-element-name">
                 <h3>TEST NAME</h3>
-                <span>{props.testName}</span>
+                <span>{ ((props.testName).length > 30) ? 
+                (((props.testName).substring(0,30-3)) + '...') : 
+                props.testName }
+                </span>
             </div>
 
             <div className="test-element-data">

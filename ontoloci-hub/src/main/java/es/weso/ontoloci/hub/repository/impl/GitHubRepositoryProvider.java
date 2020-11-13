@@ -99,6 +99,9 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
         this.jsonMapper = jsonMapper;
     }
 
+
+    public void get(){}
+
     /**
      * Gets a collection of test cases from a concrete commit of a GitHub repository.
      *

@@ -3,11 +3,21 @@ package es.weso.ontoloci.hub;
 import es.weso.ontoloci.hub.build.HubBuild;
 import es.weso.ontoloci.hub.repository.impl.GitHubRepositoryProvider;
 import es.weso.ontoloci.hub.test.HubTestCase;
+import es.weso.ontoloci.hub.utils.KeyUtils;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import org.apache.commons.io.FileUtils;
+import org.apache.jena.base.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-
-import java.util.Collection;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.security.KeyFactory;
+import java.security.PrivateKey;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 /**
  *
@@ -53,4 +63,23 @@ public class OntolociHubImplementation implements OntolociHub {
         hubBuild.setTestCases(testsCases);
         return hubBuild;
     }
+
+
+    public void saveInstallation(){
+
+    }
+
+
+    public static void main(String[] args) throws Exception {
+        OntolociHubImplementation o = new OntolociHubImplementation();
+        System.out.println(KeyUtils.getJWT());
+    }
+
+
+
+
+
+
+
+
 }
