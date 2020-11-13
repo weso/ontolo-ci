@@ -1,9 +1,11 @@
 package es.weso.ontoloci.hub;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import es.weso.ontoloci.hub.build.HubBuild;
 import es.weso.ontoloci.hub.repository.impl.GitHubRepositoryProvider;
 import es.weso.ontoloci.hub.test.HubTestCase;
 import es.weso.ontoloci.hub.utils.KeyUtils;
+import fansi.Str;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.commons.io.FileUtils;
@@ -31,6 +33,8 @@ public class OntolociHubImplementation implements OntolociHub {
     // Instantiate the github service.
     final GitHubRepositoryProvider gitHubService;
 
+    private Map<String,String> installations;
+
     public OntolociHubImplementation() {
 
         LOGGER.debug(
@@ -38,6 +42,7 @@ public class OntolociHubImplementation implements OntolociHub {
         );
 
         gitHubService = GitHubRepositoryProvider.empty();
+        installations = new HashMap<>();
     }
 
 
@@ -65,14 +70,17 @@ public class OntolociHubImplementation implements OntolociHub {
     }
 
 
-    public void saveInstallation(){
-
+    public void saveInstallation(String owner, String code){
+        GitHubRepositoryProvider gh = GitHubRepositoryProvider.empty();
+        String auth = gh.getPersonalAccessToken(code);
+        installations.put(owner,gh.getInstallationId(auth));
+        System.out.print(installations.get("mistermbot"));
     }
 
 
     public static void main(String[] args) throws Exception {
         OntolociHubImplementation o = new OntolociHubImplementation();
-        System.out.println(KeyUtils.getJWT());
+        o.saveInstallation("mistermbot","3147d7e5513b16e1be87");
     }
 
 

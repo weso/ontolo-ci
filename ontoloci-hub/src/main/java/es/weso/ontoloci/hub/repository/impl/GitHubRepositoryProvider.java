@@ -110,15 +110,6 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
     }
 
 
-
-    public static void main(String[] args) throws JsonProcessingException {
-        GitHubRepositoryProvider gh = new GitHubRepositoryProvider();
-        String auth = gh.getPersonalAccessToken("8287020c4b2ad113ca02");
-        System.out.println(auth);
-        System.out.println(gh.getInstallationId(auth));
-
-    }
-
     public String getPersonalAccessToken(String code){
         String access_token = "";
         String clientId = KeyUtils.getClientId();
@@ -180,7 +171,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
             List<Map<String,Object>> installations = (List<Map<String, Object>>) installationsResponse.get("installations");
             for(Map<String,Object> installation: installations) {
                 String appName = (String) installations.get(0).get("app_slug");
-                if(appName=="oci-test"){
+                if(appName.equals("oci-test")){
                     return String.valueOf(installations.get(0).get("id"));
                 }
             }
