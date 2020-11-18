@@ -1,26 +1,13 @@
 package es.weso.ontoloci.hub;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import es.weso.ontoloci.hub.build.HubBuild;
 import es.weso.ontoloci.hub.repository.impl.GitHubRepositoryProvider;
 import es.weso.ontoloci.hub.test.HubTestCase;
-import es.weso.ontoloci.hub.utils.KeyUtils;
 import fansi.Str;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import org.apache.commons.io.FileUtils;
-import org.apache.jena.base.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.security.KeyFactory;
-import java.security.PrivateKey;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
+
+import java.io.FileNotFoundException;
 import java.util.*;
 
 /**
@@ -56,6 +43,8 @@ public class OntolociHubImplementation implements OntolociHub {
     @Override
     public HubBuild addTestsToBuild(HubBuild hubBuild) {
 
+        Map<String,String> metadata = new HashMap<>(hubBuild.getMetadata());
+
         // Parse the data from the build.
         currentOwner = hubBuild.getMetadata().get("owner");
         currentRepo = hubBuild.getMetadata().get("repo");
@@ -74,19 +63,49 @@ public class OntolociHubImplementation implements OntolociHub {
         currentCheckRunId = gitHubService.createCheckRun(token,currentOwner,currentRepo,currentCommit);
 
         // Create the tests collection from the owner+repo+branch.
-        final Collection<HubTestCase> testsCases = gitHubService.getTestCases(currentOwner,currentRepo,currentCommit);
 
-        // Populate the hub build with the computed test cases.
-        hubBuild.setTestCases(testsCases);
+        try {
+            final Collection<HubTestCase> testsCases = gitHubService.getTestCases(currentOwner, currentRepo, currentCommit);
+
+            // Populate the hub build with the computed test cases.
+            hubBuild.setTestCases(testsCases);
+            metadata.put("exceptions","false");
+
+        }catch (FileNotFoundException e) {
+            LOGGER.error(
+                    String.format(
+                            "ERROR while getting any file at getTestCases from GitHubRepositoryProvider: %s",
+                            e.getMessage())
+            );
+
+            metadata.put("exceptions","true");
+            metadata.put("checkTitle","FileNotFound");
+            metadata.put("checkBody","Any file was not found");
+        }
+        catch (Exception e) {
+            LOGGER.error(
+                    String.format(
+                            "ERROR while getting the HubTestCases at getTestCases from GitHubRepositoryProvider: %s",
+                            e.getMessage())
+            );
+
+            metadata.put("exception","true");
+            metadata.put("checkTitle","Exception");
+            metadata.put("checkBody","Something went wrong");
+        }
+
+        hubBuild.setMetadata(metadata);
         return hubBuild;
     }
 
     @Override
-    public void updateCheckRun(boolean hasPassed){
+    public void updateCheckRun(String conclusion,String output){
         String installationId = gitHubService.getInstallationId(currentOwner);
         String token = gitHubService.authenticateByInstallation(installationId);
-        gitHubService.updateCheckRun(token,currentCheckRunId,hasPassed,currentOwner,currentRepo);
+        gitHubService.updateCheckRun(token,currentCheckRunId,currentOwner,currentRepo,conclusion,output);
     }
+
+
 
 
 

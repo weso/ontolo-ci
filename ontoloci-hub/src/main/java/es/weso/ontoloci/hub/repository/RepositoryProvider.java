@@ -1,6 +1,7 @@
 package es.weso.ontoloci.hub.repository;
 import es.weso.ontoloci.hub.test.HubTestCase;
 
+import java.io.IOException;
 import java.util.Collection;
 
 /**
@@ -21,8 +22,8 @@ public interface RepositoryProvider {
             final String owner,
             final String repo,
             final String commit
-    );
+    ) throws IOException;
 
 
-    void updateCheckRun(String authToken, String checkRunId, boolean hasPassed, String owner, String repo);
+    void updateCheckRun(String authToken, String checkRunId, String owner, String repo, String conclusion, String output);
 }

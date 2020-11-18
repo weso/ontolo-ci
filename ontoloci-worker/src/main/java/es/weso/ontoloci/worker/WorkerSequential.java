@@ -39,8 +39,12 @@ public class WorkerSequential implements Worker {
         TestCaseResult currentTestCase = null;
         // Temp variable to store if the build passes or not (PASS by default)
         String buildResult = "PASS";
+        // Temp variables to store the check run title and the check run body
+        String checkTitle = "Build Passing";
+        String checkBody = "All the tests has passed without problems";
         // Temp variable to store each result validation test
         String resultVaLidation = "";
+
 
         final long initBuildTime = System.nanoTime(); // Init counting execution time of the build
 
@@ -72,6 +76,8 @@ public class WorkerSequential implements Worker {
                     currentTestCase.setStatus(TestCaseResultStatus.PASS);
                 }else{
                     buildResult = "fail";
+                    checkTitle = "Build Failed";
+                    checkBody = "Some test have not passed...";
                     currentTestCase.setStatus(TestCaseResultStatus.FAIL);
                 }
 
@@ -107,7 +113,10 @@ public class WorkerSequential implements Worker {
         final Map<String, String> buildMetadata = new HashMap<>(build.getMetadata());
         buildMetadata.put("execution_time",executionBuildTimeFormated);
         buildMetadata.put("execution_date", String.valueOf(System.currentTimeMillis()));
+        buildMetadata.put("checkTitle",checkTitle);
+        buildMetadata.put("checkBody",checkBody);
         buildMetadata.put("buildResult", buildResult);
+
         build.setMetadata(buildMetadata);
         // Finally return the Build result.
         return BuildResult.from(build.getMetadata(),testCaseResults);

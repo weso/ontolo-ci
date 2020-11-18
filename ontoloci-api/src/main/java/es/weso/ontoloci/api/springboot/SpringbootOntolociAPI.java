@@ -20,7 +20,7 @@ public class SpringbootOntolociAPI implements OntolociAPI {
 
     private final OntolociDAO persistence = OntolociInMemoryDAO.instance();
 
-    @CrossOrigin(origins = "http://156.35.82.21:3000")
+    @CrossOrigin
     @GetMapping("/buildResults")
     @Override
     public List<PersistedBuildResult> getAllBuildResults() {
@@ -34,7 +34,7 @@ public class SpringbootOntolociAPI implements OntolociAPI {
         return persistence.findAllBuildResults();
     }
 
-    @CrossOrigin(origins = "http://156.35.82.21:3000")
+    @CrossOrigin
     @GetMapping("/buildResults/{buildId}")
     @Override
     public PersistedBuildResult getBuildResult(@PathVariable String buildId) {

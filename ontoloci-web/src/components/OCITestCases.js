@@ -47,7 +47,7 @@ function OCITestCases(props) {
       <div className={"build-panel border-"+status}>
           <div className="top-panel">
             {getSvgStatus()}
-            <h3 class={status}>Push <a class={"commit-link "+status} href={"https://github.com/"+metadata.owner+"/"+metadata.repo+"/tree/"+metadata.commit}>[{metadata.commitId}]</a> {metadata.commitName}</h3>
+            <h3 class={status}>Pull Request <a class={"commit-link "+status} href={"https://github.com/"+metadata.owner+"/"+metadata.repo+"/tree/"+metadata.commit}>[{metadata.commitId}]</a> {metadata.commitName}</h3>
           </div>
           <div className="bottom-panel">
             <div>

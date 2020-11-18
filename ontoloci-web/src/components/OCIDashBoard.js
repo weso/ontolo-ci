@@ -81,7 +81,7 @@ function OCIDashBoard() {
                       branchName={build.metadata.branch}
                       commitName={build.metadata.commitName}
                       commitId={build.metadata.commitId}
-                      buildResult={build.metadata.buildResult.toLowerCase()}
+                      buildResult={build.metadata.buildResult?.toLowerCase()}
                       executionTime={build.metadata.execution_time}
                       date={getDate(build.metadata.execution_date)}/>
         })}

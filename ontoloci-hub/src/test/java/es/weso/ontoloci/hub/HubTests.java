@@ -4,6 +4,7 @@ import es.weso.ontoloci.hub.repository.impl.GitHubRepositoryProvider;
 import es.weso.ontoloci.hub.test.HubTestCase;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,7 +20,7 @@ public class HubTests {
 
 
     @Test
-    public void getTestCasesTest() {
+    public void getTestCasesTest() throws IOException {
 
         GitHubRepositoryProvider gitHubService = GitHubRepositoryProvider.empty();
         Collection<HubTestCase> testCases = gitHubService.getTestCases(owner,repo,branch);

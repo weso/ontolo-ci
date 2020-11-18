@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 
 import es.weso.ontoloci.hub.OntolociHubImplementation;
 
+import java.util.*;
+
 public class WorkerExecutor implements Worker {
 
     // LOGGER CREATION
@@ -43,12 +45,24 @@ public class WorkerExecutor implements Worker {
         HubBuild hubBuild = build.toHubBuild();
         //Add the tests
         hubBuild = ontolocyHub.addTestsToBuild(hubBuild);
+
         //Transform the returned HubBuild to a Build and overwrites the result
         build = build.from(hubBuild);
 
-        // Store the result of the build.
-        final BuildResult buildResult = this.worker.executeBuild(build);
-        ontolocyHub.updateCheckRun(buildResult.getMetadata().get("buildResult").equals("PASS"));
+        BuildResult buildResult = BuildResult.from(build.getMetadata(), new ArrayList<TestCaseResult>());
+        String title = build.getMetadata().get("checkTitle");
+        String body = build.getMetadata().get("checkBody");
+        String conclusion = "failure";
+        if(!build.getMetadata().get("exceptions").equals("true")){
+            // Store the result of the build.
+            buildResult = this.worker.executeBuild(build);
+            conclusion = buildResult.getMetadata().get("buildResult").equals("PASS") ? "success" : "failure";
+            title = buildResult.getMetadata().get("checkTitle");
+            body = buildResult.getMetadata().get("checkBody");
+        }
+        
+        String output = "{\"title\":\""+title+"\",\"summary\":\""+body+"\"}";
+        ontolocyHub.updateCheckRun(conclusion,output);
 
         for(TestCaseResult tcr : buildResult.getTestCaseResults()) {
             System.out.println(tcr.getTestCase().getName() + " -> " + tcr.getStatus());

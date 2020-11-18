@@ -60,7 +60,6 @@ public class GitHubRestListener {
 
     @RequestMapping(value = "/pull_request",method = RequestMethod.POST)
     public void pullRequestListener(@RequestBody Map<String, Object> payload) {
-        System.out.println("PULL REQUEST WORKS!");
 
         Map<String, Object> pullRequest = (Map<String, Object>) payload.get("pull_request");
         Map<String, Object> userData = (Map<String, Object>) pullRequest.get("user");
