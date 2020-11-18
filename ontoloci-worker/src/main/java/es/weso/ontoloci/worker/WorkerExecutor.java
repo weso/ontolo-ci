@@ -6,6 +6,7 @@ import es.weso.ontoloci.persistence.mongo.OntolociInMemoryDAO;
 import es.weso.ontoloci.worker.build.Build;
 import es.weso.ontoloci.worker.build.BuildResult;
 import es.weso.ontoloci.worker.test.TestCaseResult;
+import es.weso.ontoloci.worker.utils.MarkdownUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,9 +59,9 @@ public class WorkerExecutor implements Worker {
             buildResult = this.worker.executeBuild(build);
             conclusion = buildResult.getMetadata().get("buildResult").equals("PASS") ? "success" : "failure";
             title = buildResult.getMetadata().get("checkTitle");
-            body = buildResult.getMetadata().get("checkBody");
+            body = MarkdownUtils.getMarkDownFromTests(buildResult.getTestCaseResults());
         }
-        
+
         String output = "{\"title\":\""+title+"\",\"summary\":\""+body+"\"}";
         ontolocyHub.updateCheckRun(conclusion,output);
 
