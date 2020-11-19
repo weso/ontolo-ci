@@ -239,6 +239,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
         return null;
     }
 
+
     @Override
     public void updateCheckRun(String authToken, String checkRunId, String owner, String repo, String conclusion,String output) {
         HttpClient httpclient = HttpClients.createDefault();
@@ -435,5 +436,6 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
     private String getConcatenatedPath(final String owner,final String repo,final String commit) {
         return API_REQUEST+owner+SLASH_SYMBOL+repo+SLASH_SYMBOL+commit+SLASH_SYMBOL;
     }
+
 
 }

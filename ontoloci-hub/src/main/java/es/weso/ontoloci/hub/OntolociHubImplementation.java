@@ -62,8 +62,6 @@ public class OntolociHubImplementation implements OntolociHub {
         String token = gitHubService.authenticateByInstallation(installationId);
         currentCheckRunId = gitHubService.createCheckRun(token,currentOwner,currentRepo,currentCommit);
 
-        // Create the tests collection from the owner+repo+branch.
-
         try {
             final Collection<HubTestCase> testsCases = gitHubService.getTestCases(currentOwner, currentRepo, currentCommit);
 
@@ -72,23 +70,13 @@ public class OntolociHubImplementation implements OntolociHub {
             metadata.put("exceptions","false");
 
         }catch (FileNotFoundException e) {
-            LOGGER.error(
-                    String.format(
-                            "ERROR while getting any file at getTestCases from GitHubRepositoryProvider: %s",
-                            e.getMessage())
-            );
-
+            LOGGER.error(String.format("ERROR while getting any file at getTestCases from GitHubRepositoryProvider: %s",e.getMessage()));
             metadata.put("exceptions","true");
             metadata.put("checkTitle","FileNotFound");
             metadata.put("checkBody","Any file was not found");
         }
         catch (Exception e) {
-            LOGGER.error(
-                    String.format(
-                            "ERROR while getting the HubTestCases at getTestCases from GitHubRepositoryProvider: %s",
-                            e.getMessage())
-            );
-
+            LOGGER.error(String.format("ERROR while getting the HubTestCases at getTestCases from GitHubRepositoryProvider: %s",e.getMessage()));
             metadata.put("exception","true");
             metadata.put("checkTitle","Exception");
             metadata.put("checkBody","Something went wrong");

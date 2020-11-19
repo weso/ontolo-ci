@@ -25,7 +25,7 @@ public class GitHubRestListener {
     private static final String OWNER_KEY = "owner";
     private static final String BRANCH_KEY = "branch";
 
-    /*@RequestMapping(value = "/push",method = RequestMethod.POST)
+    @RequestMapping(value = "/push",method = RequestMethod.POST)
     public void pushListener(@RequestBody Map<String, Object> payload) {
             Map<String, Object> repositoryData = (Map<String, Object>) payload.get("repository");
             Map<String, Object> ownerData = (Map<String, Object>) repositoryData.get("owner");
@@ -55,8 +55,7 @@ public class GitHubRestListener {
             // Instantiate the scheduler.
             Scheduler.getInstance().scheduleBuild(build);
 
-            System.out.println("PUSH WORKS!");
-    }*/
+    }
 
     @RequestMapping(value = "/pull_request",method = RequestMethod.POST)
     public void pullRequestListener(@RequestBody Map<String, Object> payload) {
