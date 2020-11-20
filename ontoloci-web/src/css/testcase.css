@@ -1,3 +1,14 @@
+.main{
+    display: grid;
+    justify-content: center;
+    grid-template-columns: 70%;
+    grid-template-rows: 25% 10%  auto;
+    height: 80vh;
+    overflow-y: scroll;
+    gap:1vh;
+}
+
+
 .test-elements-list{
     display: grid;
     grid-template-rows: repeat(1000,auto);
@@ -16,12 +27,20 @@
     grid-template-columns:  2%  20%  20%  15%  13% 13% 13%  20% ;
     align-items: center;
     padding-top: 1vh;
-    border-top: 1px solid #dfdcdc;
-    border-bottom: 1px solid #dfdcdc;
-    border-right: 1px solid #dfdcdc;
+    border-top: 1px solid #f3f0f0;
+    border-bottom: 1px solid #f3f0f0;
+    border-right: 1px solid #f3f0f0;
     min-height: 8vh;
 }
 
+
+
+.bottom-panel{
+    display: grid;
+    grid-template-columns: auto auto;
+    padding-left: 4vh;
+    padding-top: 1.5vh;
+}
 
 
 
@@ -76,9 +95,25 @@
 
 @media (max-width: 1200px) {
  
+
     .main{
+        display: grid;
+        justify-content: center;
         grid-template-columns: 95% !important;
+        grid-template-rows: 30% 10%  auto;
+        height: 80vh;
+        overflow-y: scroll;
+        gap:1vh;
     }
+
+
+    .bottom-panel{
+        display: grid;
+        grid-template-columns: auto auto;
+        padding-left: 0vh !important;
+        padding-top: 1.5vh;
+    }
+
 
     .test-element-name{
         grid-column: 1/2 !important;
@@ -126,7 +161,7 @@
     .github-metadata{
         display: grid;
  
-        border-left: 1px solid #dfdcdc ;
+        border-left: 1px solid #f3f0f0 ;
         padding-left: 0vh !important;
     }
     
@@ -241,7 +276,7 @@ span{
 .github-metadata{
     display: grid;
     grid-template-columns: 98% auto;
-    border-left: 1px solid #dfdcdc ;
+    border-left: 1px solid #f3f0f0 ;
     padding-left: 2vh;
 }
 
