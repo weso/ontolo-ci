@@ -46,6 +46,15 @@ function OCITestCases(props) {
       if(e2) e2.className = after2;
   }
 
+  const getHeader = function(){
+    return (
+      <h3 className={status}>Pull Request  
+        <a className={"pr-link "+status} href={"https://github.com/"+metadata.owner+"/"+metadata.repo+"/pull/"+metadata.prNumber}>{" #"+metadata.prNumber+" "}</a>
+        {" "+metadata.commitName+" "}
+      </h3>)
+  }
+
+
   useEffect(() => {
     getTestCases()
   }, []);
@@ -68,11 +77,7 @@ function OCITestCases(props) {
         <div className={"build-panel border-"+status}>
             <div className="top-panel">
               {getSvgStatus()}
-              <h3 className={status}>Pull Request  
-                  <a className={"pr-link "+status} href={"https://github.com/"+metadata.owner+"/"+metadata.repo+"/pull/"+metadata.prNumber}>{" #"+metadata.prNumber+" "}</a>
-                   
-                {" "+metadata.commitName+" "}
-                <a className={"commit-link "+status} href={"https://github.com/"+metadata.owner+"/"+metadata.repo+"/tree/"+metadata.commit}>[{metadata.commitId}]</a></h3>
+              {getHeader()}
             </div>
             <div className="bottom-panel">
               <div>
@@ -88,7 +93,7 @@ function OCITestCases(props) {
                                 <path d="M7.089 13.343h6.434L13.524 1H2.176v12.343H4.46M2.176 10.543h11.348"></path><path d="M4.46 12.239v2.756l1.394-1.285 1.235 1.236v-2.707zM4.199 1v9.543M5.635 8.737h.63M5.635 6.782h.63M5.635 4.828h.63M5.635 2.873h.63"/>
                       </g>
               </svg>
-              <span>{metadata.owner}/{metadata.repo}</span>
+              <span><a href={"https://github.com/"+metadata.owner+"/"+metadata.repo} target="_blank">{metadata.owner}/{metadata.repo}</a></span>
               </div>
                 
               
@@ -100,7 +105,7 @@ function OCITestCases(props) {
 
                 <div>
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 17" className="icon"><circle cx="8.51" cy="8.5" r="3.5" fill="none" stroke="#9d9d9d" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10"></circle><path d="M16.5 8.5h-4.49m-7 0H.5" fill="none" stroke="#9d9d9d" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10"></path></svg>
-                  <span>{metadata.commitName}</span>
+                  <span><a href={"https://github.com/"+metadata.owner+"/"+metadata.repo+"/commit/"+metadata.commit} target="_blank">{"["+metadata.commitId+"] "+metadata.commitName}</a></span>
                 </div>
                 
                 <div>
@@ -110,7 +115,7 @@ function OCITestCases(props) {
                 
                 <div>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 17" className="icon"><circle cx="4.94" cy="2.83" r="1.83" fill="none" stroke="#9d9d9d" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10"></circle><circle cx="11.78" cy="5.15" r="1.83" fill="none" stroke="#9d9d9d" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10"></circle><circle cx="4.98" cy="14.17" r="1.83" fill="none" stroke="#9d9d9d" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10"></circle><path d="M11.78 6.99s.09 2.68-1.9 3.38c-1.76.62-2.92-.04-4.93 1.97V4.66" fill="none" stroke="#9d9d9d" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10"></path></svg>
-                  <span className="branch-name">Branch {metadata.branch}</span>
+                  <span className="branch-name"><a href={"https://github.com/"+metadata.owner+"/"+metadata.repo+"/tree/"+metadata.branch} target="_blank">{metadata.branch}</a></span>
               </div>
             </div>
         </div>
