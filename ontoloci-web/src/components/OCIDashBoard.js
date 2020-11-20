@@ -11,7 +11,7 @@ function OCIDashBoard() {
 
     axios({
       method: 'get',
-      url: 'http://localhost/api/v1/buildResults',
+      url: 'http://156.35.82.21/api/v1/buildResults',
       config: { headers: {'Access-Control-Allow-Origin': '*' }}
   }).then(function(response){
         console.log(response.data)
@@ -81,6 +81,7 @@ function OCIDashBoard() {
                       branchName={build.metadata.branch}
                       commitName={build.metadata.commitName}
                       commitId={build.metadata.commitId}
+                      prNumber={build.metadata.prNumber}
                       buildResult={build.metadata.buildResult?.toLowerCase()}
                       executionTime={build.metadata.execution_time}
                       date={getDate(build.metadata.execution_date)}/>

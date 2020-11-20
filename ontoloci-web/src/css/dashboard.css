@@ -2,8 +2,8 @@
 .main{
     display: grid;
     justify-content: center;
-    grid-template-columns: 60%;
-    grid-template-rows: 20% 10%  auto;
+    grid-template-columns: 70%;
+    grid-template-rows: 25% 10%  auto;
     height: 80vh;
     overflow-y: scroll;
     gap:1vh;
@@ -39,7 +39,9 @@
 
 .bottom-panel{
     display: grid;
+    grid-template-columns: auto auto;
     padding-left: 4vh;
+    padding-top: 1.5vh;
 }
 
 
@@ -78,13 +80,7 @@
 }
 
 
-.dashboard-element-info{
-    list-style-type: none;
-    display: grid;
-    justify-content: flex-start;
-    gap: 0.7vh;
-    color: #9e9e9e;
-}
+
 
 a{
     color: #9e9e9e;
@@ -140,21 +136,9 @@ a:hover{
 }
 
 
-.github-metadata{
-    border-left: 1px solid #dfdcdc ;
-    padding-left: 2vh;
-}
 
-.logo-container{
-    display: grid;
-    grid-template-columns: 18% auto;
-}
 
-.logo{
-    display: grid;
-    justify-content: center;
-    margin-right: 4px;
-}
+
 
 .pr-id{
     margin-left: 2px;

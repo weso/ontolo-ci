@@ -74,6 +74,7 @@ public class GitHubRestListener {
             final String commit = (String) headData.get("sha");
             final String commmitId = String.valueOf(commit).substring(0, 6);
             final String commmitName = (String) pullRequest.get("title");
+            final String prNumber = String.valueOf(payload.get("number"));
 
             // Add the metadata.
             Map<String, String> metadata = new HashMap<>();
@@ -83,6 +84,7 @@ public class GitHubRestListener {
             metadata.put("commit", commit);
             metadata.put("commitId", commmitId);
             metadata.put("commitName", commmitName);
+            metadata.put("prNumber", prNumber);
 
             // We set the metadata.
             build.setMetadata(metadata);

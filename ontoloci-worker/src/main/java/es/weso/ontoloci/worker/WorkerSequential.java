@@ -42,8 +42,9 @@ public class WorkerSequential implements Worker {
         // Temp variables to store the check run title and the check run body
         String checkTitle = "Build Passing";
         String checkBody = "All the tests has passed without problems";
-        // Temp variable to store each result validation test
-        String resultVaLidation = "";
+        // Temps variables to store each result validation test
+        String producedResultVaLidation = "";
+        String expectedResultVaLidation = "";
 
 
         final long initBuildTime = System.nanoTime(); // Init counting execution time of the build
@@ -72,7 +73,10 @@ public class WorkerSequential implements Worker {
                 List<ShapeMapResultValidation> expected = Arrays.asList(jsonMapper.readValue(resultValidation.getExpectedShapeMap().toJson().spaces2(), ShapeMapResultValidation[].class));
 
                 TestCaseResult finalCurrentTestCase = currentTestCase;
-                if(expected.get(0).equals(produced.get(0))){
+                producedResultVaLidation = produced.get(0).getStatus();
+                expectedResultVaLidation = expected.get(0).getStatus();
+
+                if(expectedResultVaLidation.equals(producedResultVaLidation)){
                     currentTestCase.setStatus(TestCaseResultStatus.PASS);
                 }else{
                     buildResult = "fail";
@@ -81,7 +85,6 @@ public class WorkerSequential implements Worker {
                     currentTestCase.setStatus(TestCaseResultStatus.FAIL);
                 }
 
-                resultVaLidation = expected.get(0).getStatus();
 
             }catch (JsonProcessingException e) {
                 e.printStackTrace();
@@ -97,7 +100,8 @@ public class WorkerSequential implements Worker {
             // Set execution time as metadata.
             final Map<String, String> metadata = new HashMap<>(currentTestCase.getMetadata());
             metadata.put("execution_time", executionTimeFormated);
-            metadata.put("validation_status",resultVaLidation);
+            metadata.put("validation_status",producedResultVaLidation);
+            metadata.put("expected_validation_status",expectedResultVaLidation);
             currentTestCase.setMetadata(metadata);
 
             // And finally add it to the collection of results.
