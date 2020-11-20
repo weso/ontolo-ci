@@ -14,7 +14,7 @@ function OCITest(props){
     <div className="test-element-container">
         <div className={"test-element" + " test-element-"+props.status}>
             <div className="test-element-field test-element-name">
-                <h3 class="field-title">TEST NAME</h3>
+                <h3 className="field-title">TEST NAME</h3>
                 <span>{ ((props.testName).length > 30) ? 
                 (((props.testName).substring(0,30-3)) + '...') : 
                 props.testName }
@@ -22,22 +22,22 @@ function OCITest(props){
             </div>
 
             <div className="test-element-field test-element-data">
-                <h3 class="field-title">DATA NODE</h3>
+                <h3 className="field-title">DATA NODE</h3>
                 <span>{props.dataNode}</span>
             </div>
 
             <div className="test-element-field test-element-shape">
-                <h3 class="field-title">SHAPE</h3>
+                <h3 className="field-title">SHAPE</h3>
                 <span>{props.shape}</span>
             </div>
 
             <div className="test-element-field test-element-validation-result">
-                <h3 class="field-title">STATUS</h3>
+                <h3 className="field-title">STATUS</h3>
                 <span>{props.validationStatus}</span>
             </div>
 
             <div className="test-element-field test-element-validation-result">
-                <h3 class="field-title">EXPECTED STATUS</h3>
+                <h3 className="field-title">EXPECTED STATUS</h3>
                 <span>{props.expectedValidationStatus}</span>
             </div>
 
