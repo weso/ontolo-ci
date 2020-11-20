@@ -2,11 +2,10 @@
 .main{
     display: grid;
     justify-content: center;
-    grid-template-columns: 55%;
+    grid-template-columns: 60%;
     grid-template-rows: 20% 10%  auto;
     height: 80vh;
     overflow-y: scroll;
-    margin-left: 5vh;
     gap:1vh;
 }
 
