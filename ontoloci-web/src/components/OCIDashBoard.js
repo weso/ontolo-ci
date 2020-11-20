@@ -16,8 +16,6 @@ function OCIDashBoard() {
       config: { headers: {'Access-Control-Allow-Origin': '*' }}
   }).then(function(response){
         console.log(response.data)
-        console.log(response.data)
-        console.log(response.data)
         setBuilds(response.data)
     })
     .catch(function (response) {
@@ -49,6 +47,7 @@ function OCIDashBoard() {
                       prNumber={build.metadata.prNumber}
                       buildResult={build.metadata.buildResult?.toLowerCase()}
                       executionTime={build.metadata.execution_time}
+                      exceptions={build.metadata.exceptions}
                       date={getDate(build.metadata.execution_date)}/>
         })}
        

@@ -5,15 +5,23 @@ import {getDate} from '../utils/datUtils';
 function OCIRepo(props){
 
     const getSvgStatus = function(){
-        if(props.buildResult=='pass')
-          return <svg className="icon-check-pass" data-name="Layer 1" id="Layer_1" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><title/><path d="M21.33,57.82,0,36.53l5.87-5.87L21.33,46.09,58.13,9.36,64,15.23,21.33,57.82" data-name="&lt;Compound Path&gt;" id="_Compound_Path_"/></svg> 
-        return <svg className="icon-check-fail" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" ><path d="M0 0h24v24H0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        console.log(props)
+        if(props.buildResult){
+            if(props.buildResult=='pass')
+            return <svg className="icon-check-pass" data-name="Layer 1" id="Layer_1" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><title/><path d="M21.33,57.82,0,36.53l5.87-5.87L21.33,46.09,58.13,9.36,64,15.23,21.33,57.82" data-name="&lt;Compound Path&gt;" id="_Compound_Path_"/></svg> 
+          return <svg className="icon-check-fail" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" ><path d="M0 0h24v24H0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        }
+        return <svg className="icon-check-exception" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg>
       }
+
+    const getBuildResult = function(){
+        return props.buildResult!=undefined ? props.buildResult:"exception";
+    }
 
     return (
 
     <Link to={`/tests/${props.build.id}`} className={"dashboard-element"+" dashboard-element-"+props.buildResult}>
-        <div className={"dashboard-element-logo dashboard-element-logo-"+props.buildResult}
+        <div className={"dashboard-element-logo dashboard-element-logo-"+getBuildResult()}
         title="Public repository">
             <svg    xmlns="http://www.w3.org/2000/svg" 
                     viewBox="0 0 16 16" 

@@ -91,6 +91,10 @@ a:hover{
     border-right: 3px solid #db4545;
 }
 
+.dashboard-element-logo-exception{
+    border-right: 3px solid #db8945;
+}
+
 .icon{
     width: 5vh;
     height: 2vh;
@@ -119,6 +123,12 @@ a:hover{
     fill:  #db4545;
 }
 
+
+.icon-check-exception{
+    margin-top: 0.5vh;
+    height: 2.5vh;
+    fill:  #db8945;
+}
 
 
 

@@ -24,7 +24,6 @@ function OCITestCases(props) {
       url: endpoint,
       config: { headers: {'Access-Control-Allow-Origin': '*' }}
   }).then(function(response){
-    console.log(response.data)
       setMetadata(response.data.metadata)
       setStatus(response.data.metadata.buildResult.toLowerCase())
       setTests(response.data.testCaseResults)
