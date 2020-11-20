@@ -47,11 +47,23 @@ function OCITestCases(props) {
   }
 
   const getHeader = function(){
+    let title = "Pull Request";
+    let path = "pull";
+    let linkClass = "pr-link ";
+    let specialContent = " #"+metadata.prNumber+" ";
+    if(metadata.prNumber == undefined){
+      title = "Push";
+      let path = "commit";
+      let linkClass = "commit-link ";
+      specialContent = " ["+metadata.commitId+"] ";
+    }
+
     return (
-      <h3 className={status}>Pull Request  
-        <a className={"pr-link "+status} href={"https://github.com/"+metadata.owner+"/"+metadata.repo+"/pull/"+metadata.prNumber}>{" #"+metadata.prNumber+" "}</a>
-        {" "+metadata.commitName+" "}
-      </h3>)
+    <h3 className={status}>
+      {title}  
+      <a className={linkClass +status} href={"https://github.com/"+metadata.owner+"/"+metadata.repo+"/"+path+"/"+metadata.commit}>{specialContent}</a>
+      {" "+metadata.commitName+" "}
+    </h3>)
   }
 
 
