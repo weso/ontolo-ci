@@ -248,6 +248,11 @@ span{
     fill: #db4545 !important;
 }
 
+.exception{
+    color: #db8945 !important;
+    fill: #db8945 !important;
+}
+
 .top-panel{
     display: grid;
     grid-template-columns: auto auto;

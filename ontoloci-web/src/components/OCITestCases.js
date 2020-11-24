@@ -2,7 +2,7 @@ import React,{useState,useEffect} from 'react';
 import axios from 'axios';
 import OCITest from './OCITest';
 import {useParams} from "react-router-dom";
-import {getDate} from '../utils/datUtils';
+import {getDate} from '../utils/dateUtils';
 
 
 

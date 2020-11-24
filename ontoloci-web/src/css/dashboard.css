@@ -1,7 +1,4 @@
 
-
-
-
 .main-2{
     display: grid;
     justify-content: center;
@@ -25,10 +22,6 @@
     border-right: 1px solid #f3f0f0;
     margin-top: 1.5vh;
 }
-
-
-
-
 
 
  h2 {
@@ -63,6 +56,41 @@
     margin-bottom: 1vh;
 }
 
+@media (max-width: 1450px) {
+    
+    .main-2{
+        grid-template-columns: 90%;
+    }
+
+}
+
+
+@media (max-width: 800px) {
+    
+  
+    .dashboard-element{
+        grid-template-columns: 100%;
+        grid-template-rows:  repeat(6,auto);
+        max-height: 35vh;
+        justify-content: flex-start !important;
+        padding-left: 3vh;
+    }
+
+    .dashboard-element-info{
+
+        justify-content: flex-start !important;
+    }
+
+    .dashboard-element-logo{
+        justify-content: center !important;
+        margin-left: -2vh ;
+    }
+
+    .dashboard-element-status{
+        justify-content: flex-start  !important;
+        height: 100% !important;
+    }
+}
 
 
 

@@ -63,8 +63,8 @@ function OCIRepo(props){
         {getSvgStatus()}
         </div>
         <div className="dashboard-element-info">
-            <span className={props.buildResult}>{props.owner}</span>
-            <span className={props.buildResult}>{props.repo}</span>
+            <span className={getBuildResult()}>{props.owner}</span>
+            <span className={getBuildResult()}>{props.repo}</span>
         </div>
 
         <div className="dashboard-element-info">

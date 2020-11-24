@@ -74,12 +74,14 @@ public class OntolociHubImplementation implements OntolociHub {
             metadata.put("exceptions","true");
             metadata.put("checkTitle","FileNotFound");
             metadata.put("checkBody","Any file was not found");
+            metadata.put("execution_date",String.valueOf(System.currentTimeMillis()));
         }
         catch (Exception e) {
             LOGGER.error(String.format("ERROR while getting the HubTestCases at getTestCases from GitHubRepositoryProvider: %s",e.getMessage()));
             metadata.put("exception","true");
             metadata.put("checkTitle","Exception");
             metadata.put("checkBody","Something went wrong");
+            metadata.put("execution_date",String.valueOf(System.currentTimeMillis()));
         }
 
         hubBuild.setMetadata(metadata);

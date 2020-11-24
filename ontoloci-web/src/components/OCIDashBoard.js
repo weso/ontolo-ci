@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from 'react';
 import axios from 'axios';
 import OCIBuild from './OCIBuild';
-import {getDate} from '../utils/datUtils';
+import {getDate} from '../utils/dateUtils';
 
 
 
@@ -16,13 +16,27 @@ function OCIDashBoard() {
       config: { headers: {'Access-Control-Allow-Origin': '*' }}
   }).then(function(response){
         console.log(response.data)
-        setBuilds(response.data)
+        setBuilds(sortBuilds(response.data));
     })
     .catch(function (response) {
         console.log('error')
         console.log(response);
     });
   
+  }
+
+  const sortBuilds = function(unsortedBuilds){
+    return unsortedBuilds.sort((build1,build2)=>{
+      console.log({build1:build1.id,build2:build2.id})
+      if(build1.id > build2.id ){
+        return -1;
+      }
+      if(build1.id < build2.id ){
+        return 1;
+      }
+
+      return 0;
+    })
   }
 
   useEffect(() => {
