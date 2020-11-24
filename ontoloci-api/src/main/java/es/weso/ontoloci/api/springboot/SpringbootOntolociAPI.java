@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
+@CrossOrigin( value = "*")
 @RequestMapping("/api/v1")
 public class SpringbootOntolociAPI implements OntolociAPI {
 
@@ -20,7 +21,7 @@ public class SpringbootOntolociAPI implements OntolociAPI {
 
     private final OntolociDAO persistence = OntolociInMemoryDAO.instance();
 
-    @CrossOrigin(origins = "http://156.35.82.21:3000")
+
     @GetMapping("/buildResults")
     @Override
     public List<PersistedBuildResult> getAllBuildResults() {
@@ -34,7 +35,7 @@ public class SpringbootOntolociAPI implements OntolociAPI {
         return persistence.findAllBuildResults();
     }
 
-    @CrossOrigin(origins = "http://156.35.82.21:3000")
+
     @GetMapping("/buildResults/{buildId}")
     @Override
     public PersistedBuildResult getBuildResult(@PathVariable String buildId) {

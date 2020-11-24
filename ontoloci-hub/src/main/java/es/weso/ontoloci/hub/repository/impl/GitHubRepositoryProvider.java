@@ -2,7 +2,6 @@ package es.weso.ontoloci.hub.repository.impl;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -12,7 +11,6 @@ import es.weso.ontoloci.hub.repository.RepositoryConfiguration;
 import es.weso.ontoloci.hub.repository.RepositoryProvider;
 import es.weso.ontoloci.hub.test.HubTestCase;
 import es.weso.ontoloci.hub.utils.KeyUtils;
-import fansi.Str;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -25,10 +23,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.jena.base.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -131,17 +127,15 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
         try {
             httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
 
-
-        //Execute and get the response.
-        HttpResponse response = httpclient.execute(httppost);
-        HttpEntity entity = response.getEntity();
-
+            //Execute and get the response.
+            HttpResponse response = httpclient.execute(httppost);
+            HttpEntity entity = response.getEntity();
 
             if (entity != null) {
                 try (InputStream instream = entity.getContent()) {
                     // do something useful
                     String content = IOUtils.toString(instream, "UTF-8");
-                    access_token =content.split("access_token=")[1].split("&expires_in=")[0];
+                    access_token = content.split("access_token=")[1].split("&expires_in=")[0];
                 }
             }
 
@@ -245,8 +239,9 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
         return null;
     }
 
+
     @Override
-    public void updateCheckRun(String authToken, String checkRunId, boolean hasPassed, String owner, String repo) {
+    public void updateCheckRun(String authToken, String checkRunId, String owner, String repo, String conclusion,String output) {
         HttpClient httpclient = HttpClients.createDefault();
         HttpPatch httpatch = new HttpPatch("https://api.github.com/repos/"+owner+"/"+repo+"/check-runs/"+checkRunId);
 
@@ -254,12 +249,9 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
         httpatch.addHeader("Authorization", "token "+authToken);
         httpatch.addHeader("content-type", "application/json");
 
-
-        String conclusion = hasPassed ? "success": "failure";
-
         try {
             // Request parameters and other properties.
-            StringEntity params = new StringEntity("{\"conclusion\":\""+conclusion+"\"}");
+            StringEntity params = new StringEntity("{\"conclusion\":\""+conclusion+"\",\"output\":"+output+"}");
             httpatch.setEntity(params);
 
             //Execute and get the response.
@@ -296,7 +288,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
      * @return test cases
      */
     @Override
-    public Collection<HubTestCase> getTestCases(final String owner, final String repo,final String commit) {
+    public Collection<HubTestCase> getTestCases(final String owner, final String repo,final String commit) throws IOException {
 
         LOGGER.debug(
                 String.format(
@@ -310,39 +302,33 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
         // Result collection, initialized to empty one so not null is returned.
         final Collection<HubTestCase> hubTestCases = new ArrayList<>();
 
-        try {
-            // Get the repository configuration file.
-            final RepositoryConfiguration repositoryConfig =
-                    getRepositoryConfiguration(getConcatenatedPath(owner,repo,commit) + YAML_FILE_NAME);
 
-            // Parse the repository configuration file and create a manifest object
-            final Manifest manifest =
-                    getManifest(getConcatenatedPath(owner,repo,commit) + repositoryConfig.getManifestPath());
+        // Get the repository configuration file.
+        final RepositoryConfiguration repositoryConfig =
+                getRepositoryConfiguration(getConcatenatedPath(owner,repo,commit) + YAML_FILE_NAME);
 
-            // Get the ontology folder
-            final String ontologyFolder = repositoryConfig.getOntologyFolder();
+        // Parse the repository configuration file and create a manifest object
+        final Manifest manifest =
+                getManifest(getConcatenatedPath(owner,repo,commit) + repositoryConfig.getManifestPath());
 
-            // Get the tests folder
-            final String testsFolder = repositoryConfig.getTestFolder();
+        // Get the ontology folder
+        final String ontologyFolder = repositoryConfig.getOntologyFolder();
 
-            // Get collection of generated test cases from the manifest file.
-            final Collection<HubTestCase> parsedTestCases = getTestCasesFromManifest(owner,repo,commit,ontologyFolder,testsFolder,manifest);
+        // Get the tests folder
+        final String testsFolder = repositoryConfig.getTestFolder();
 
-            LOGGER.debug(
-                    String.format(
-                    "INTERNAL parsed test cases [%s]",
-                    parsedTestCases.size())
-            );
+        // Get collection of generated test cases from the manifest file.
+        final Collection<HubTestCase> parsedTestCases = getTestCasesFromManifest(owner,repo,commit,ontologyFolder,testsFolder,manifest);
 
-            // Add all the test cases to the result collection.
-            hubTestCases.addAll(parsedTestCases);
-        } catch (IOException e) {
-            LOGGER.error(
-                    String.format(
-                    "ERROR while getting the HubTestCases at getTestCases from GitHubRepositoryProvider: %s",
-                    e.getMessage())
-                    );
-        }
+        LOGGER.debug(
+                String.format(
+                "INTERNAL parsed test cases [%s]",
+                parsedTestCases.size())
+        );
+
+        // Add all the test cases to the result collection.
+        hubTestCases.addAll(parsedTestCases);
+
 
         return hubTestCases;
     }
@@ -392,8 +378,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
      *
      * @return test cases
      */
-    private Collection<HubTestCase> getTestCasesFromManifest(String owner, String repo, String commit, String ontologyFolder, String testFolder, Manifest mainifest)
-            throws JsonMappingException, JsonProcessingException, IOException {
+    private Collection<HubTestCase> getTestCasesFromManifest(String owner, String repo, String commit, String ontologyFolder, String testFolder, Manifest mainifest) throws IOException {
         Collection<HubTestCase> testCases = new ArrayList<HubTestCase>();
         String genericOntologyPath = getConcatenatedPath(owner, repo, commit)+ontologyFolder+SLASH_SYMBOL;
         String genericTestPath = getConcatenatedPath(owner, repo, commit)+testFolder+SLASH_SYMBOL;
@@ -418,7 +403,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
      * @param path  url
      * @return contend data
      */
-    private String getData(String path) {
+    private String getData(String path) throws IOException {
         URL url;
         HttpURLConnection con;
         try {
@@ -432,9 +417,9 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
 
         } catch (IOException e) {
             e.printStackTrace();
+            throw e;
         }
 
-        return null;
     }
 
     private String getFileContent(InputStream in) throws IOException {
@@ -451,5 +436,6 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
     private String getConcatenatedPath(final String owner,final String repo,final String commit) {
         return API_REQUEST+owner+SLASH_SYMBOL+repo+SLASH_SYMBOL+commit+SLASH_SYMBOL;
     }
+
 
 }

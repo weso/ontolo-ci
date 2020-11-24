@@ -18,6 +18,6 @@ public interface OntolociHub {
     HubBuild addTestsToBuild(HubBuild hubBuild);
 
 
-    void updateCheckRun(boolean hasPassed);
+    void updateCheckRun(String conclusion,String output);
 
 }

@@ -39,8 +39,13 @@ public class WorkerSequential implements Worker {
         TestCaseResult currentTestCase = null;
         // Temp variable to store if the build passes or not (PASS by default)
         String buildResult = "PASS";
-        // Temp variable to store each result validation test
-        String resultVaLidation = "";
+        // Temp variables to store the check run title and the check run body
+        String checkTitle = "Build Passing";
+        String checkBody = "All the tests has passed without problems";
+        // Temps variables to store each result validation test
+        String producedResultVaLidation = "";
+        String expectedResultVaLidation = "";
+
 
         final long initBuildTime = System.nanoTime(); // Init counting execution time of the build
 
@@ -68,14 +73,18 @@ public class WorkerSequential implements Worker {
                 List<ShapeMapResultValidation> expected = Arrays.asList(jsonMapper.readValue(resultValidation.getExpectedShapeMap().toJson().spaces2(), ShapeMapResultValidation[].class));
 
                 TestCaseResult finalCurrentTestCase = currentTestCase;
-                if(expected.get(0).equals(produced.get(0))){
+                producedResultVaLidation = produced.get(0).getStatus();
+                expectedResultVaLidation = expected.get(0).getStatus();
+
+                if(expectedResultVaLidation.equals(producedResultVaLidation)){
                     currentTestCase.setStatus(TestCaseResultStatus.PASS);
                 }else{
                     buildResult = "fail";
+                    checkTitle = "Build Failed";
+                    checkBody = "Some test have not passed...";
                     currentTestCase.setStatus(TestCaseResultStatus.FAIL);
                 }
 
-                resultVaLidation = expected.get(0).getStatus();
 
             }catch (JsonProcessingException e) {
                 e.printStackTrace();
@@ -91,7 +100,8 @@ public class WorkerSequential implements Worker {
             // Set execution time as metadata.
             final Map<String, String> metadata = new HashMap<>(currentTestCase.getMetadata());
             metadata.put("execution_time", executionTimeFormated);
-            metadata.put("validation_status",resultVaLidation);
+            metadata.put("validation_status",producedResultVaLidation);
+            metadata.put("expected_validation_status",expectedResultVaLidation);
             currentTestCase.setMetadata(metadata);
 
             // And finally add it to the collection of results.
@@ -107,7 +117,10 @@ public class WorkerSequential implements Worker {
         final Map<String, String> buildMetadata = new HashMap<>(build.getMetadata());
         buildMetadata.put("execution_time",executionBuildTimeFormated);
         buildMetadata.put("execution_date", String.valueOf(System.currentTimeMillis()));
+        buildMetadata.put("checkTitle",checkTitle);
+        buildMetadata.put("checkBody",checkBody);
         buildMetadata.put("buildResult", buildResult);
+
         build.setMetadata(buildMetadata);
         // Finally return the Build result.
         return BuildResult.from(build.getMetadata(),testCaseResults);
