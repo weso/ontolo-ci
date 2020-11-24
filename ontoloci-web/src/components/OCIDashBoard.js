@@ -1,6 +1,6 @@
 import React,{useState,useEffect} from 'react';
 import axios from 'axios';
-import OCIRepo from './OCIRepo';
+import OCIBuild from './OCIBuild';
 import {getDate} from '../utils/datUtils';
 
 
@@ -36,7 +36,7 @@ function OCIDashBoard() {
       <div className="dashboard-elements-list">
 
         {builds.map(build =>{
-          return <OCIRepo 
+          return <OCIBuild 
                       key={build.id}
                       build={build}
                       owner={build.metadata.owner}

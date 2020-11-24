@@ -43,6 +43,10 @@
 }
 
 
+.disabled-build{
+    cursor: default !important; 
+}
+
 
 @media (max-width: 1600px) {
  
