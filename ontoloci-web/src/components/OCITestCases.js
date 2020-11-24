@@ -130,7 +130,7 @@ function OCITestCases(props) {
               </div>
             </div>
         </div>
-        <h2><a className="subtitle">Test Cases</a></h2>
+        <h2><a className="subtitle">{"Test Cases ("+tests.length+")"}</a></h2>
         <div className="test-elements-list">
           {tests.map( (test,id) =>{
             return <OCITest 
