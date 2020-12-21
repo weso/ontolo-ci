@@ -8,6 +8,7 @@ import es.weso.ontoloci.worker.build.BuildResult;
 import es.weso.ontoloci.worker.test.TestCase;
 import es.weso.ontoloci.worker.test.TestCaseResult;
 import es.weso.ontoloci.worker.test.TestCaseResultStatus;
+import es.weso.ontoloci.worker.validation.NodeValidation;
 import es.weso.ontoloci.worker.validation.ResultValidation;
 import es.weso.ontoloci.worker.validation.ShapeMapResultValidation;
 import es.weso.ontoloci.worker.validation.Validate;
@@ -46,6 +47,7 @@ public class WorkerSequential implements Worker {
         String producedResultVaLidation = "";
         String expectedResultVaLidation = "";
 
+        final List<NodeValidation> nodeValidation = new ArrayList<>();
 
         final long initBuildTime = System.nanoTime(); // Init counting execution time of the build
 
@@ -76,7 +78,19 @@ public class WorkerSequential implements Worker {
                 producedResultVaLidation = produced.get(0).getStatus();
                 expectedResultVaLidation = expected.get(0).getStatus();
 
-                if(expectedResultVaLidation.equals(producedResultVaLidation)){
+                boolean valid = true;
+                for(ShapeMapResultValidation e: expected){
+                    for(ShapeMapResultValidation p: produced){
+                        if(e.getNode().equals(p.getNode())){
+                            nodeValidation.add(new NodeValidation(e.getNode(),p.getStatus(),e.getStatus()));
+                            if(!e.getStatus().equals(p.getStatus())){
+                                valid = false;
+                            }
+                        }
+                    }
+                }
+
+                if(valid){
                     currentTestCase.setStatus(TestCaseResultStatus.PASS);
                 }else{
                     buildResult = "fail";
@@ -103,6 +117,7 @@ public class WorkerSequential implements Worker {
             metadata.put("validation_status",producedResultVaLidation);
             metadata.put("expected_validation_status",expectedResultVaLidation);
             currentTestCase.setMetadata(metadata);
+            currentTestCase.setNodes(nodeValidation);
 
             // And finally add it to the collection of results.
             testCaseResults.add(currentTestCase);

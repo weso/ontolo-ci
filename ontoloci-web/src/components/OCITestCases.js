@@ -14,7 +14,7 @@ function OCITestCases(props) {
   const [tests,setTests] = useState([]);
   const [metadata,setMetadata] = useState({});
   const [status,setStatus] = useState('');
-  let endpoint = 'http://156.35.82.21/api/v1/buildResults/'+id
+  let endpoint = 'http://156.35.82.21:8085/api/v1/buildResults/'+id
 
   
   const getTestCases = function(){
@@ -24,6 +24,7 @@ function OCITestCases(props) {
       url: endpoint,
       config: { headers: {'Access-Control-Allow-Origin': '*' }}
   }).then(function(response){
+    console.log(response.data)
       setMetadata(response.data.metadata)
       setStatus(response.data.metadata.buildResult.toLowerCase())
       setTests(response.data.testCaseResults)

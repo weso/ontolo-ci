@@ -1,7 +1,6 @@
 package es.weso.ontoloci.listener;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import es.weso.ontoloci.scheduler.Scheduler;
 import es.weso.ontoloci.worker.build.Build;
 import org.apache.jena.base.Sys;
@@ -25,8 +24,23 @@ public class GitHubRestListener {
     private static final String OWNER_KEY = "owner";
     private static final String BRANCH_KEY = "branch";
 
-    @RequestMapping(value = "/push",method = RequestMethod.POST)
-    public void pushListener(@RequestBody Map<String, Object> payload) {
+    private static final String GITHUB_PUSH_EVENT = "push";
+    private static final String GITHUB_PULL_REQUEST_EVENT = "pull_request";
+
+
+    @RequestMapping("/")
+    public void listen(@RequestHeader("X-GitHub-Event") String event, @RequestBody Map<String, Object> payload) {
+        // We only listen to these two type of events.
+        LOGGER.debug("GITHUB-EVENT- "+ event);
+        if(Objects.equals(event, GITHUB_PUSH_EVENT))
+            handlePush(payload);
+        if(Objects.equals(event, GITHUB_PULL_REQUEST_EVENT))
+            handlePullRequest(payload);
+
+    }
+
+
+    public void handlePush(Map<String, Object> payload) {
             Map<String, Object> repositoryData = (Map<String, Object>) payload.get("repository");
             Map<String, Object> ownerData = (Map<String, Object>) repositoryData.get("owner");
             ArrayList<Map<String, Object>> commitData = (ArrayList<Map<String, Object>>) payload.get("commits");
@@ -57,8 +71,8 @@ public class GitHubRestListener {
 
     }
 
-    @RequestMapping(value = "/pull_request",method = RequestMethod.POST)
-    public void pullRequestListener(@RequestBody Map<String, Object> payload) {
+
+    public void handlePullRequest(@RequestBody Map<String, Object> payload) {
 
         if(!payload.get("action").equals("closed")) {
             Map<String, Object> pullRequest = (Map<String, Object>) payload.get("pull_request");

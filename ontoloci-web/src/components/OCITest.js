@@ -1,12 +1,13 @@
 import React , {useState} from 'react';
 import { Collapse} from 'reactstrap';
+import { Button,Accordion  } from 'react-bootstrap';
 import { LazyLog } from 'react-lazylog';
 import '../css/testcase.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function OCITest(props){
 
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(true);
 
     const toggle = () => setIsOpen(!isOpen);
 
@@ -59,10 +60,45 @@ function OCITest(props){
     </div>
     <Collapse isOpen={isOpen} >
         <div className="test-element-log">
-            <LazyLog enableSearch url="http://localhost:3000/examplelog.log" />
+        <table class="table table-hover table-sm ">
+        <thead>
+    <tr>
+    
+      <th scope="col">Data Node</th>
+      <th scope="col">Shape</th>
+      <th scope="col">Status</th>
+      <th scope="col">Expected Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+    
+      <td>Mark</td>
+      <td>Otto</td>
+      <td>@mdo</td>
+      <td>@mdo</td>
+    </tr>
+    <tr>
+
+      <td>Jacob</td>
+      <td>Thornton</td>
+      <td>@fat</td>
+      <td>@mdo</td>
+    </tr>
+    <tr>
+     
+      <td>Larry</td>
+      <td>the Bird</td>
+      <td>@twitter</td>
+      <td>@mdo</td>
+    </tr>
+  </tbody>
+  </table>
         </div>
     </Collapse>
 </div>) 
 }
 
 export default OCITest;
+
+/*<LazyLog enableSearch url="http://localhost:3000/examplelog.log" />*/

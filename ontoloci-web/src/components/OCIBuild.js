@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Tooltip from '@material-ui/core/Tooltip';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 
-function OCIRepo(props){
+function OCIBuild(props){
 
     const getSvgStatus = function(){
         if(props.buildResult){
@@ -115,4 +115,4 @@ function OCIRepo(props){
         </Link>);
 }
 
-export default OCIRepo;
+export default OCIBuild;

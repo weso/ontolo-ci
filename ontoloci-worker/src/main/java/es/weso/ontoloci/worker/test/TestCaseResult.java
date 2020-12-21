@@ -3,12 +3,11 @@ package es.weso.ontoloci.worker.test;
 import es.weso.ontoloci.persistence.PersistedTestCase;
 import es.weso.ontoloci.persistence.PersistedTestCaseResult;
 import es.weso.ontoloci.persistence.PersistedTestCaseResultStatus;
+import es.weso.ontoloci.worker.validation.NodeValidation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Models the result of a test execution. The result of a test execution is composed of the tests case that was
@@ -29,6 +28,7 @@ public class TestCaseResult {
     // Non final fields.
     private TestCaseResultStatus status;
     private Map<String, String> metadata;
+    private List<NodeValidation> nodeValidationList;
 
     public static PersistedTestCaseResult toPersistedTestCaseResult(TestCaseResult testCaseResult) {
 
@@ -98,6 +98,7 @@ public class TestCaseResult {
         this.testCase = testCase;
         this.status = status;
         this.metadata = metadata;
+        this.nodeValidationList = new ArrayList<>();
 
         LOGGER.debug("Creating new test case result for");
     }
@@ -146,8 +147,19 @@ public class TestCaseResult {
         return Collections.unmodifiableMap(this.metadata);
     }
 
+    public List<NodeValidation> getResults() {
+        LOGGER.debug("Getting the nodes of the test case result");
+
+        return this.nodeValidationList;
+    }
+
     public void setMetadata(Map<String, String> metadata) {
         this.metadata = metadata;
+    }
+
+
+    public void setNodes(List<NodeValidation> nodeValidationList) {
+        this.nodeValidationList = nodeValidationList;
     }
 
     @Override

@@ -213,6 +213,16 @@
 .test-element-log{
     height: 50vh;
     width: 100% !important;
+    border-left: 1px solid #cac8c8;
+    border-right: 1px solid #cac8c8;
+    border-bottom: 1px solid #cac8c8;
+    padding: 1%;
+}
+
+.sub-log{
+    border: 1px solid red;
+    display: grid;
+    grid-template-columns: auto auto auto;
 }
 
 
@@ -341,3 +351,18 @@ animation: spin 2s linear infinite;
 .hideLoader{
     display: none;
 }
+
+.expand-link{
+    padding-left: 0 !important;
+}
+
+.expand-link:hover{
+    text-decoration: none !important;
+}
+
+.expand-link:focus{
+    text-decoration: none !important;
+    outline: 0 !important;
+    box-shadow:  none !important;
+}
+
