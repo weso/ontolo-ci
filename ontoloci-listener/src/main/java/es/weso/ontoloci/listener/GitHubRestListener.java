@@ -20,10 +20,6 @@ public class GitHubRestListener {
     // LOGGER CREATION
     private static final Logger LOGGER = LoggerFactory.getLogger(GitHubRestListener.class);
 
-    private static final String REPO_KEY = "repository";
-    private static final String OWNER_KEY = "owner";
-    private static final String BRANCH_KEY = "branch";
-
     private static final String GITHUB_PUSH_EVENT = "push";
     private static final String GITHUB_PULL_REQUEST_EVENT = "pull_request";
 
