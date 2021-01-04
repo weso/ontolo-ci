@@ -3,7 +3,6 @@ package es.weso.ontoloci.worker.test;
 import es.weso.ontoloci.persistence.PersistedTestCase;
 import es.weso.ontoloci.persistence.PersistedTestCaseResult;
 import es.weso.ontoloci.persistence.PersistedTestCaseResultStatus;
-import es.weso.ontoloci.worker.validation.NodeValidation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
