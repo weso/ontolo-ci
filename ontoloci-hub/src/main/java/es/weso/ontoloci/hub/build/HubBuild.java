@@ -6,6 +6,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
+/**
+ * Representation of a build for the Hub subsystem.
+ * A HubBuild contains a collection of Hub test cases and a metadata map
+ * @author Pablo Menéndez
+ */
 public class HubBuild {
 
     // LOGGER CREATION
@@ -21,14 +26,7 @@ public class HubBuild {
      * @return the new build instance.
      */
     public static HubBuild from(final HubTestCase... testCases) {
-        LOGGER.debug(
-                String.format(
-                        "NEW Creating new HubBuild from the static factory with [%s] hub test cases" +
-                        "and an empty HashMap<>()",
-                        testCases.length
-                )
-        );
-
+        LOGGER.debug(String.format("NEW Creating new HubBuild from the static factory with [%s] hub test cases And an empty HashMap<>()", testCases.length));
         return new HubBuild(Arrays.asList(testCases), new HashMap<>());
     }
 
@@ -39,13 +37,7 @@ public class HubBuild {
      * @return the new build instance.
      */
     public static HubBuild from(final Collection<HubTestCase> testCases) {
-        LOGGER.debug(
-                String.format(
-                        "NEW Creating new HubBuild from the static factory with [%s] hub test cases" +
-                        "and an empty HashMap<>()", testCases.size()
-                )
-        );
-
+        LOGGER.debug(String.format("NEW Creating new HubBuild from the static factory with [%s] hub test cases and an empty HashMap<>()", testCases.size()));
         return new HubBuild(testCases, new HashMap<>());
     }
 
@@ -57,13 +49,7 @@ public class HubBuild {
      * @return the new build instance.
      */
     public static HubBuild from(final Collection<HubTestCase> testCases, final Map<String,String> metadata) {
-        LOGGER.debug(
-                String.format(
-                        "NEW Creating new HubBuild from the static factory with [%s] hub test cases " +
-                        "and [%s] metadata", testCases.size(), metadata
-                )
-        );
-
+        LOGGER.debug(String.format("NEW Creating new HubBuild from the static factory with [%s] hub test cases and [%s] metadata", testCases.size(), metadata));
         return new HubBuild(testCases, metadata);
     }
 
@@ -76,12 +62,7 @@ public class HubBuild {
         this.testCases = testCases;
         this.metadata = metadata;
 
-        LOGGER.debug(
-                String.format(
-                        "NEW Creating new HubBuild from the public constructor with [%s] hub test cases " +
-                        "and [%s] metadata", testCases.size(), metadata
-                )
-        );
+        LOGGER.debug(String.format("NEW Creating new HubBuild from the public constructor with [%s] hub test cases " + "and [%s] metadata", testCases.size(), metadata));
     }
 
     /**
@@ -90,12 +71,7 @@ public class HubBuild {
      * @return an unmodifiable collection of the collection of test cases.
      */
     public Collection<HubTestCase> getTestCases() {
-        LOGGER.debug(
-                String.format(
-                        "GET reading the test cases of the HubTestCase, returning [%s] elements",
-                        this.testCases.size()
-                )
-        );
+        LOGGER.debug(String.format("GET reading the test cases of the HubTestCase, returning [%s] elements", this.testCases.size()));
         return Collections.unmodifiableCollection(this.testCases);
     }
 
@@ -105,13 +81,7 @@ public class HubBuild {
      * @param testCases collection to be set.
      */
     public void setTestCases(final Collection<HubTestCase> testCases) {
-        LOGGER.debug(
-                String.format(
-                        "SET writing the test cases of the HubTestCase, new Collection has size of [%s]",
-                        this.testCases.size()
-                )
-        );
-
+        LOGGER.debug(String.format("SET writing the test cases of the HubTestCase, new Collection has size of [%s]", this.testCases.size()));
         this.testCases = testCases;
     }
 
@@ -121,13 +91,7 @@ public class HubBuild {
      * @return the metadata map.
      */
     public Map<String, String> getMetadata() {
-        LOGGER.debug(
-                String.format(
-                        "GET reading the metadata of the test case result, returning [%s]",
-                        metadata.entrySet().size()
-                )
-        );
-
+        LOGGER.debug(String.format("GET reading the metadata of the test case result, returning [%s]", metadata.entrySet().size()));
         return Collections.unmodifiableMap(this.metadata);
     }
 
@@ -138,15 +102,8 @@ public class HubBuild {
      * @param metadata to be set.
      */
     public void setMetadata(Map<String, String> metadata) {
-        LOGGER.debug(
-                String.format(
-                        "SET writing the metadata of the HubTestCase, new Map has size of [%s]",
-                        this.metadata.entrySet().size()
-                )
-        );
-
+        LOGGER.debug(String.format("SET writing the metadata of the HubTestCase, new Map has size of [%s]",this.metadata.entrySet().size()));
         this.metadata = metadata;
     }
-
 
 }
