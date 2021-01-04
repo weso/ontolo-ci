@@ -58,9 +58,7 @@ public class OntolociHubImplementation implements OntolociHub {
         );
 
         // Create the check run
-        String installationId = gitHubService.getInstallationId(currentOwner);
-        String token = gitHubService.authenticateByInstallation(installationId);
-        currentCheckRunId = gitHubService.createCheckRun(token,currentOwner,currentRepo,currentCommit);
+        currentCheckRunId = gitHubService.createCheckRun(currentOwner,currentRepo,currentCommit);
 
         try {
             final Collection<HubTestCase> testsCases = gitHubService.getTestCases(currentOwner, currentRepo, currentCommit);
@@ -90,9 +88,7 @@ public class OntolociHubImplementation implements OntolociHub {
 
     @Override
     public void updateCheckRun(String conclusion,String output){
-        String installationId = gitHubService.getInstallationId(currentOwner);
-        String token = gitHubService.authenticateByInstallation(installationId);
-        gitHubService.updateCheckRun(token,currentCheckRunId,currentOwner,currentRepo,conclusion,output);
+        gitHubService.updateCheckRun(currentCheckRunId,currentOwner,currentRepo,conclusion,output);
     }
 
 

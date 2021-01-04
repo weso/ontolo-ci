@@ -41,7 +41,6 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
 
     private final static String GITHUB_RAW_REQUEST      =   "https://raw.githubusercontent.com/";
     private final static String GITHUB_API_REQUEST      =   "https://api.github.com/";
-    private final static String PERSONAL_TOKEN_REQUEST  =   "https://github.com/login/oauth/access_token";
     private final static String INSTALLATION_REQUEST    =   "https://api.github.com/app/installations";
 
     private final static String YAML_FILE_NAME          =   ".oci.yml";
@@ -102,7 +101,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
 
 
     /**
-     * Gets a collection of test cases from a concrete commit of a GitHub repository.
+     * Gets a collection of test cases from a specific commit of a GitHub repository.
      *
      * @param owner                 of the repository
      * @param repo                  name of the repository
@@ -141,78 +140,116 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
         return hubTestCases;
     }
 
-
+    /**
+     * Creates a checkrun in a specific commit of a GitHub repository.
+     *
+     * @param owner     of the repository
+     * @param repo      name of the repository
+     * @param commit    sha of the commit
+     *
+     * @return checkRunId
+     */
     @Override
-    public String createCheckRun(String authToken,String owner,String repo,String commit){
+    public String createCheckRun(String owner,String repo,String commit){
 
         LOGGER.debug( String.format("Creating CheckRun  for user=[%s], repo =[%s] and commit =[%s] ",owner,repo,commit));
 
+        // Create the HttpClient
         HttpClient httpclient = HttpClients.createDefault();
+        // Set the request path
         String path = getCheckRunsPath(owner,repo);
+        // Authenticate the user
+        String authToken = authenticate(owner);
+        // Create the appropriate Http method for the request
         HttpPost httppost = getGitHubPostAuth(path,authToken);
-        String response = executeRequest(httpclient,httppost,getCreateCheckRunParams(commit));
-        String result =  getCheckRunIdFromResponse(response);
+        // Set the request params
+        httppost  = addCreateCheckRunParams(httppost,commit);
+        // Perform the request
+        String response = executeRequest(httpclient,httppost);
+        // Obtain the checkRunId from the response
+        String checkRunId =  getCheckRunIdFromResponse(response);
 
         LOGGER.debug( String.format("Created CheckRun for user=[%s], repo =[%s] and commit =[%s] ",owner,repo,commit));
 
-        return result;
+        return checkRunId;
     }
 
 
+    /**
+     * Updates an existing checkrun in a GitHub repository with a new status.
+     *
+     * @param checkRunId            id of the checkRun
+     * @param owner                 of the repository
+     * @param repo                  name of the repository
+     * @param conclusion            new status of the checkrun
+     * @param output                message
+     */
     @Override
-    public void updateCheckRun(String authToken, String checkRunId, String owner, String repo, String conclusion,String output) {
+    public void updateCheckRun(String checkRunId, String owner, String repo, String conclusion,String output) {
 
         LOGGER.debug( String.format("Updating CheckRun = [%s] for user=[%s] and repo =[%s] ",checkRunId,owner,repo));
 
+        // Create the HttpClient
         HttpClient httpclient = HttpClients.createDefault();
+        // Set the request path
         String path = getUpdateCheckRunPath(owner,repo,checkRunId);
+        // Authenticate the user
+        String authToken = authenticate(owner);
+        // Create the appropriate Http method for the request
         HttpPatch httpatch = getGitHubPatchAuth(path,authToken);
-        executeRequest(httpclient,httpatch,getUpdateCheckRunParams(conclusion,output));
+        // Set the request params
+        httpatch  = addUpdateCheckRunParams(httpatch,conclusion,output);
+        // Perform the request
+        executeRequest(httpclient,httpatch);
 
         LOGGER.debug( String.format("CheckRun updated = [%s] for user=[%s] and repo =[%s] ",checkRunId,owner,repo));
+
     }
 
-
-
-    public String getPersonalAccessToken(String code){
-
-        LOGGER.debug("Getting the Personal Access token");
-
-        HttpClient httpclient = HttpClients.createDefault();
-        HttpPost httppost = getGitHubPost(PERSONAL_TOKEN_REQUEST);
-
-        StringEntity params = getPersonalAccessTokenParams(code);
-        String response = executeRequest(httpclient,httppost,params);
-        String access_token = getAccessTokenFromResponse(response);
-
-        LOGGER.debug("Personal Access token obtained");
-
-        return access_token;
+    /**
+     * Authenticates a GitHub user via Installation Id
+     *
+     * @param user to be authenticated
+     * @return authentication token
+     */
+    private String authenticate(String user){
+        String installationId = getInstallationId(user);
+        return authenticateByInstallation(installationId);
     }
 
+    /**
+     * Obtains the GitHub Installation Id from a GitHub user
+     *
+     * @param user   to get their Installation Id
+     * @return installationId
+     */
+    private String getInstallationId(String user) {
 
-    public String getInstallationId(String owner) {
-
-        LOGGER.debug( String.format("Getting InstallationId for user=[%s] ",owner));
+        LOGGER.debug( String.format("Getting InstallationId for user=[%s] ",user));
 
         HttpClient httpclient = HttpClients.createDefault();
         HttpGet httpget = getGitHubGetAuth(INSTALLATION_REQUEST);
-        String response = executeRequest(httpclient,httpget,null);
-        String id = getInstallationIdFromResponse(response,owner);
+        String response = executeRequest(httpclient,httpget);
+        String installationId = getInstallationIdFromResponse(response,user);
 
-        LOGGER.debug( String.format("InstallationId obtained for user=[%s] ",owner));
+        LOGGER.debug( String.format("InstallationId obtained for user=[%s] ",user));
 
-        return id;
+        return installationId;
     }
 
-
-    public String authenticateByInstallation(String installationId)  {
+    /**
+     * Authenticates a user by their installationId
+     *
+     * @param installationId
+     * @return authorization token
+     */
+    private String authenticateByInstallation(String installationId)  {
 
         LOGGER.debug( String.format("Authenticating installationId = [%s]",installationId));
 
         HttpClient httpclient = HttpClients.createDefault();
         HttpPost httppost = getBearerGitHubPost(getAuthenticationByInstallationPath(installationId));
-        String response = executeRequest(httpclient,httppost,null);
+        String response = executeRequest(httpclient,httppost);
         String authToken = getAuthTokenFromResponse(response);
 
         LOGGER.debug( String.format("Authenticated installationId = [%s]",installationId));
@@ -223,9 +260,8 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
 
 
 
-
     /**
-     * Gets the Manifest from the .oci.yml file of a concrete commit of a GitHub repository
+     * Gets the Manifest from the .oci.yml file of a specific commit of a GitHub repository
      * @param path .oci.yml file path
      * @throws JsonMappingException
      * @throws JsonProcessingException
@@ -234,11 +270,11 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
      * @return oci
      */
     private RepositoryConfiguration getRepositoryConfiguration(String path) throws JsonMappingException, JsonProcessingException, IOException {
-       return yamlMapper.readValue(getData(path), RepositoryConfiguration.class);
+       return yamlMapper.readValue(getGitHubData(path), RepositoryConfiguration.class);
     }
 
     /**
-     * Gets the Manifest from the manifest.json file of a concrete commit of a GitHub repository
+     * Gets the Manifest from the manifest.json file of a specific commit of a GitHub repository
      * @param path manifest.json file path
      * @throws JsonMappingException
      * @throws JsonProcessingException
@@ -248,12 +284,12 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
      */
     private Manifest getManifest(String path)
             throws JsonMappingException, JsonProcessingException, IOException {
-        return new Manifest(Arrays.asList(jsonMapper.readValue(getData(path), ManifestEntry[].class)));
+        return new Manifest(Arrays.asList(jsonMapper.readValue(getGitHubData(path), ManifestEntry[].class)));
     }
 
 
     /**
-     * Gets a collection of test cases from manifest of a concrete commit of a GitHub repository.
+     * Gets a collection of test cases from manifest of a specific commit of a GitHub repository.
      * For each manifest entry, gets the proper data needed for the creation of a new TestCase
      *
      * @param owner                 of the repository
@@ -273,15 +309,14 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
         Collection<HubTestCase> testCases = new ArrayList<HubTestCase>();
         String genericOntologyPath = getRawPath(owner, repo, commit)+ontologyFolder+SLASH;
         String genericTestPath = getRawPath(owner, repo, commit)+testFolder+SLASH;
-        
-        
+
         for(ManifestEntry entry:mainifest.getManifestEntries()){
             String name = entry.getName();
-            String ontology = getData(genericOntologyPath+entry.getOntology());
-            String instances = getData(genericTestPath+entry.getInstances());
-            String schema = getData(genericTestPath+entry.getSchema());
-            String producedSM = getData(genericTestPath+entry.getProducedShapeMap());
-            String expectedSM = getData(genericTestPath+entry.getExpectedShapeMap());
+            String ontology = getGitHubData(genericOntologyPath+entry.getOntology());
+            String instances = getGitHubData(genericTestPath+entry.getInstances());
+            String schema = getGitHubData(genericTestPath+entry.getSchema());
+            String producedSM = getGitHubData(genericTestPath+entry.getProducedShapeMap());
+            String expectedSM = getGitHubData(genericTestPath+entry.getExpectedShapeMap());
 
             testCases.add(new HubTestCase(name,ontology,instances,schema,producedSM,expectedSM));
         }
@@ -290,55 +325,27 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
     }
 
     /**
-     * Performs a request to a concrete url and returns the content data of the file returned by the request
+     * Performs a request to a specific url and returns the content data of the file returned by the request
      * @param path  url
      * @return contend data
      */
-    private String getData(String path) throws IOException {
-        URL url;
-        HttpURLConnection con;
-        try {
-            url = new URL(path);
-            con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("GET");
-            con.setDoOutput(true);
-            con.setRequestProperty("Accept", "application/json");
-
-            return getStreamContent(con.getInputStream());
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw e;
-        }
-
+    private String getGitHubData(String path) throws IOException {
+        HttpClient httpclient = HttpClients.createDefault();
+        HttpGet httpget = getGitHubGet(path);
+        return executeRequest(httpclient,httpget);
     }
+
 
     /**
-     * Gets the content of a stream
-     * @param  in stream
-     * @return the content of the stream
-     * @throws IOException
+     * Gets the checkrunId value from the response result
+     *
+     * @param result of the response
+     * @return checkrunId
      */
-    private String getStreamContent(InputStream in) throws IOException {
-        BufferedReader rd = new BufferedReader(new InputStreamReader(in));
-        StringBuilder result = new StringBuilder();
-        String line;
-        while ((line = rd.readLine()) != null) {
-            result.append(line+'\n');
-        }
-        rd.close();
-        return result.toString();
-    }
-
-
-
-
-
-
-    private String getCheckRunIdFromResponse(String response){
+    private String getCheckRunIdFromResponse(String result){
         Map<String,Object> checkResponse = null;
         try {
-            checkResponse = this.jsonMapper.readValue(response, Map.class);
+            checkResponse = this.jsonMapper.readValue(result, Map.class);
             return String.valueOf(checkResponse.get("id"));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
@@ -346,54 +353,60 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
         return null;
     }
 
-    private StringEntity getCreateCheckRunParams(String commit){
+    /**
+     * Adds to the request the needed params to create a GitHub checkrun
+     *
+     * @param httppost
+     * @param commit sha of the commit
+     *
+     * @return request with the params
+     */
+    private HttpPost addCreateCheckRunParams(HttpPost httppost, String commit){
         try {
-            return new StringEntity("{\"name\":\"ontolo-ci\",\"head_sha\":\""+commit+"\"}");
+            StringEntity params =  new StringEntity("{\"name\":\"ontolo-ci\",\"head_sha\":\""+commit+"\"}");
+            httppost.setEntity(params);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        return null;
+        return httppost;
     }
 
-    private StringEntity getUpdateCheckRunParams(String conclusion, String output)  {
+    /**
+     * Adds to the request the needed params to update a GitHub checkrun
+     *
+     * @param conclusion    new status of the checkrun
+     * @param output        output message
+     *
+     * @return request with the params
+     */
+    private HttpPatch addUpdateCheckRunParams(HttpPatch httppatch,String conclusion, String output)  {
         try {
-            return new StringEntity("{\"conclusion\":\""+conclusion+"\",\"output\":"+output+"}");
+            StringEntity params = new StringEntity("{\"conclusion\":\""+conclusion+"\",\"output\":"+output+"}");
+            httppatch.setEntity(params);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        return null;
+        return httppatch;
     }
 
 
-    private StringEntity getPersonalAccessTokenParams(String code){
-        String clientId = KeyUtils.getClientId();
-        String clientSecret = KeyUtils.getClientSecret();
-
-        List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-
-        params.add(new BasicNameValuePair("client_id", clientId));
-        params.add(new BasicNameValuePair("client_secret", clientSecret));
-        params.add(new BasicNameValuePair("code", code));
-
-        try {
-            return new UrlEncodedFormEntity(params, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return null;
+    private HttpEntityEnclosingRequestBase addParams(HttpEntityEnclosingRequestBase request,StringEntity params){
+         request.setEntity(params);
+         return request;
     }
 
 
-
-    private String executeRequest( HttpClient httpclient,HttpRequestBase request,StringEntity params) {
+    /**
+     * Performs a request and returns the result.
+     *
+     * @param httpclient
+     * @param request
+     * @return
+     */
+    private String executeRequest( HttpClient httpclient,HttpRequestBase request) {
 
         try {
 
-            if(request instanceof HttpEntityEnclosingRequestBase)
-                if(params!=null)
-                    ((HttpEntityEnclosingRequestBase) request).setEntity(params);
-
-            //Execute and get the response.
             HttpResponse response = httpclient.execute(request);
             HttpEntity entity = response.getEntity();
 
@@ -402,7 +415,6 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
                     return IOUtils.toString(instream, "UTF-8");
                 }
             }
-
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -446,9 +458,14 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
 
 
 
-    private HttpGet getGitHubGetAuth(String path){
+    private HttpGet getGitHubGet(String path){
         HttpGet httpGet = new HttpGet(path);
         httpGet = (HttpGet) setGitHubHeaders(httpGet);
+        return httpGet;
+    }
+
+    private HttpGet getGitHubGetAuth(String path){
+        HttpGet httpGet = getGitHubGet(path);
         httpGet.setHeader("Authorization", "Bearer "+KeyUtils.getJWT());
         return httpGet;
     }
