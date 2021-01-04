@@ -3,9 +3,8 @@ package es.weso.ontoloci.hub;
 import es.weso.ontoloci.hub.build.HubBuild;
 
 /**
- * Interface for ontoloci hub.
- *
- * @author Fablo Menéndez Suárez
+ * This interface sets the contract for all the hub possible implementations
+ * @author Pablo Menéndez Suárez
  */
 public interface OntolociHub {
 

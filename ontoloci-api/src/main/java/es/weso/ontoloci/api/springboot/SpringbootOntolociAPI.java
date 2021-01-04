@@ -50,7 +50,7 @@ public class SpringbootOntolociAPI implements OntolociAPI {
             LOGGER.error(String.format("no result found for buildId=[%s]", buildId));
         }
 
-        return persistence.findBuildResultForId(buildId).orElse(PersistedBuildResult.from());
+        return result;
     }
 
 }

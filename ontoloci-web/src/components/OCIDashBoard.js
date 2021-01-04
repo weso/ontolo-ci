@@ -12,7 +12,7 @@ function OCIDashBoard() {
 
     axios({
       method: 'get',
-      url: 'http://156.35.82.21:8085/api/v1/buildResults',
+      url: 'http://localhost:8090/api/v1/buildResults',
       config: { headers: {'Access-Control-Allow-Origin': '*' }}
   }).then(function(response){
         console.log(response.data)

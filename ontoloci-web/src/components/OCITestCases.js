@@ -14,7 +14,7 @@ function OCITestCases(props) {
   const [tests,setTests] = useState([]);
   const [metadata,setMetadata] = useState({});
   const [status,setStatus] = useState('');
-  let endpoint = 'http://156.35.82.21:8085/api/v1/buildResults/'+id
+  let endpoint = 'http://localhost:8090/api/v1/buildResults/'+id
 
   
   const getTestCases = function(){

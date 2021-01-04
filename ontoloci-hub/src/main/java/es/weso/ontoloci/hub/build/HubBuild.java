@@ -131,6 +131,12 @@ public class HubBuild {
         return Collections.unmodifiableMap(this.metadata);
     }
 
+
+    /**
+     * Sets the metadata to the given one.
+     *
+     * @param metadata to be set.
+     */
     public void setMetadata(Map<String, String> metadata) {
         LOGGER.debug(
                 String.format(

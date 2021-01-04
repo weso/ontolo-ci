@@ -213,10 +213,14 @@
 .test-element-log{
     height: 50vh;
     width: 100% !important;
-    border-left: 1px solid #cac8c8;
-    border-right: 1px solid #cac8c8;
-    border-bottom: 1px solid #cac8c8;
+    border-left: 1px solid #f3f0f0;
+    border-right: 1px solid #f3f0f0;
+    border-bottom: 1px solid #f3f0f0;
     padding: 1%;
+}
+
+th {
+    font-weight: normal !important;
 }
 
 .sub-log{

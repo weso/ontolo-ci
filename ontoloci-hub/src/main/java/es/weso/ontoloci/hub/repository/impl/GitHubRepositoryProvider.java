@@ -312,10 +312,10 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
                 getManifest(getConcatenatedPath(owner,repo,commit) + repositoryConfig.getManifestPath());
 
         // Get the ontology folder
-        final String ontologyFolder = repositoryConfig.getOntologyFolder();
+        final String ontologyFolder = repositoryConfig.getOntologyFolderPath();
 
         // Get the tests folder
-        final String testsFolder = repositoryConfig.getTestFolder();
+        final String testsFolder = repositoryConfig.getTestFolderPath();
 
         // Get collection of generated test cases from the manifest file.
         final Collection<HubTestCase> parsedTestCases = getTestCasesFromManifest(owner,repo,commit,ontologyFolder,testsFolder,manifest);
