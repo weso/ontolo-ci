@@ -30,7 +30,8 @@ import java.net.URL;
 import java.util.*;
 
 /**
- * TODO
+ * This class implements the methods of the RepositoryProvider interface for the repository provider GitHub.
+ * It contains all the needed methods to collect data and handle checkruns on GitHub.
  *
  * @author Pablo Menéndez
  */
@@ -160,7 +161,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
         String path = getCheckRunsPath(owner,repo);
         // Authenticate the user
         String authToken = authenticate(owner);
-        // Create the appropriate Http method for the request
+        // Create the appropriate HTTP method for the request
         HttpPost httppost = getGitHubPostAuth(path,authToken);
         // Set the request params
         httppost  = addCreateCheckRunParams(httppost,commit);
@@ -195,7 +196,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
         String path = getUpdateCheckRunPath(owner,repo,checkRunId);
         // Authenticate the user
         String authToken = authenticate(owner);
-        // Create the appropriate Http method for the request
+        // Create the appropriate HTTP method for the request
         HttpPatch httpatch = getGitHubPatchAuth(path,authToken);
         // Set the request params
         httpatch  = addUpdateCheckRunParams(httpatch,conclusion,output);
@@ -227,9 +228,13 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
 
         LOGGER.debug( String.format("Getting InstallationId for user=[%s] ",user));
 
+        // Create the HttpClient
         HttpClient httpclient = HttpClients.createDefault();
+        // Create the appropriate HTTP method for the request
         HttpGet httpget = getGitHubGetAuth(INSTALLATION_REQUEST);
+        // Perform the request
         String response = executeRequest(httpclient,httpget);
+        // Obtain the installationId from the response
         String installationId = getInstallationIdFromResponse(response,user);
 
         LOGGER.debug( String.format("InstallationId obtained for user=[%s] ",user));
@@ -247,9 +252,15 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
 
         LOGGER.debug( String.format("Authenticating installationId = [%s]",installationId));
 
+        // Create the HttpClient
         HttpClient httpclient = HttpClients.createDefault();
-        HttpPost httppost = getBearerGitHubPost(getAuthenticationByInstallationPath(installationId));
+        // Set the request path
+        String path = getAuthenticationByInstallationPath(installationId);
+        // Create the appropriate HTTP method for the request
+        HttpPost httppost = getBearerGitHubPost(path);
+        // Perform the request
         String response = executeRequest(httpclient,httppost);
+        // Obtain the authToken from the response
         String authToken = getAuthTokenFromResponse(response);
 
         LOGGER.debug( String.format("Authenticated installationId = [%s]",installationId));
@@ -337,7 +348,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
 
 
     /**
-     * Gets the checkrunId value from the response result
+     * Gets the checkrunId value from the request result
      *
      * @param result of the response
      * @return checkrunId
@@ -390,23 +401,17 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
     }
 
 
-    private HttpEntityEnclosingRequestBase addParams(HttpEntityEnclosingRequestBase request,StringEntity params){
-         request.setEntity(params);
-         return request;
-    }
-
 
     /**
-     * Performs a request and returns the result.
+     * Performs a request and returns the result as a String.
      *
      * @param httpclient
      * @param request
-     * @return
+     * @return result
      */
     private String executeRequest( HttpClient httpclient,HttpRequestBase request) {
 
         try {
-
             HttpResponse response = httpclient.execute(request);
             HttpEntity entity = response.getEntity();
 
@@ -425,13 +430,20 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
         }
 
         return null;
-
     }
 
-    private String getInstallationIdFromResponse(String response,String owner) {
+    /**
+     * Gets the installationId value from the request result
+     *
+     * @param result    of the request
+     * @param owner     of the installation
+     *
+     * @return installationId
+     */
+    private String getInstallationIdFromResponse(String result,String owner) {
         List<Map<String,Object>> installations = null;
         try {
-            installations = this.jsonMapper.readValue(response, List.class);
+            installations = this.jsonMapper.readValue(result, List.class);
             for (Map<String, Object> installation : installations) {
                 String accountData = (String) ((Map<String, Object>) installation.get("account")).get("login");
                 if (accountData.equals(owner))
@@ -444,11 +456,16 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
         return  null;
     }
 
-
-    private String getAuthTokenFromResponse(String response) {
+    /**
+     * Gets the authorization token value from the request result
+     *
+     * @param  result   of the request
+     * @return authorization token
+     */
+    private String getAuthTokenFromResponse(String result) {
         Map<String,Object> content = null;
         try {
-            content = this.jsonMapper.readValue(response, Map.class);
+            content = this.jsonMapper.readValue(result, Map.class);
             return (String) content.get("token");
         } catch (JsonProcessingException e) {
             e.printStackTrace();
@@ -456,40 +473,73 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
         return null;
     }
 
-
-
+    /***
+     * Creates a new specific GET request with the common GitHub headers
+     *
+     * @param path  for the request
+     * @return GET request
+     */
     private HttpGet getGitHubGet(String path){
         HttpGet httpGet = new HttpGet(path);
         httpGet = (HttpGet) setGitHubHeaders(httpGet);
         return httpGet;
     }
 
+    /***
+     * Creates a new specific GET request with the common GitHub headers and Bearer Authorization Header
+     *
+     * @param path  for the request
+     * @return GET request
+     */
     private HttpGet getGitHubGetAuth(String path){
         HttpGet httpGet = getGitHubGet(path);
         httpGet.setHeader("Authorization", "Bearer "+KeyUtils.getJWT());
         return httpGet;
     }
 
+    /***
+     * Creates a new specific POST request with the common GitHub headers
+     *
+     * @param path  for the request
+     * @return POST request
+     */
     private HttpPost getGitHubPost(String path){
         HttpPost httppost = new HttpPost(path);
         httppost = (HttpPost) setGitHubHeaders(httppost);
         return httppost;
     }
 
+    /***
+     * Creates a new specific POST request with the common GitHub headers and Authorization Header
+     *
+     * @param path  for the request
+     * @return POST request
+     */
     private HttpPost getGitHubPostAuth(String path,String authToken){
         HttpPost httppost = getGitHubPost(path);
         httppost.addHeader("Authorization", "token "+authToken);
         return httppost;
     }
 
+    /***
+     * Creates a new specific POST request with the common GitHub headers and Bearer Authorization Header
+     *
+     * @param path  for the request
+     * @return POST request
+     */
     private HttpPost getBearerGitHubPost(String path) {
         HttpPost httppost = getGitHubPost(path);
-        String jwt = KeyUtils.getJWT();
-        httppost.addHeader("Authorization", "Bearer "+jwt);
+        httppost.addHeader("Authorization", "Bearer "+KeyUtils.getJWT());
         return httppost;
     }
 
 
+    /***
+     * Creates a new specific PATCH request with the common GitHub headers and Authorization Header
+     *
+     * @param path  for the request
+     * @return POST request
+     */
     private HttpPatch getGitHubPatchAuth(String path,String authToken){
         HttpPatch httpatch = new HttpPatch(path);
         httpatch = (HttpPatch) setGitHubHeaders(httpatch);
@@ -497,9 +547,12 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
         return httpatch;
     }
 
-
-
-
+    /**
+     * Sets the common GitHub headers to a specific request
+     *
+     * @param   requestBase
+     * @return  request
+     */
     private HttpRequestBase setGitHubHeaders(HttpRequestBase requestBase){
         requestBase.addHeader("Accept", "application/vnd.github.v3+json");
         requestBase.addHeader("content-type", "application/json");
@@ -507,13 +560,10 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
     }
 
 
-    private String getAccessTokenFromResponse(String response) {
-        return response.split("access_token=")[1].split("&expires_in=")[0];
-    }
-
 
     /**
      * Returns the full path for the GitHub Raw requests
+     *
      * @param owner   of the repository
      * @param repo    the repository name
      * @param commit  of the repository
@@ -524,22 +574,64 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
         return GITHUB_RAW_REQUEST +owner+SLASH+repo+SLASH+commit+SLASH;
     }
 
+    /**
+     * Returns the full path for the GitHub API Check Runs requests
+     *
+     * @param owner   of the repository
+     * @param repo    the repository name
+     *
+     * @return path as a string
+     */
     private String getCheckRunsPath(final String owner, final String repo) {
         return GITHUB_API_REQUEST+"repos"+SLASH+owner+SLASH+repo+SLASH+"check-runs";
     }
 
+    /**
+     * Returns the full path to update a Check Run via GitHub API
+     *
+     * @param owner         of the repository
+     * @param repo          the repository name
+     * @param checkRunId
+     *
+     * @return path as a string
+     */
     private String getUpdateCheckRunPath(final String owner, final String repo, final String checkRunId) {
         return getCheckRunsPath(owner,repo)+SLASH+checkRunId;
     }
 
+    /**
+     * Returns the full path to obtain the YAML_FILE_NAME of a concrete commit of a concrete repository via GitHub Raw
+     *
+     * @param owner   of the repository
+     * @param repo    the repository name
+     * @param commit  of the repository
+     *
+     * @return path as a string
+     */
     private String getYAMLPath(final String owner, final String repo, final String commit){
         return getRawPath(owner,repo,commit) + YAML_FILE_NAME;
     }
 
-    private String getManifestPath(final String owner, final String repo, final String commit,RepositoryConfiguration repositoryConfig){
+    /**
+     * Returns the full path to obtain the manifest of a concrete commit of a concrete repository via GitHub Raw
+     *
+     * @param owner               of the repository
+     * @param repo                the repository name
+     * @param commit              of the repository
+     * @param repositoryConfig    the configuration of the repostitory
+     *
+     * @return path as a string
+     */
+    private String getManifestPath(final String owner, final String repo, final String commit,final RepositoryConfiguration repositoryConfig){
         return getRawPath(owner, repo, commit) + repositoryConfig.getManifestPath();
     }
 
+    /**
+     * Returns the full path to authenticate by installation via GitHub API
+     *
+     * @param installationId
+     * @return path as a string
+     */
     private String getAuthenticationByInstallationPath(String installationId) {
         return GITHUB_API_REQUEST+"app/installations/"+installationId+"/access_tokens";
     }
