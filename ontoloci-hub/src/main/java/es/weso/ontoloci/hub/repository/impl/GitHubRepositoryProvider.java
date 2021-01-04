@@ -31,8 +31,7 @@ import java.net.URL;
 import java.util.*;
 
 /**
- * This class implements the needed methods to get a collection of TestCases
- * from a concrete commit of a GitHub repository.
+ * TODO
  *
  * @author Pablo Menéndez
  */
@@ -41,9 +40,11 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
     // LOGGER CREATION
     private static final Logger LOGGER = LoggerFactory.getLogger(GitHubRepositoryProvider.class);
 
-    private final static String API_REQUEST = "https://raw.githubusercontent.com/";
+    private final static String GITHUB_RAW_REQUEST = "https://raw.githubusercontent.com/";
+    private final static String GITHUB_API_REQUEST = "https://api.github.com/";
+
     private final static String YAML_FILE_NAME = ".oci.yml";
-    private final static String SLASH_SYMBOL = "/";
+    private final static String SLASH = "/";
 
     private final ObjectMapper yamlMapper;
     private final ObjectMapper jsonMapper;
@@ -108,6 +109,173 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
     }
 
 
+
+    /**
+     * Gets a collection of test cases from a concrete commit of a GitHub repository.
+     *
+     * @param owner                 of the repository
+     * @param repo                  name of the repository
+     * @param commit                of the repository
+     *
+     * @return test cases
+     */
+    @Override
+    public Collection<HubTestCase> getTestCases(final String owner, final String repo,final String commit) throws IOException {
+
+        LOGGER.debug(
+                String.format(
+                        "GET Computing the collection of HubTestCase for user=[%s], repo =[%s] and commit=[%s]",
+                        owner,
+                        repo,
+                        commit
+                )
+        );
+
+        // Result collection, initialized to empty one so not null is returned.
+        final Collection<HubTestCase> hubTestCases = new ArrayList<>();
+
+        // Get the repository configuration file.
+        String path = getGitHubRawPath(owner,repo,commit) + YAML_FILE_NAME;
+        final RepositoryConfiguration repositoryConfig =
+                getRepositoryConfiguration(path);
+
+        // Parse the repository configuration file and create a manifest object
+        final Manifest manifest =
+                getManifest(getGitHubRawPath(owner,repo,commit) + repositoryConfig.getManifestPath());
+
+        // Get the ontology folder
+        final String ontologyFolder = repositoryConfig.getOntologyFolder();
+
+        // Get the tests folder
+        final String testsFolder = repositoryConfig.getTestFolder();
+
+        // Get collection of generated test cases from the manifest file.
+        final Collection<HubTestCase> parsedTestCases = getTestCasesFromManifest(owner,repo,commit,ontologyFolder,testsFolder,manifest);
+
+        LOGGER.debug(
+                String.format(
+                "INTERNAL parsed test cases [%s]",
+                parsedTestCases.size())
+        );
+
+        // Add all the test cases to the result collection.
+        hubTestCases.addAll(parsedTestCases);
+
+        return hubTestCases;
+    }
+
+
+    @Override
+    public String createCheckRun(String authToken,String owner,String repo,String commit){
+
+        LOGGER.debug(
+                String.format(
+                        "Creating CheckRun for user=[%s], repo =[%s] and commit=[%s]",
+                        owner,
+                        repo,
+                        commit
+                )
+        );
+
+        HttpClient httpclient = HttpClients.createDefault();
+        String path = getGitHubCheckRunsPath(owner,repo);
+        HttpPost httppost = getGitHubPost(path,owner,repo,authToken);
+
+        try {
+            // Request parameters and other properties.
+            StringEntity params = new StringEntity("{\"name\":\"ontolo-ci\",\"head_sha\":\""+commit+"\"}");
+            httppost.setEntity(params);
+
+            //Execute and get the response.
+            HttpResponse response = httpclient.execute(httppost);
+            HttpEntity entity = response.getEntity();
+
+
+            if (entity != null) {
+                try (InputStream instream = entity.getContent()) {
+                    // do something useful
+                    String content = IOUtils.toString(instream, "UTF-8");
+                    Map<String,Object> checkResponse = this.jsonMapper.readValue(content,Map.class);
+                    return String.valueOf(checkResponse.get("id"));
+                }
+            }
+
+        }catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private HttpPost getGitHubPost(String path,String owner,String repo,String authToken){
+        HttpPost httppost = new HttpPost(path);
+
+        httppost.addHeader("Accept", "application/vnd.github.v3+json");
+        httppost.addHeader("Authorization", "token "+authToken);
+        httppost.addHeader("content-type", "application/json");
+
+        return httppost;
+    }
+
+
+    @Override
+    public void updateCheckRun(String authToken, String checkRunId, String owner, String repo, String conclusion,String output) {
+
+        LOGGER.debug(
+                String.format(
+                        "Unpadating CheckRun = [%s] for user=[%s] and repo =[%s] ",
+                        checkRunId,
+                        owner,
+                        repo
+                )
+        );
+
+
+        HttpClient httpclient = HttpClients.createDefault();
+        HttpPatch httpatch = new HttpPatch(getUpdateCheckRunPath(owner,repo,checkRunId));
+
+        httpatch.addHeader("Accept", "application/vnd.github.v3+json");
+        httpatch.addHeader("Authorization", "token "+authToken);
+        httpatch.addHeader("content-type", "application/json");
+
+        try {
+            // Request parameters and other properties.
+            StringEntity params = new StringEntity("{\"conclusion\":\""+conclusion+"\",\"output\":"+output+"}");
+            httpatch.setEntity(params);
+
+            //Execute and get the response.
+            HttpResponse response = httpclient.execute(httpatch);
+            HttpEntity entity = response.getEntity();
+
+
+            if (entity != null) {
+                try (InputStream instream = entity.getContent()) {
+                    // do something useful
+                    String content = IOUtils.toString(instream, "UTF-8");
+                    System.out.println(content);
+
+                }
+            }
+
+        }catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private String getUpdateCheckRunPath(String owner, String repo, String checkRunId) {
+        return GITHUB_API_REQUEST+"/repos/"+owner+"/"+repo+"/check-runs/"+checkRunId;
+    }
+
+
+
     public String getPersonalAccessToken(String code){
         String access_token = "";
         String clientId = KeyUtils.getClientId();
@@ -162,7 +330,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
             con.setRequestProperty("Accept", "application/vnd.github.v3+json");
             con.setRequestProperty("Authorization", "Bearer "+KeyUtils.getJWT());
 
-            String content =  getFileContent(con.getInputStream());
+            String content =  getStreamContent(con.getInputStream());
             List<Map<String,Object>> installations = this.jsonMapper.readValue(content,List.class);
             for(Map<String,Object> installation: installations) {
                 String accountData = (String) ((Map<String, Object>) installation.get("account")).get("login");
@@ -191,7 +359,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
             con.setRequestProperty("Accept", "application/vnd.github.v3+json");
             con.setRequestProperty("Authorization", "Bearer "+jwt);
 
-            String content =  getFileContent(con.getInputStream());
+            String content =  getStreamContent(con.getInputStream());
             Map<String,Object> response = this.jsonMapper.readValue(content,Map.class);
             return (String) response.get("token");
 
@@ -202,136 +370,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
         return null;
     }
 
-    public String createCheckRun(String authToken,String owner,String repo,String headSha){
-        HttpClient httpclient = HttpClients.createDefault();
-        HttpPost httppost = new HttpPost("https://api.github.com/repos/"+owner+"/"+repo+"/check-runs");
 
-        httppost.addHeader("Accept", "application/vnd.github.v3+json");
-        httppost.addHeader("Authorization", "token "+authToken);
-        httppost.addHeader("content-type", "application/json");
-
-        try {
-            // Request parameters and other properties.
-            StringEntity params = new StringEntity("{\"name\":\"ontolo-ci\",\"head_sha\":\""+headSha+"\"}");
-            httppost.setEntity(params);
-
-            //Execute and get the response.
-            HttpResponse response = httpclient.execute(httppost);
-            HttpEntity entity = response.getEntity();
-
-
-            if (entity != null) {
-                try (InputStream instream = entity.getContent()) {
-                    // do something useful
-                    String content = IOUtils.toString(instream, "UTF-8");
-                    Map<String,Object> checkResponse = this.jsonMapper.readValue(content,Map.class);
-                    return String.valueOf(checkResponse.get("id"));
-                }
-            }
-
-        }catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-
-    @Override
-    public void updateCheckRun(String authToken, String checkRunId, String owner, String repo, String conclusion,String output) {
-        HttpClient httpclient = HttpClients.createDefault();
-        HttpPatch httpatch = new HttpPatch("https://api.github.com/repos/"+owner+"/"+repo+"/check-runs/"+checkRunId);
-
-        httpatch.addHeader("Accept", "application/vnd.github.v3+json");
-        httpatch.addHeader("Authorization", "token "+authToken);
-        httpatch.addHeader("content-type", "application/json");
-
-        try {
-            // Request parameters and other properties.
-            StringEntity params = new StringEntity("{\"conclusion\":\""+conclusion+"\",\"output\":"+output+"}");
-            httpatch.setEntity(params);
-
-            //Execute and get the response.
-            HttpResponse response = httpclient.execute(httpatch);
-            HttpEntity entity = response.getEntity();
-
-
-            if (entity != null) {
-                try (InputStream instream = entity.getContent()) {
-                    // do something useful
-                    String content = IOUtils.toString(instream, "UTF-8");
-                    System.out.println(content);
-
-                }
-            }
-
-        }catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    /**
-     * Gets a collection of test cases from a concrete commit of a GitHub repository.
-     *
-     * @param owner                 of the repository
-     * @param repo                  name of the repository
-     * @param commit                of the repository
-     *
-     * @return test cases
-     */
-    @Override
-    public Collection<HubTestCase> getTestCases(final String owner, final String repo,final String commit) throws IOException {
-
-        LOGGER.debug(
-                String.format(
-                        "GET Computing the collection of HubTestCase for user=[%s], repo =[%s] and commit=[%s]",
-                        owner,
-                        repo,
-                        commit
-                )
-        );
-
-        // Result collection, initialized to empty one so not null is returned.
-        final Collection<HubTestCase> hubTestCases = new ArrayList<>();
-
-
-        // Get the repository configuration file.
-        final RepositoryConfiguration repositoryConfig =
-                getRepositoryConfiguration(getConcatenatedPath(owner,repo,commit) + YAML_FILE_NAME);
-
-        // Parse the repository configuration file and create a manifest object
-        final Manifest manifest =
-                getManifest(getConcatenatedPath(owner,repo,commit) + repositoryConfig.getManifestPath());
-
-        // Get the ontology folder
-        final String ontologyFolder = repositoryConfig.getOntologyFolderPath();
-
-        // Get the tests folder
-        final String testsFolder = repositoryConfig.getTestFolderPath();
-
-        // Get collection of generated test cases from the manifest file.
-        final Collection<HubTestCase> parsedTestCases = getTestCasesFromManifest(owner,repo,commit,ontologyFolder,testsFolder,manifest);
-
-        LOGGER.debug(
-                String.format(
-                "INTERNAL parsed test cases [%s]",
-                parsedTestCases.size())
-        );
-
-        // Add all the test cases to the result collection.
-        hubTestCases.addAll(parsedTestCases);
-
-
-        return hubTestCases;
-    }
 
     /**
      * Gets the Manifest from the .oci.yml file of a concrete commit of a GitHub repository
@@ -380,8 +419,8 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
      */
     private Collection<HubTestCase> getTestCasesFromManifest(String owner, String repo, String commit, String ontologyFolder, String testFolder, Manifest mainifest) throws IOException {
         Collection<HubTestCase> testCases = new ArrayList<HubTestCase>();
-        String genericOntologyPath = getConcatenatedPath(owner, repo, commit)+ontologyFolder+SLASH_SYMBOL;
-        String genericTestPath = getConcatenatedPath(owner, repo, commit)+testFolder+SLASH_SYMBOL;
+        String genericOntologyPath = getGitHubRawPath(owner, repo, commit)+ontologyFolder+SLASH;
+        String genericTestPath = getGitHubRawPath(owner, repo, commit)+testFolder+SLASH;
         
         
         for(ManifestEntry entry:mainifest.getManifestEntries()){
@@ -413,7 +452,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
             con.setDoOutput(true);
             con.setRequestProperty("Accept", "application/json");
 
-            return getFileContent(con.getInputStream());
+            return getStreamContent(con.getInputStream());
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -422,7 +461,13 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
 
     }
 
-    private String getFileContent(InputStream in) throws IOException {
+    /**
+     * Gets the content of a stream
+     * @param  in stream
+     * @return the content of the stream
+     * @throws IOException
+     */
+    private String getStreamContent(InputStream in) throws IOException {
         BufferedReader rd = new BufferedReader(new InputStreamReader(in));
         StringBuilder result = new StringBuilder();
         String line;
@@ -433,9 +478,20 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
         return result.toString();
     }
 
-    private String getConcatenatedPath(final String owner,final String repo,final String commit) {
-        return API_REQUEST+owner+SLASH_SYMBOL+repo+SLASH_SYMBOL+commit+SLASH_SYMBOL;
+    /**
+     * Returns the full path for the GitHub Raw requests
+     * @param owner   of the repository
+     * @param repo    the repository name
+     * @param commit  of the repository
+     *
+     * @return path as a string
+     */
+    private String getGitHubRawPath(final String owner,final String repo,final String commit) {
+        return GITHUB_RAW_REQUEST +owner+SLASH+repo+SLASH+commit+SLASH;
     }
 
+    private String getGitHubCheckRunsPath(final String owner,final String repo) {
+        return GITHUB_API_REQUEST+"repos"+SLASH+owner+SLASH+repo+SLASH+"check-runs";
+    }
 
 }

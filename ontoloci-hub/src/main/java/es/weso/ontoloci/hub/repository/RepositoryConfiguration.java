@@ -17,27 +17,27 @@ public class RepositoryConfiguration {
     private static final Logger LOGGER = LoggerFactory.getLogger(RepositoryConfiguration.class);
 
     private String manifestPath;
-    private String ontologyFolderPath;
-    private String testFolderPath;
+    private String ontologyFolder;
+    private String testFolder;
 
     /**
      * RepositoryConfiguration public constructor
      *
      * @param manifestPath path of the manifest file inside the repository.
-     * @param ontologyFolderPath path of the ontology folder inside the repository.
-     * @param testFolderPath path of the tests folder inside the repository.
+     * @param ontologyFolder path of the ontology folder inside the repository.
+     * @param testFolder path of the tests folder inside the repository.
      */
-    public RepositoryConfiguration(final String manifestPath, final String ontologyFolderPath, final String testFolderPath) {
+    public RepositoryConfiguration(final String manifestPath, final String ontologyFolder, final String testFolder) {
         this.manifestPath = manifestPath;
-        this.ontologyFolderPath = ontologyFolderPath;
-        this.testFolderPath = testFolderPath;
+        this.ontologyFolder = ontologyFolder;
+        this.testFolder = testFolder;
 
         LOGGER.debug(
                 "Creating a new RepositoryConfiguration from the public constructor with manifest path=[%s], " +
                         "ontology folder=[%s] and tests folder=[%s]",
                 manifestPath,
-                ontologyFolderPath,
-                testFolderPath
+                ontologyFolder,
+                testFolder
         );
     }
 
@@ -59,16 +59,16 @@ public class RepositoryConfiguration {
      * Gets the path of the ontology folder.
      * @return the ontology folder path.
      */
-    public String getOntologyFolderPath() {
-        return ontologyFolderPath;
+    public String getOntologyFolder() {
+        return ontologyFolder;
     }
 
     /**
      * Gets the path of the test folder.
      * @return the test folder path.
      */
-    public String getTestFolderPath() {
-        return testFolderPath;
+    public String getTestFolder() {
+        return testFolder;
     }
 
     /**
@@ -81,18 +81,18 @@ public class RepositoryConfiguration {
 
     /**
      * Sets the path of the ontology folder
-     * @param ontologyFolderPath to be set.
+     * @param ontologyFolder to be set.
      */
-    public void setOntologyFolderPath(String ontologyFolderPath) {
-        this.ontologyFolderPath = ontologyFolderPath;
+    public void setOntologyFolder(String ontologyFolder) {
+        this.ontologyFolder = ontologyFolder;
     }
 
     /**
      * Sets the path of the test folder
-     * @param testFolderPath to be set.
+     * @param testFolder to be set.
      */
-    public void setTestFolderPath(String testFolderPath) {
-        this.testFolderPath = testFolderPath;
+    public void setTestFolder(String testFolder) {
+        this.testFolder = testFolder;
     }
 
 
@@ -100,8 +100,8 @@ public class RepositoryConfiguration {
     public String toString() {
         return "RepositoryConfiguration{" +
                 "manifestPath='" + manifestPath + '\'' +
-                ", ontologyFolder='" + ontologyFolderPath + '\'' +
-                ", testFolder='" + testFolderPath + '\'' +
+                ", ontologyFolder='" + ontologyFolder + '\'' +
+                ", testFolder='" + testFolder + '\'' +
                 '}';
     }
 }

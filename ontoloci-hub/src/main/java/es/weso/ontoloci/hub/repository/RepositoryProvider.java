@@ -15,7 +15,7 @@ public interface RepositoryProvider {
      *
      * @param owner                 of the repository
      * @param repo                  name of the repository
-     * @param commit                of the repository
+     * @param commit                sha of the commit
      *
      * @return test cases
      */
@@ -25,8 +25,21 @@ public interface RepositoryProvider {
             final String commit
     ) throws IOException;
 
+
     /**
-     * Updates the checkrun status for a concrete checkRunId of a repo
+     * Creates a checkrun for a concrete commit of a repository
+     *
+     * @param authToken authorization token
+     * @param owner     of the repository
+     * @param repo      name of the repository
+     * @param commit    sha of the commit
+     *
+     * @return  id of the created checkrun
+     */
+    String createCheckRun(String authToken,String owner,String repo,String commit);
+
+    /**
+     * Updates the checkrun status for a concrete checkRunId of a repository
      *
      * @param authToken             authorization token
      * @param checkRunId            id of the checkRun
