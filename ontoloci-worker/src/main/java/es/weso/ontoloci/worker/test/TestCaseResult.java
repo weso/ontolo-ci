@@ -156,6 +156,9 @@ public class TestCaseResult {
         this.metadata = metadata;
     }
 
+    public void addMetadata(String key,String value){
+        this.metadata.put(key,value);
+    }
 
     public void setNodes(List<NodeValidation> nodeValidationList) {
         this.nodeValidationList = nodeValidationList;
