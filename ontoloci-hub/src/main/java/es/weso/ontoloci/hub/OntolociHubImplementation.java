@@ -133,7 +133,7 @@ public class OntolociHubImplementation implements OntolociHub {
      */
     private Map<String,String> fillMetadataException(String checkTitle,String checkBody){
         Map<String,String> metadata = new HashMap<>();
-        metadata.put("exception","true");
+        metadata.put("exceptions","true");
         metadata.put("checkTitle",checkTitle);
         metadata.put("checkBody",checkBody);
         metadata.put("execution_date",String.valueOf(System.currentTimeMillis()));

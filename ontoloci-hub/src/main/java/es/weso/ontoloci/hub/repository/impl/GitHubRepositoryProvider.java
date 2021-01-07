@@ -114,30 +114,22 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
     public Collection<HubTestCase> getTestCases(final String owner, final String repo,final String commit) throws IOException {
 
         LOGGER.debug(String.format("GET Computing the collection of HubTestCase for user=[%s], repo =[%s] and commit=[%s]", owner, repo, commit));
-
         // Result collection, initialized to empty one so not null is returned.
         final Collection<HubTestCase> hubTestCases = new ArrayList<>();
-
-        // Get the repository configuration file.
+        // 1. Get the repository configuration file.
         final RepositoryConfiguration repositoryConfig = getRepositoryConfiguration(getYAMLPath(owner,repo,commit));
-
-        // Parse the repository configuration file and create a manifest object
+        // 2. Parse the repository configuration file and create a manifest object
         final Manifest manifest = getManifest(getManifestPath(owner,repo,commit,repositoryConfig));
-
-        // Get the ontology folder
+        // 3. Get the ontology folder
         final String ontologyFolder = repositoryConfig.getOntologyFolder();
-
-        // Get the tests folder
+        // 4. Get the tests folder
         final String testsFolder = repositoryConfig.getTestFolder();
-
-        // Get collection of generated test cases from the manifest file.
+        // 5. Get collection of generated test cases from the manifest file.
         final Collection<HubTestCase> parsedTestCases = getTestCasesFromManifest(owner,repo,commit,ontologyFolder,testsFolder,manifest);
-
         LOGGER.debug(String.format("INTERNAL parsed test cases [%s]",parsedTestCases.size()));
-
-        // Add all the test cases to the result collection.
+        // 6. Add all the test cases to the result collection.
         hubTestCases.addAll(parsedTestCases);
-
+        // 7. Finally, return the test cases
         return hubTestCases;
     }
 
@@ -155,19 +147,19 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
 
         LOGGER.debug( String.format("Creating CheckRun  for user=[%s], repo =[%s] and commit =[%s] ",owner,repo,commit));
 
-        // Create the HttpClient
+        // 1. Create the HttpClient
         HttpClient httpclient = HttpClients.createDefault();
-        // Set the request path
+        // 2. Set the request path
         String path = getCheckRunsPath(owner,repo);
-        // Authenticate the user
+        // 3. Authenticate the user
         String authToken = authenticate(owner);
-        // Create the appropriate HTTP method for the request
+        // 4. Create the appropriate HTTP method for the request
         HttpPost httppost = getGitHubPostAuth(path,authToken);
-        // Set the request params
+        // 5. Set the request params
         httppost  = addCreateCheckRunParams(httppost,commit);
-        // Perform the request
+        // 6. Perform the request
         String response = executeRequest(httpclient,httppost);
-        // Obtain the checkRunId from the response
+        // 7. Obtain the checkRunId from the response
         String checkRunId =  getCheckRunIdFromResponse(response);
 
         LOGGER.debug( String.format("Created CheckRun for user=[%s], repo =[%s] and commit =[%s] ",owner,repo,commit));
@@ -190,18 +182,18 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
 
         LOGGER.debug( String.format("Updating CheckRun = [%s] for user=[%s] and repo =[%s] ",checkRunId,owner,repo));
 
-        // Create the HttpClient
+        // 1. Create the HttpClient
         HttpClient httpclient = HttpClients.createDefault();
-        // Set the request path
+        // 2. Set the request path
         String path = getUpdateCheckRunPath(owner,repo,checkRunId);
-        // Authenticate the user
+        // 3. Authenticate the user
         String authToken = authenticate(owner);
-        // Create the appropriate HTTP method for the request
+        // 4. Create the appropriate HTTP method for the request
         HttpPatch httpatch = getGitHubPatchAuth(path,authToken);
-        // Set the request params
+        // 5. Set the request params
         httpatch  = addUpdateCheckRunParams(httpatch,conclusion,output);
-        // Perform the request
-        executeRequest(httpclient,httpatch);
+        // 6. Perform the request
+        String result = executeRequest(httpclient,httpatch);
 
         LOGGER.debug( String.format("CheckRun updated = [%s] for user=[%s] and repo =[%s] ",checkRunId,owner,repo));
 
@@ -252,15 +244,15 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
 
         LOGGER.debug( String.format("Authenticating installationId = [%s]",installationId));
 
-        // Create the HttpClient
+        // 1. Create the HttpClient
         HttpClient httpclient = HttpClients.createDefault();
-        // Set the request path
+        // 2. Set the request path
         String path = getAuthenticationByInstallationPath(installationId);
-        // Create the appropriate HTTP method for the request
+        // 3. Create the appropriate HTTP method for the request
         HttpPost httppost = getBearerGitHubPost(path);
-        // Perform the request
+        // 4. Perform the request
         String response = executeRequest(httpclient,httppost);
-        // Obtain the authToken from the response
+        // 5. Obtain the authToken from the response
         String authToken = getAuthTokenFromResponse(response);
 
         LOGGER.debug( String.format("Authenticated installationId = [%s]",installationId));

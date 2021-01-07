@@ -7,22 +7,23 @@ import org.slf4j.LoggerFactory;
 /**
  * Represents the values that the build result status may take:
  *
- *  - PASS when the test finishes and the result is positive.
+ *  - SUCCESS when the test finishes and the result is positive.
  *  - FAIL when the test finishes and the result is not positive.
  *
  * @author Pablo Menéndez
  */
 public enum BuildResultStatus {
 
+
     /**
      * Represents a build that has been executed and the result is positive.
      */
-    PASS("pass"),
+    PASS("success"),
 
     /**
      * Represents a build that has been executed and the result is not positive.
      */
-    FAIL("fail");
+    FAIL("failure");
 
     // LOGGER CREATION
     private static final Logger LOGGER = LoggerFactory.getLogger(PersistedTestCaseResult.class);

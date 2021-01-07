@@ -5,6 +5,7 @@ import es.weso.ontoloci.persistence.OntolociDAO;
 import es.weso.ontoloci.persistence.mongo.OntolociInMemoryDAO;
 import es.weso.ontoloci.worker.build.Build;
 import es.weso.ontoloci.worker.build.BuildResult;
+import es.weso.ontoloci.worker.build.BuildResultStatus;
 import es.weso.ontoloci.worker.test.TestCaseResult;
 import es.weso.ontoloci.worker.utils.MarkdownUtils;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import es.weso.ontoloci.hub.OntolociHubImplementation;
 
+import javax.swing.plaf.ButtonUI;
 import java.util.*;
 
 public class WorkerExecutor implements Worker {
@@ -29,8 +31,7 @@ public class WorkerExecutor implements Worker {
     }
     
     /**
-     * Main constructor for the worker exeutor class. This is intended for dependency injection.
-     *
+     * Main constructor for the worker executor class. This is intended for dependency injection.
      * @param worker to execute the builds.
      */
     private WorkerExecutor(final Worker worker) {
@@ -39,39 +40,70 @@ public class WorkerExecutor implements Worker {
 
     @Override
     public BuildResult executeBuild(Build build) {
-        LOGGER.debug("Executing a nre build for " + build);
-
+        LOGGER.debug("Executing build: " + build);
+        // 1. Create a Hub instance
         OntolociHubImplementation ontolocyHub = new OntolociHubImplementation();
-        //Transform the current build to a HubBuild
+        // 2. Transform the current build to a HubBuild
         HubBuild hubBuild = build.toHubBuild();
-        //Add the tests
+        // 3. Add the tests to the build
         hubBuild = ontolocyHub.addTestsToBuild(hubBuild);
-
-        //Transform the returned HubBuild to a Build and overwrites the result
-        build = build.from(hubBuild);
-
-        BuildResult buildResult = BuildResult.from(build.getMetadata(), new ArrayList<TestCaseResult>());
-        String title = build.getMetadata().get("checkTitle");
-        String body = build.getMetadata().get("checkBody");
-        String conclusion = "failure";
-        if(!build.getMetadata().get("exceptions").equals("true")){
-            // Store the result of the build.
-            buildResult = this.worker.executeBuild(build);
-            conclusion =  "success"; //AHORA HAY QUE COMPROBAR CON EL BUILDRESULTSTATUS
-            title = buildResult.getMetadata().get("checkTitle");
-            body = MarkdownUtils.getMarkDownFromTests(buildResult.getTestCaseResults());
-        }
-
-        String output = "{\"title\":\""+title+"\",\"summary\":\""+body+"\"}";
-        ontolocyHub.updateCheckRun(conclusion,output);
-
-        for(TestCaseResult tcr : buildResult.getTestCaseResults()) {
-            System.out.println(tcr.getTestCase().getName() + " -> " + tcr.getStatus());
-        }
-
-        LOGGER.debug("INTERNAL validation finished, storing results in persistence layer");
-        persistence.save(BuildResult.toPersistedBuildResult(buildResult));
-
+        // 4. Transform the HubBuild to a worker build
+        build = Build.from(hubBuild);
+        // 5. Execute worker in case everything went right
+        BuildResult buildResult = executeWorker(build);
+        // 6. Update the check run
+        updateCheckRun(ontolocyHub,buildResult);
+        // 7. Persist the build result
+        persist(buildResult);
+        // 8. Finally return the build result
         return buildResult;
     }
+
+    private void updateCheckRun(OntolociHubImplementation ontolocyHub, BuildResult buildResult) {
+        String conclusion = getConclusion(buildResult);
+        String output = getOutput(buildResult);
+        ontolocyHub.updateCheckRun(conclusion,output);
+    }
+
+
+    private BuildResult executeWorker(Build build){
+      return !hasExceptions(build) ?
+              this.worker.executeBuild(build) :
+              BuildResult.from(build.getMetadata(), new ArrayList<>());
+    }
+
+    private void persist(BuildResult buildResult) {
+        LOGGER.debug("INTERNAL validation finished, storing results in persistence layer");
+        persistence.save(BuildResult.toPersistedBuildResult(buildResult));
+    }
+
+
+    private String getOutput(BuildResult buildResult) {
+        String title = getTilte(buildResult);
+        String body = getBody(buildResult);
+        return "{\"title\":\""+title+"\",\"summary\":\""+body+"\"}";
+    }
+
+    private String getTilte(BuildResult buildResult) {
+        return buildResult.getMetadata().get("checkTitle");
+    }
+
+    private String getBody(BuildResult buildResult) {
+        return !hasExceptions(buildResult) ?
+                MarkdownUtils.getMarkDownFromTests(buildResult.getTestCaseResults()) :
+                buildResult.getMetadata().get("checkBody");
+    }
+
+    private String getConclusion(BuildResult buildResult) {
+       return buildResult.getStatus().getValue();
+    }
+
+    private boolean hasExceptions(Build build){
+        return build.getMetadata().get("exceptions").equals("true");
+    }
+
+    private boolean hasExceptions(BuildResult buildResult){
+        return buildResult.getMetadata().get("exceptions").equals("true");
+    }
+
 }
