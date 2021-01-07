@@ -42,7 +42,7 @@ public class WorkerExecutor implements Worker {
     }
 
     /**
-     * This method recives an empty build that will be filled calling the appropriate Hub implementation,
+     * This method receives an empty build that will be filled calling the appropriate Hub implementation,
      * who also will create a check run.
      * Once the build is filled, this worker will delegate the work to the sequential worker, who will
      * perform the validation of the build.
