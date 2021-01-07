@@ -27,7 +27,6 @@ public class TestCaseResult {
     // Non final fields.
     private TestCaseResultStatus status;
     private Map<String, String> metadata;
-    private List<NodeValidation> nodeValidationList;
 
     public static PersistedTestCaseResult toPersistedTestCaseResult(TestCaseResult testCaseResult) {
 
@@ -97,7 +96,6 @@ public class TestCaseResult {
         this.testCase = testCase;
         this.status = status;
         this.metadata = metadata;
-        this.nodeValidationList = new ArrayList<>();
 
         LOGGER.debug("Creating new test case result for");
     }
@@ -146,11 +144,7 @@ public class TestCaseResult {
         return Collections.unmodifiableMap(this.metadata);
     }
 
-    public List<NodeValidation> getResults() {
-        LOGGER.debug("Getting the nodes of the test case result");
 
-        return this.nodeValidationList;
-    }
 
     public void setMetadata(Map<String, String> metadata) {
         this.metadata = metadata;
@@ -160,9 +154,6 @@ public class TestCaseResult {
         this.metadata.put(key,value);
     }
 
-    public void setNodes(List<NodeValidation> nodeValidationList) {
-        this.nodeValidationList = nodeValidationList;
-    }
 
     @Override
     public String toString() {

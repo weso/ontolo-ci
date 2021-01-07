@@ -2,6 +2,7 @@ package es.weso.ontoloci.worker.build;
 
 import es.weso.ontoloci.persistence.PersistedBuildResult;
 import es.weso.ontoloci.worker.test.TestCaseResult;
+import es.weso.ontoloci.worker.test.TestCaseResultStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +16,7 @@ public class BuildResult {
 
     private String id;
     private Map<String, String> metadata;
+    private BuildResultStatus status;
     private Collection<TestCaseResult> testCaseResults;
 
     public static BuildResult from(PersistedBuildResult persistedBuildResult) {
@@ -98,10 +100,20 @@ public class BuildResult {
         return Collections.unmodifiableMap(this.metadata);
     }
 
+    public BuildResultStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(BuildResultStatus status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "BuildResult{" +
                 "id='" + id + '\'' +
+                ", metadata=" + metadata +
+                ", status=" + status +
                 ", testCaseResults=" + testCaseResults +
                 '}';
     }

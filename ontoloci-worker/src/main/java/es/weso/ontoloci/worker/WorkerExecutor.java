@@ -57,7 +57,7 @@ public class WorkerExecutor implements Worker {
         if(!build.getMetadata().get("exceptions").equals("true")){
             // Store the result of the build.
             buildResult = this.worker.executeBuild(build);
-            conclusion = buildResult.getMetadata().get("buildResult").equals("PASS") ? "success" : "failure";
+            conclusion =  "success"; //AHORA HAY QUE COMPROBAR CON EL BUILDRESULTSTATUS
             title = buildResult.getMetadata().get("checkTitle");
             body = MarkdownUtils.getMarkDownFromTests(buildResult.getTestCaseResults());
         }
