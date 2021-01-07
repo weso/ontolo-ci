@@ -20,11 +20,14 @@ public class WorkerExecutor implements Worker {
 
     // LOGGER CREATION
     private static final Logger LOGGER = LoggerFactory.getLogger(BuildResult.class);
-
+    private final Worker worker;
     private final OntolociDAO persistence = OntolociInMemoryDAO.instance();
 
-    private final Worker worker;
-
+    /**
+     * Factory method that creates a WorkerExecutor instance from a Worker instance.
+     * @param worker from which to create the new WorkerExecutor.
+     * @return the new WorkerExecutor instance.
+     */
     public static WorkerExecutor from(Worker worker) {
         LOGGER.debug("Static factory creating a new worker executor for " + worker);
         return new WorkerExecutor(worker);
@@ -38,6 +41,17 @@ public class WorkerExecutor implements Worker {
         this.worker = worker;
     }
 
+    /**
+     * This method recives an empty build that will be filled calling the appropriate Hub implementation,
+     * who also will create a check run.
+     * Once the build is filled, this worker will delegate the work to the sequential worker, who will
+     * perform the validation of the build.
+     * Then, the check run will be updated with the validation results.
+     * Finally, the build results will be stored in the persist layer.
+     *
+     * @param build to allocate in the worker.
+     * @return build result
+     */
     @Override
     public BuildResult executeBuild(Build build) {
         LOGGER.debug("Executing build: " + build);
@@ -59,49 +73,110 @@ public class WorkerExecutor implements Worker {
         return buildResult;
     }
 
-    private void updateCheckRun(OntolociHubImplementation ontolocyHub, BuildResult buildResult) {
-        String conclusion = getConclusion(buildResult);
-        String output = getOutput(buildResult);
-        ontolocyHub.updateCheckRun(conclusion,output);
-    }
 
-
+    /**
+     * Delegates the work to the sequential worker to perform the validation
+     * in case the build result has not previous exceptions during the hub tasks.
+     * Otherwise, it returns and empty build result.
+     *
+     * @param build to be executed
+     * @return build result after the execution or empty build
+     */
     private BuildResult executeWorker(Build build){
       return !hasExceptions(build) ?
               this.worker.executeBuild(build) :
               BuildResult.from(build.getMetadata(), new ArrayList<>());
     }
 
+    /**
+     * Calls the Hub in order to update the check run once the validation is performed.
+     * @param ontolocyHub hub
+     * @param buildResult build result
+     */
+    private void updateCheckRun(OntolociHubImplementation ontolocyHub, BuildResult buildResult) {
+        String conclusion = getConclusion(buildResult);
+        String output = getOutput(buildResult);
+        ontolocyHub.updateCheckRun(conclusion,output);
+    }
+
+    /**
+     * Stores build results in the persistence layer
+     * @param buildResult to be stored
+     */
     private void persist(BuildResult buildResult) {
         LOGGER.debug("INTERNAL validation finished, storing results in persistence layer");
         persistence.save(BuildResult.toPersistedBuildResult(buildResult));
     }
 
+    /**
+     * Gets the conclusion param for the check run update.
+     * The conclusion may be:
+     *
+     *  - SUCCESS when the build finishes and the result is positive.
+     *  - FAILURE when the build finishes and the result is not positive.
+     *
+     * @param buildResult
+     * @return conclusion as a string
+     */
+    private String getConclusion(BuildResult buildResult) {
+        return buildResult.getStatus().getValue();
+    }
 
+    /**
+     * Gets the output param for the check run update.
+     * This param provides descriptive details about the run.
+     *
+     * @param buildResult
+     * @return output as a string
+     */
     private String getOutput(BuildResult buildResult) {
         String title = getTilte(buildResult);
         String body = getBody(buildResult);
         return "{\"title\":\""+title+"\",\"summary\":\""+body+"\"}";
     }
 
+    /**
+     * Gets the title for the check run output param.
+     * This param is fetched from the build metadata.
+     *
+     * @param buildResult
+     * @return title as a string
+     */
     private String getTilte(BuildResult buildResult) {
         return buildResult.getMetadata().get("checkTitle");
     }
 
+    /**
+     * Gets the body for the check run output param.
+     * The body content will be a markdown string with the results of the build
+     * in case the build result has not previous exceptions during the hub tasks.
+     * Otherwise, the body content will be fetched from the build metadata
+     *
+     * @param buildResult
+     * @return body as a string
+     */
     private String getBody(BuildResult buildResult) {
         return !hasExceptions(buildResult) ?
                 MarkdownUtils.getMarkDownFromTests(buildResult.getTestCaseResults()) :
                 buildResult.getMetadata().get("checkBody");
     }
 
-    private String getConclusion(BuildResult buildResult) {
-       return buildResult.getStatus().getValue();
-    }
-
+    /**
+     * Checks if the build has suffered any exception during the hub tasks
+     *
+     * @param build
+     * @return true if it has been any exception, false otherwise
+     */
     private boolean hasExceptions(Build build){
         return build.getMetadata().get("exceptions").equals("true");
     }
 
+    /**
+     * Checks if the build result has suffered any exception during the hub tasks
+     *
+     * @param buildResult
+     * @return true if it has been any exception, false otherwise
+     */
     private boolean hasExceptions(BuildResult buildResult){
         return buildResult.getMetadata().get("exceptions").equals("true");
     }

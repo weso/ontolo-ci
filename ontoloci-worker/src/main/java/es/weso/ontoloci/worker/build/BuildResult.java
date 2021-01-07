@@ -68,7 +68,7 @@ public class BuildResult {
     private BuildResult(final String id,final Map<String, String> metadata, final Collection<TestCaseResult> testCaseResults) {
         this.testCaseResults = testCaseResults;
         this.metadata = metadata;
-        this.status = BuildResultStatus.FAIL; // I know it´s weird that the status value it´s fail by default but it simplifies the things
+        this.status = BuildResultStatus.FAILURE; // I know it´s weird that the status value it´s fail by default but it simplifies the things
         LOGGER.debug("Creating a new build result for ");
     }
 

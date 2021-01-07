@@ -105,9 +105,9 @@ public class WorkerSequential implements Worker {
     private BuildResultStatus resolveBuildStatus(Collection<TestCaseResult> testCaseResults) {
         for(TestCaseResult testCase : testCaseResults) {
             if(testCase.getStatus() == TestCaseResultStatus.FAIL)
-                return BuildResultStatus.FAIL;
+                return BuildResultStatus.FAILURE;
         }
-        return BuildResultStatus.PASS;
+        return BuildResultStatus.SUCCESS;
     }
 
     /**
@@ -244,7 +244,7 @@ public class WorkerSequential implements Worker {
         String checkTitle = "Build Passing";
         String checkBody = "All the tests has passed without problems";
 
-        if(buildStatus == BuildResultStatus.FAIL){
+        if(buildStatus == BuildResultStatus.FAILURE){
           checkTitle = "Build Passing";
           checkBody = "All the tests has passed without problems";
         }
