@@ -4,9 +4,6 @@ import OCITest from './OCITest';
 import {useParams} from "react-router-dom";
 import {getDate} from '../utils/dateUtils';
 
-
-
-
 function OCITestCases(props) {
 
 
@@ -26,7 +23,7 @@ function OCITestCases(props) {
   }).then(function(response){
       console.log(response.data)
       setMetadata(response.data.metadata)
-      setStatus(response.status)
+      setStatus(response.data.status.toLowerCase())
       setTests(response.data.testCaseResults)
       animate('hidePanel','main','showLoader','hideLoader')  
       
@@ -86,7 +83,7 @@ function OCITestCases(props) {
     
       <div className="main">
       
-        <div className={"build-panel border-"+status}>
+        <div className={"build-panel border-success"}>
             <div className="top-panel">
               {getSvgStatus()}
               {getHeader()}
