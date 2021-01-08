@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -64,7 +65,11 @@ public class OntolociHubImplementation implements OntolociHub {
     @Override
     public void updateCheckRun(String conclusion,String output){
         LOGGER.debug("Updating GitHub ChekRun=[%s] for [%s,%s,%s] with status=[%s] and msg=[%s]",currentCheckRunId,currentOwner,currentRepo,currentCommit,conclusion,output);
-        gitHubProvider.updateCheckRun(currentCheckRunId,currentOwner,currentRepo,conclusion,output);
+        try {
+            gitHubProvider.updateCheckRun(currentCheckRunId,currentOwner,currentRepo,conclusion,output);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -73,7 +78,12 @@ public class OntolociHubImplementation implements OntolociHub {
      */
     private String createGitHubCheckRun(){
         LOGGER.debug("Creating GitHub ChekRun for [%s,%s,%s]",currentOwner,currentRepo,currentCommit);
-        return gitHubProvider.createCheckRun(currentOwner,currentRepo,currentCommit);
+        try {
+            return gitHubProvider.createCheckRun(currentOwner,currentRepo,currentCommit);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**

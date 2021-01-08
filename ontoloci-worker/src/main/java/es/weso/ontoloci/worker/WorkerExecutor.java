@@ -2,6 +2,7 @@ package es.weso.ontoloci.worker;
 
 import es.weso.ontoloci.hub.build.HubBuild;
 import es.weso.ontoloci.persistence.OntolociDAO;
+import es.weso.ontoloci.persistence.PersistedBuildResult;
 import es.weso.ontoloci.persistence.mongo.OntolociInMemoryDAO;
 import es.weso.ontoloci.worker.build.Build;
 import es.weso.ontoloci.worker.build.BuildResult;
@@ -85,7 +86,7 @@ public class WorkerExecutor implements Worker {
     private BuildResult executeWorker(Build build){
       return !hasExceptions(build) ?
               this.worker.executeBuild(build) :
-              BuildResult.from(build.getMetadata(), new ArrayList<>());
+              BuildResult.from(build.getId(),build.getMetadata(),BuildResultStatus.CANCELLED,new ArrayList<>());
     }
 
     /**
@@ -105,7 +106,8 @@ public class WorkerExecutor implements Worker {
      */
     private void persist(BuildResult buildResult) {
         LOGGER.debug("INTERNAL validation finished, storing results in persistence layer");
-        persistence.save(BuildResult.toPersistedBuildResult(buildResult));
+        PersistedBuildResult b =BuildResult.toPersistedBuildResult(buildResult);
+        persistence.save(b);
     }
 
     /**

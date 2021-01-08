@@ -19,25 +19,6 @@ public class BuildResult {
     private BuildResultStatus status;
     private Collection<TestCaseResult> testCaseResults;
 
-    public static BuildResult from(PersistedBuildResult persistedBuildResult) {
-        return new BuildResult(
-                persistedBuildResult.getId(),
-                persistedBuildResult.getMetadata(),
-                persistedBuildResult.getTestCaseResults().stream()
-                        .map(item -> TestCaseResult.from(item))
-                        .collect(Collectors.toCollection(ArrayList::new))
-        );
-    }
-
-    public static PersistedBuildResult toPersistedBuildResult(BuildResult buildResult) {
-        return new PersistedBuildResult(
-                buildResult.getId(),
-                buildResult.getMetadata(),
-                buildResult.getTestCaseResults().stream()
-                        .map(item -> TestCaseResult.toPersistedTestCaseResult(item))
-                        .collect(Collectors.toCollection(ArrayList::new))
-        );
-    }
 
     /**
      * Factory method that creates a new instance of build result from an array of test case results.
@@ -45,8 +26,8 @@ public class BuildResult {
      * @param testCaseResults from which to create the build result instance.
      * @return a new instance of build result from an array of test case results.
      */
-    public static BuildResult from(final Map<String, String> metadata,final TestCaseResult... testCaseResults) {
-        return new BuildResult("",metadata, Arrays.asList(testCaseResults));
+    public static BuildResult from(final String id,final Map<String, String> metadata,final BuildResultStatus status,final Collection<TestCaseResult> testCaseResults) {
+        return new BuildResult(id,metadata, status,testCaseResults);
     }
 
     /**
@@ -55,20 +36,36 @@ public class BuildResult {
      * @param testCaseResults from which to create the build result instance.
      * @return a new instance of build result from an array of test case results.
      */
-    public static BuildResult from(final Map<String, String> metadata,final Collection<TestCaseResult> testCaseResults) {
-        return new BuildResult("", metadata, testCaseResults);
+    public static BuildResult from(final String id,final Map<String, String> metadata,final Collection<TestCaseResult> testCaseResults) {
+        return new BuildResult(id, metadata, testCaseResults);
     }
 
     /**
-     * Private constructor for build results. It takes a map of metadata and a collection of the test results.
-     *
-     * @param metadata from which to create the build result.
-     * @param testCaseResults from which to create the build result.
+     * Private constructor for build results.
+     * @param id
+     * @param metadata
+     * @param testCaseResults
      */
     private BuildResult(final String id,final Map<String, String> metadata, final Collection<TestCaseResult> testCaseResults) {
+        this.id = id;
         this.testCaseResults = testCaseResults;
         this.metadata = metadata;
         this.status = BuildResultStatus.FAILURE; // I know it´s weird that the status value it´s fail by default but it simplifies the things
+        LOGGER.debug("Creating a new build result for ");
+    }
+
+    /***
+     * Private constructor for build results.
+     * @param id
+     * @param metadata
+     * @param status
+     * @param testCaseResults
+     */
+    private BuildResult(final String id,final Map<String, String> metadata,final BuildResultStatus status,final Collection<TestCaseResult> testCaseResults) {
+        this.id = id;
+        this.testCaseResults = testCaseResults;
+        this.metadata = metadata;
+        this.status = status;
         LOGGER.debug("Creating a new build result for ");
     }
 
@@ -108,6 +105,41 @@ public class BuildResult {
     public void setStatus(BuildResultStatus status) {
         this.status = status;
     }
+
+    /**
+     * Transforms a PersistedBuildResult into a BuildResult
+     *
+     * @param persistedBuildResult
+     * @return build result
+     */
+    public static BuildResult from(PersistedBuildResult persistedBuildResult) {
+        return new BuildResult(
+                persistedBuildResult.getId(),
+                persistedBuildResult.getMetadata(),
+                BuildResultStatus.from(persistedBuildResult.getStatus()),
+                persistedBuildResult.getTestCaseResults().stream()
+                        .map(item -> TestCaseResult.from(item))
+                        .collect(Collectors.toCollection(ArrayList::new))
+        );
+    }
+
+    /**
+     * Transforms a BuildResult into a PersistedBuildResult
+     *
+     * @param buildResult
+     * @return persisted build result
+     */
+    public static PersistedBuildResult toPersistedBuildResult(BuildResult buildResult) {
+        return PersistedBuildResult.from(
+                buildResult.getId(),
+                buildResult.getMetadata(),
+                BuildResultStatus.toPersistedBuildResultStatus(buildResult.getStatus()),
+                buildResult.getTestCaseResults().stream()
+                        .map(item -> TestCaseResult.toPersistedTestCaseResult(item))
+                        .collect(Collectors.toCollection(ArrayList::new))
+        );
+    }
+
 
     @Override
     public String toString() {

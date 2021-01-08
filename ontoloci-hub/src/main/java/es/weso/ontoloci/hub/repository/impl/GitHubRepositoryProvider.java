@@ -143,7 +143,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
      * @return checkRunId
      */
     @Override
-    public String createCheckRun(String owner,String repo,String commit){
+    public String createCheckRun(String owner,String repo,String commit) throws IOException {
 
         LOGGER.debug( String.format("Creating CheckRun  for user=[%s], repo =[%s] and commit =[%s] ",owner,repo,commit));
 
@@ -178,7 +178,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
      * @param output                message
      */
     @Override
-    public void updateCheckRun(String checkRunId, String owner, String repo, String conclusion,String output) {
+    public void updateCheckRun(String checkRunId, String owner, String repo, String conclusion,String output) throws IOException {
 
         LOGGER.debug( String.format("Updating CheckRun = [%s] for user=[%s] and repo =[%s] ",checkRunId,owner,repo));
 
@@ -193,7 +193,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
         // 5. Set the request params
         httpatch  = addUpdateCheckRunParams(httpatch,conclusion,output);
         // 6. Perform the request
-        String result = executeRequest(httpclient,httpatch);
+        executeRequest(httpclient,httpatch);
 
         LOGGER.debug( String.format("CheckRun updated = [%s] for user=[%s] and repo =[%s] ",checkRunId,owner,repo));
 
@@ -205,7 +205,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
      * @param user to be authenticated
      * @return authentication token
      */
-    private String authenticate(String user){
+    private String authenticate(String user) throws IOException {
         String installationId = getInstallationId(user);
         return authenticateByInstallation(installationId);
     }
@@ -216,7 +216,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
      * @param user   to get their Installation Id
      * @return installationId
      */
-    private String getInstallationId(String user) {
+    private String getInstallationId(String user) throws IOException {
 
         LOGGER.debug( String.format("Getting InstallationId for user=[%s] ",user));
 
@@ -240,7 +240,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
      * @param installationId
      * @return authorization token
      */
-    private String authenticateByInstallation(String installationId)  {
+    private String authenticateByInstallation(String installationId) throws IOException {
 
         LOGGER.debug( String.format("Authenticating installationId = [%s]",installationId));
 
@@ -401,26 +401,17 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
      * @param request
      * @return result
      */
-    private String executeRequest( HttpClient httpclient,HttpRequestBase request) {
-
-        try {
-            HttpResponse response = httpclient.execute(request);
-            HttpEntity entity = response.getEntity();
-
-            if (entity != null) {
-                try (InputStream instream = entity.getContent()) {
-                    return IOUtils.toString(instream, "UTF-8");
-                }
+    private String executeRequest( HttpClient httpclient,HttpRequestBase request) throws IOException {
+        HttpResponse response = httpclient.execute(request);
+        HttpEntity entity = response.getEntity();
+        if (entity != null) {
+            try (InputStream instream = entity.getContent()) {
+                String result =  IOUtils.toString(instream, "UTF-8");
+                if(result.startsWith("404:"))
+                    throw new FileNotFoundException();
+                return result;
             }
-
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-
         return null;
     }
 

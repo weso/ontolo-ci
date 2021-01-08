@@ -54,7 +54,7 @@ public class WorkerSequential implements Worker {
         // 5. Get the metadata
         final Map<String, String> metadata = fillBuildMetadata(build,buildResultStatus);
         // 6. Create the build result
-        BuildResult buildResult = BuildResult.from(metadata,testCaseResults);
+        BuildResult buildResult = BuildResult.from(build.getId(),metadata,testCaseResults);
         // 7. Set the build result status
         buildResult.setStatus(buildResultStatus);
         // 8. Finally return the Build result.

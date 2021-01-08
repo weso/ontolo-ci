@@ -12,61 +12,98 @@ public class PersistedBuildResult {
 
     private String id;
     private Map<String, String> metadata;
+    private PersistedBuildResultStatus status;
     private Collection<PersistedTestCaseResult> testCaseResults;
 
+
     /**
-     * Factory method that creates a new instance of build result from an array of test case results.
+     * Factory method that creates a new instance of build result from an id,
+     * a Map of metadata, a status and an array of test case results.
+     *
+     * @param id
+     * @param metadata
+     * @param status
+     * @param testCaseResults
+     * @return a new instance of persisted build result
+     */
+    public static PersistedBuildResult from(final String id,final Map<String, String> metadata,final PersistedBuildResultStatus status, final Collection<PersistedTestCaseResult> testCaseResults) {
+        return new PersistedBuildResult(id, metadata,status,testCaseResults);
+    }
+
+    /**
+     * Factory method that creates a new instance of persisted build result from an array of test case results.
      *
      * @param testCaseResults from which to create the build result instance.
      * @return a new instance of build result from an array of test case results.
      */
-    public static PersistedBuildResult from(final Map<String, String> metadata,final PersistedTestCaseResult... testCaseResults) {
-        return new PersistedBuildResult("",metadata, Arrays.asList(testCaseResults));
+    public static PersistedBuildResult from(final String id,final Map<String, String> metadata, final PersistedTestCaseResult... testCaseResults) {
+        return new PersistedBuildResult(id, metadata, Arrays.asList(testCaseResults));
     }
 
     /**
-     * Factory method that creates a new instance of build result from an array of test case results.
+     * Factory method that creates a new instance of persisted build result from an array of test case results.
      *
-     * @param testCaseResults from which to create the build result instance.
+     * @param testCaseResults from which to create the persisted build result instance.
      * @return a new instance of build result from an array of test case results.
      */
     public static PersistedBuildResult from(final PersistedTestCaseResult... testCaseResults) {
-        return new PersistedBuildResult("", Arrays.asList(testCaseResults));
+        return new PersistedBuildResult(UUID.randomUUID().toString(), Arrays.asList(testCaseResults));
     }
 
     /**
-     * Factory method that creates a new instance of build result from a collection of test case results.
+     * Factory method that creates a new instance of persisted build result from a collection of test case results.
      *
-     * @param testCaseResults from which to create the build result instance.
+     * @param testCaseResults from which to create the persisted build result instance.
      * @return a new instance of build result from an array of test case results.
      */
-    public static PersistedBuildResult from(final Map<String, String> metadata,final Collection<PersistedTestCaseResult> testCaseResults) {
-        return new PersistedBuildResult("",metadata, testCaseResults);
+    public static PersistedBuildResult from(final String id,final Map<String, String> metadata, final Collection<PersistedTestCaseResult> testCaseResults) {
+        return new PersistedBuildResult(id, metadata, testCaseResults);
     }
 
     /**
-     * Private constructor for build results. It takes a collection of the test results.
+     * Private constructor for build results.
      *
-     * @param metadata from which to create the build result.
-     * @param testCaseResults from which to create the build result.
+     * @param metadata        from which to create the persisted build result.
+     * @param testCaseResults from which to create the persisted build result.
      */
-    public PersistedBuildResult(final String id, final Map<String, String> metadata,final Collection<PersistedTestCaseResult> testCaseResults) {
+    private PersistedBuildResult(final String id, final Map<String, String> metadata, final Collection<PersistedTestCaseResult> testCaseResults) {
+        this.id = id;
         this.metadata = metadata;
         this.testCaseResults = testCaseResults;
 
         LOGGER.debug("Creating a new build result for ");
     }
 
-    /**
-     * Private constructor for build results. It takes a collection of the test results.
-     *
-     * @param testCaseResults from which to create the build result.
+    /***
+     * Private constructor for build results.
+     * @param id
+     * @param metadata
+     * @param status
+     * @param testCaseResults
      */
-    public PersistedBuildResult(final String id, final Collection<PersistedTestCaseResult> testCaseResults) {
+    private PersistedBuildResult(final String id, final Map<String, String> metadata,final PersistedBuildResultStatus status,final Collection<PersistedTestCaseResult> testCaseResults) {
+        this.id = id;
+        this.metadata = metadata;
+        this.status = status;
         this.testCaseResults = testCaseResults;
 
         LOGGER.debug("Creating a new build result for ");
     }
+
+    /**
+     * Private constructor for build results
+     *
+     * @param id              from which to create the persisted build result.
+     * @param testCaseResults from which to create the persisted build result.
+     */
+    private PersistedBuildResult(final String id, final Collection<PersistedTestCaseResult> testCaseResults) {
+        this.id = id;
+        this.testCaseResults = testCaseResults;
+
+        LOGGER.debug("Creating a new build result for ");
+    }
+
+
 
     public void setId(final String id) {
         this.id = id;
@@ -97,10 +134,20 @@ public class PersistedBuildResult {
         return Collections.unmodifiableMap(this.metadata);
     }
 
+    public PersistedBuildResultStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(PersistedBuildResultStatus status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
-        return "BuildResult{" +
+        return "PersistedBuildResult{" +
                 "id='" + id + '\'' +
+                ", metadata=" + metadata +
+                ", status=" + status +
                 ", testCaseResults=" + testCaseResults +
                 '}';
     }

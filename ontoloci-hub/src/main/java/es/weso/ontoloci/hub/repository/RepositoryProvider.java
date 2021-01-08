@@ -18,6 +18,7 @@ public interface RepositoryProvider {
      * @param commit                sha of the commit
      *
      * @return test cases
+     * @throws IOException
      */
     Collection<HubTestCase> getTestCases(
             final String owner,
@@ -34,11 +35,12 @@ public interface RepositoryProvider {
      * @param commit    sha of the commit
      *
      * @return  id of the created checkrun
+     * @throws IOException
      */
     String createCheckRun(
             final String owner,
             final String repo,
-            final String commit);
+            final String commit) throws IOException;
 
     /**
      * Updates the checkrun status for a specific checkRunId of a repository
@@ -49,11 +51,12 @@ public interface RepositoryProvider {
      * @param conclusion            new status of the checkrun
      * @param output                message
      *
+     * @throws IOException
      */
     void updateCheckRun(
             final String checkRunId,
             final String owner,
             final String repo,
             final String conclusion,
-            final String output);
+            final String output) throws IOException;
 }

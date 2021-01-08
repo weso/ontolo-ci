@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 public class OntolociMongoDAOTest {
 
@@ -19,9 +20,9 @@ public class OntolociMongoDAOTest {
         //new OntolociMongoDAO(new MongoClient(new ServerAddress("ds241489.mlab.com", 41489), Arrays.asList(credential)));
 
     // Test instances.
-    private final PersistedBuildResult r1 = PersistedBuildResult.from(new HashMap<>(),new ArrayList<>());
-    private final PersistedBuildResult r2 = PersistedBuildResult.from(new HashMap<>(),new ArrayList<>());
-    private final PersistedBuildResult r3 = PersistedBuildResult.from(new HashMap<>(),new ArrayList<>());
+    private final PersistedBuildResult r1 = PersistedBuildResult.from(UUID.randomUUID().toString(),new HashMap<>(),new ArrayList<>());
+    private final PersistedBuildResult r2 = PersistedBuildResult.from(UUID.randomUUID().toString(),new HashMap<>(),new ArrayList<>());
+    private final PersistedBuildResult r3 = PersistedBuildResult.from(UUID.randomUUID().toString(),new HashMap<>(),new ArrayList<>());
 
     @Test
     public void saveTest() {

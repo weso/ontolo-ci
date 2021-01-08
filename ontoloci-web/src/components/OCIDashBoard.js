@@ -49,6 +49,7 @@ function OCIDashBoard() {
       <div className="dashboard-elements-list">
 
         {builds.map(build =>{
+          console.log(build)
           return <OCIBuild 
                       key={build.id}
                       build={build}
