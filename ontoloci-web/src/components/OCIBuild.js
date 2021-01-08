@@ -16,7 +16,7 @@ function OCIBuild(props){
         if(buildStatus==FAILURE_BUILD)
             return <svg className="icon-check-failure" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" ><path d="M0 0h24v24H0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
 
-        return <BootstrapTooltip title={props.build.metadata.checkTitle}><svg className="icon-check-exception" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg></BootstrapTooltip>
+        return <BootstrapTooltip title={props.build.metadata.checkTitle}><svg className="icon-check-cancelled" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg></BootstrapTooltip>
       }
 
 
@@ -39,15 +39,17 @@ function OCIBuild(props){
     }
 
     const getBuildPath = function(){
-        return props.status  ?  `/tests/${props.build.id}` : '/';
+        let link = `/tests/${props.build.id}`;
+        let noLink = '/';
+        return getBuildStatus() == CANCELLED_BUILD ? noLink :link;
     }
 
     const getBuildClass = function(){
-        let buildStatus = getBuildStatus();
-        if(buildStatus == CANCELLED_BUILD)
-            return 'disabled-build';
-        return 'dashboard-element-'+buildStatus;
+        let disabled = 'disabled-build';
+        let enabled = 'dashboard-element-'+getBuildStatus();
+        return getBuildStatus() == CANCELLED_BUILD ? disabled :enabled;
     }
+
 
     return (
 

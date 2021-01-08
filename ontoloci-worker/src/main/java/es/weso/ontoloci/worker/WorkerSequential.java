@@ -13,7 +13,6 @@ import es.weso.ontoloci.worker.validation.ResultValidation;
 import es.weso.ontoloci.worker.validation.ShapeMapResultValidation;
 import es.weso.ontoloci.worker.validation.Validate;
 import es.weso.shapeMaps.ShapeMap;
-import org.apache.http.entity.StringEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,7 +103,7 @@ public class WorkerSequential implements Worker {
      */
     private BuildResultStatus resolveBuildStatus(Collection<TestCaseResult> testCaseResults) {
         for(TestCaseResult testCase : testCaseResults) {
-            if(testCase.getStatus() == TestCaseResultStatus.FAIL)
+            if(testCase.getStatus() == TestCaseResultStatus.FAILURE)
                 return BuildResultStatus.FAILURE;
         }
         return BuildResultStatus.SUCCESS;
@@ -121,12 +120,12 @@ public class WorkerSequential implements Worker {
     private void compareResults(ResultValidation resultValidation,TestCaseResult testCaseResult) {
         List<ShapeMapResultValidation> expected = getExpectedResult(resultValidation);
         List<ShapeMapResultValidation> produced = getProducedResult(resultValidation);
-        TestCaseResultStatus status = TestCaseResultStatus.PASS;
+        TestCaseResultStatus status = TestCaseResultStatus.SUCCESS;
 
         for(ShapeMapResultValidation e: expected){
             for(ShapeMapResultValidation p: produced){
                 if(!compareShapeMapResult(e,p))
-                    status = TestCaseResultStatus.FAIL;
+                    status = TestCaseResultStatus.FAILURE;
             }
         }
         testCaseResult.setStatus(status);

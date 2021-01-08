@@ -27,12 +27,12 @@ public enum PersistedTestCaseResultStatus {
     /**
      * Represents a test case that has been executed and the result is positive.
      */
-    PASS("pass"),
+    SUCCESS("success"),
 
     /**
      * Represents a test case that has been executed and the result is not positive.
      */
-    FAIL("fail");
+    FAILURE("failure");
 
     /**
      * Stores the string value of the enum.

@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
  * A test case can be:<p>
  *  - WAITING to be executed.<p>
  *  - EXECUTING when the test is under execution.<p>
- *  - PASS when the test finishes and the result is positive.<p>
+ *  - SUCCESS when the test finishes and the result is positive.<p>
  *  - FAIL when the test finishes and the result is not positive.<p>
  *
  * @author Guillermo Facundo Colunga
@@ -32,12 +32,12 @@ public enum TestCaseResultStatus {
     /**
      * Represents a test case that has been executed and the result is positive.
      */
-    PASS("pass"),
+    SUCCESS("success"),
 
     /**
      * Represents a test case that has been executed and the result is not positive.
      */
-    FAIL("fail");
+    FAILURE("failure");
 
     // LOGGER CREATION
     private static final Logger LOGGER = LoggerFactory.getLogger(PersistedTestCaseResult.class);
@@ -82,12 +82,12 @@ public enum TestCaseResultStatus {
             return PersistedTestCaseResultStatus.EXECUTING;
         else if(status.equals(WAITING))
             return PersistedTestCaseResultStatus.WAITING;
-        else if(status.equals(FAIL))
-            return PersistedTestCaseResultStatus.FAIL;
-        else if(status.equals(PASS))
-            return PersistedTestCaseResultStatus.PASS;
+        else if(status.equals(FAILURE))
+            return PersistedTestCaseResultStatus.FAILURE;
+        else if(status.equals(SUCCESS))
+            return PersistedTestCaseResultStatus.SUCCESS;
         else
-            return PersistedTestCaseResultStatus.FAIL;
+            return PersistedTestCaseResultStatus.FAILURE;
     }
 
     public static TestCaseResultStatus fromPersistedTestCaseResultStatus(PersistedTestCaseResultStatus persistedStatus) {
@@ -95,11 +95,11 @@ public enum TestCaseResultStatus {
             return EXECUTING;
         else if(persistedStatus.equals(PersistedTestCaseResultStatus.WAITING))
             return WAITING;
-        else if(persistedStatus.equals(PersistedTestCaseResultStatus.FAIL))
-            return FAIL;
-        else if(persistedStatus.equals(PersistedTestCaseResultStatus.PASS))
-            return PASS;
+        else if(persistedStatus.equals(PersistedTestCaseResultStatus.FAILURE))
+            return FAILURE;
+        else if(persistedStatus.equals(PersistedTestCaseResultStatus.SUCCESS))
+            return SUCCESS;
         else
-            return FAIL;
+            return FAILURE;
     }
 }

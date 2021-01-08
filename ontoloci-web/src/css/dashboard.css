@@ -119,7 +119,7 @@ a:hover{
     border-right: 3px solid #db4545;
 }
 
-.dashboard-element-logo-exception{
+.dashboard-element-logo-cancelled{
     border-right: 3px solid #db8945;
 }
 
@@ -152,7 +152,7 @@ a:hover{
 }
 
 
-.icon-check-exception{
+.icon-check-cancelled{
     margin-top: 0.5vh;
     height: 2.5vh;
     fill:  #db8945;

@@ -60,7 +60,7 @@ function OCITest(props){
     </div>
     <Collapse isOpen={isOpen} >
         <div className="test-element-log">
-        <table class="table table-hover table-sm ">
+        <table className="table table-hover table-sm ">
         <thead>
     <tr>
     
