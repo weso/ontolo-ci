@@ -189,19 +189,19 @@
 
 
 
-.test-element-pass{
+.test-element-success{
     border-left: 1vh solid #39aa56;
 }
 
-.test-element-fail{
+.test-element-failure{
     border-left: 1vh solid #db4545;
 }
 
-.border-pass{
+.border-success{
     border-left: 1.2vh solid #39aa56;
 }
 
-.border-fail{
+.border-failure{
     border-left: 1.2vh solid #db4545;
 }
 
@@ -252,17 +252,17 @@ span{
 }
 
 
-.pass{
+.success{
     color: #39aa56 !important;
     fill: #39aa56 !important;
 }
 
-.fail{
+.failure{
     color: #db4545 !important;
     fill: #db4545 !important;
 }
 
-.exception{
+.cancelled{
     color: #db8945 !important;
     fill: #db8945 !important;
 }

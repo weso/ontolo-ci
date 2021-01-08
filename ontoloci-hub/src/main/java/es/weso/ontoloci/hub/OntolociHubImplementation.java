@@ -106,11 +106,11 @@ public class OntolociHubImplementation implements OntolociHub {
 
         }catch (FileNotFoundException e) {
             LOGGER.error(String.format("ERROR while getting any file at getTestCases from GitHubRepositoryProvider: %s",e.getMessage()));
-            metadata = getFilleNotFoundMetadata();
+            addFilleNotFoundMetadata(metadata);
         }
         catch (Exception e) {
             LOGGER.error(String.format("ERROR while getting the HubTestCases at getTestCases from GitHubRepositoryProvider: %s",e.getMessage()));
-            metadata = getExceptionMetadata();
+            addExceptionMetadata(metadata);
         }
 
         hubBuild.setMetadata(metadata);
@@ -118,36 +118,34 @@ public class OntolociHubImplementation implements OntolociHub {
     }
 
     /**
-     * Gets a metadata map with the FileNotFound exception attributes
-     * @return metadata
+     * Adds FileNotFound exception attributes to a metadata map
+     * @param metadata map
      */
-    private Map<String,String> getFilleNotFoundMetadata(){
-        return fillMetadataException("FileNotFound","Some file was not found");
+    private void addFilleNotFoundMetadata(Map<String,String> metadata){
+        fillMetadataException(metadata,"FileNotFound","Some file was not found");
     }
 
     /**
-     * Gets a metadata map with the common exception attributes
-     * @return metadata
+     * Adds common exception attributes to a metadata map
+     * @param metadata map
      */
-    private Map<String,String> getExceptionMetadata(){
-        return fillMetadataException("Exception","Something went wrong");
+    private void addExceptionMetadata(Map<String,String> metadata){
+        fillMetadataException(metadata,"Exception","Something went wrong");
     }
 
     /**
-     * Creates a metadata map with a specific exceptions fields.
+     * Fills a metadata map with a specific exceptions fields.
      *
+     * @param metadata map
      * @param checkTitle    title for the checkrun
      * @param checkBody     body for the checkrun
      *
-     * @return metadata
      */
-    private Map<String,String> fillMetadataException(String checkTitle,String checkBody){
-        Map<String,String> metadata = new HashMap<>();
+    private void fillMetadataException(Map<String,String> metadata,String checkTitle,String checkBody){
         metadata.put("exceptions","true");
         metadata.put("checkTitle",checkTitle);
         metadata.put("checkBody",checkBody);
         metadata.put("execution_date",String.valueOf(System.currentTimeMillis()));
-        return metadata;
     }
 
 

@@ -3,8 +3,6 @@ import axios from 'axios';
 import OCIBuild from './OCIBuild';
 import {getDate} from '../utils/dateUtils';
 
-
-
 function OCIDashBoard() {
 
   const [builds,setBuilds] = useState([]);
@@ -53,15 +51,14 @@ function OCIDashBoard() {
           return <OCIBuild 
                       key={build.id}
                       build={build}
+                      status={build.status}
                       owner={build.metadata.owner}
                       repo={build.metadata.repo}
                       branchName={build.metadata.branch}
                       commitName={build.metadata.commitName}
                       commitId={build.metadata.commitId}
                       prNumber={build.metadata.prNumber}
-                      buildResult={build.metadata.buildResult?.toLowerCase()}
                       executionTime={build.metadata.execution_time}
-                      exceptions={build.metadata.exceptions}
                       date={getDate(build.metadata.execution_date)}/>
         })}
        

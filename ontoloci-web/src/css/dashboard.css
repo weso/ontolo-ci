@@ -111,11 +111,11 @@ a:hover{
     height: 80%;
 }
 
-.dashboard-element-logo-pass{
+.dashboard-element-logo-success{
     border-right: 3px solid #39aa56;
 }
 
-.dashboard-element-logo-fail{
+.dashboard-element-logo-failure{
     border-right: 3px solid #db4545;
 }
 
@@ -139,13 +139,13 @@ a:hover{
     height: 80%;
 }
 
-.icon-check-pass{
+.icon-check-success{
     margin-top: 0.5vh;
     height: 2.5vh;
     fill:  #39aa56;
 }
 
-.icon-check-fail{
+.icon-check-failure{
     margin-top: 0.5vh;
     height: 2.5vh;
     fill:  #db4545;
