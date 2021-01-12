@@ -1,7 +1,6 @@
 import React,{useState,useEffect} from 'react';
 import axios from 'axios';
 import OCIBuild from './OCIBuild';
-import {getDate} from '../utils/dateUtils';
 
 function OCIDashBoard() {
 
@@ -45,23 +44,9 @@ function OCIDashBoard() {
     <div className="main-2">
       <h2><a className="subtitle">Builds</a></h2>
       <div className="dashboard-elements-list">
-
         {builds.map(build =>{
-          console.log(build)
-          return <OCIBuild 
-                      key={build.id}
-                      build={build}
-                      status={build.status}
-                      owner={build.metadata.owner}
-                      repo={build.metadata.repo}
-                      branchName={build.metadata.branch}
-                      commitName={build.metadata.commitName}
-                      commitId={build.metadata.commitId}
-                      prNumber={build.metadata.prNumber}
-                      executionTime={build.metadata.execution_time}
-                      date={getDate(build.metadata.execution_date)}/>
+            return <OCIBuild build={build}/>
         })}
-       
       </div>
     </div>
   );

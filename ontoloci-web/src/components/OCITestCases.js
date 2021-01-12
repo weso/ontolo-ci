@@ -3,9 +3,9 @@ import axios from 'axios';
 import OCITest from './OCITest';
 import {useParams} from "react-router-dom";
 import {getDate} from '../utils/dateUtils';
+import {animate} from '../utils/animationUtils';
 
 function OCITestCases(props) {
-
 
   let { id } = useParams();
   const [tests,setTests] = useState([]);
@@ -13,7 +13,6 @@ function OCITestCases(props) {
   const [status,setStatus] = useState('');
   let endpoint = 'http://localhost:8090/api/v1/buildResults/'+id
 
-  
   const getTestCases = function(){
     animate('main','hidePanel','hideLoader','showLoader')
     axios({
@@ -26,21 +25,12 @@ function OCITestCases(props) {
       setStatus(response.data.status.toLowerCase())
       setTests(response.data.testCaseResults)
       animate('hidePanel','main','showLoader','hideLoader')  
-      
     })
     .catch(function (response) {
-        console.log('error')
+        console.log('Error fetching build with id: '+id)
         console.log(response);
     });
   
-  }
-
-
-  const animate = function(before1,after1,before2,after2){
-      let e1 = document.getElementsByClassName(before1)[0];
-      if(e1) e1.className = after1;
-      let e2 = document.getElementsByClassName(before2)[0];
-      if(e2) e2.className = after2;
   }
 
   const getHeader = function(){
