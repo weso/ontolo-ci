@@ -41,7 +41,8 @@ function OCIBuild(props){
             value={{
                 SUCCESS_BUILD:SUCCESS_BUILD,
                 FAILURE_BUILD:FAILURE_BUILD,
-                CANCELLED_BUILD:CANCELLED_BUILD,                
+                CANCELLED_BUILD:CANCELLED_BUILD,
+                build:build,                
                 buildStatus:getBuildStatus(),
                 owner:build.metadata.owner,
                 repo:build.metadata.repo,

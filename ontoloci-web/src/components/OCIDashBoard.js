@@ -1,38 +1,30 @@
 import React,{useState,useEffect} from 'react';
 import axios from 'axios';
 import OCIBuild from './OCIBuild';
+import {sortBuilds} from '../utils/buildUtils';
+import {
+  BUILD_ENDPOINT,
+  REQUEST_METHOD,
+  REQUES_HEADER} from '../utils/requestUtils';
+
 
 function OCIDashBoard() {
 
   const [builds,setBuilds] = useState([]);
-  const getBuilds = function(){
 
+  const getBuilds = function(){
     axios({
-      method: 'get',
-      url: 'http://localhost:8090/api/v1/buildResults',
-      config: { headers: {'Access-Control-Allow-Origin': '*' }}
-  }).then(function(response){
-        console.log(response.data)
+      method: REQUEST_METHOD,
+      url:    BUILD_ENDPOINT,
+      config: { 
+          headers: REQUES_HEADER
+      }
+    }).then(function(response){
         setBuilds(sortBuilds(response.data));
-    })
-    .catch(function (response) {
-        console.log('error')
+    }).catch(function (response) {
         console.log(response);
     });
   
-  }
-
-  const sortBuilds = function(unsortedBuilds){
-    return unsortedBuilds.sort((build1,build2)=>{
-      if(build1.id > build2.id ){
-        return -1;
-      }
-      if(build1.id < build2.id ){
-        return 1;
-      }
-
-      return 0;
-    })
   }
 
   useEffect(() => {
