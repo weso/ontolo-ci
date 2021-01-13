@@ -34,10 +34,10 @@ function OCIDashBoard() {
   return (
    
     <div className="main-2">
-      <h2><a className="subtitle">Builds</a></h2>
+      <h2><a href='/' className="subtitle">Builds</a></h2>
       <div className="dashboard-elements-list">
         {builds.map(build =>{
-            return <OCIBuild build={build}/>
+            return <OCIBuild key={build.id} build={build}/>
         })}
       </div>
     </div>

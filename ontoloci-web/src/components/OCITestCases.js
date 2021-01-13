@@ -22,8 +22,8 @@ function OCITestCases() {
   const getTestCases = function(){
     startTestCasesAnimation();
     axios({
-      method: REQUEST_METHOD+id,
-      url:    BUILD_ENDPOINT,
+      method: REQUEST_METHOD,
+      url:    BUILD_ENDPOINT+'/'+id,
       config: { 
           headers: REQUES_HEADER
       }
@@ -67,11 +67,13 @@ function OCITestCases() {
           <TestCasesHeader/>
           <h2><a className="subtitle">{"Test Cases ("+tests.length+")"}</a></h2>
           <div className="test-elements-list">
-            {tests.map( (test,id) =>{
+            {
+            tests.map( (test,id) =>{
+              console.log(test)
               return <OCITest 
                       key = {id}
                       testName= {test.testCase.name}
-                      buildStatus = {test.buildStatus.toLowerCase()}
+                      status ={test.status.toLowerCase()}
                       dataNode={test.testCase.expectedShapeMap.split("@")[0]}
                       shape={test.testCase.expectedShapeMap.split("@")[1]}
                       validationStatus={test.metadata.validation_status}

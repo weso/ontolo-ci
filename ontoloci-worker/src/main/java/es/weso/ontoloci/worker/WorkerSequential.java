@@ -146,7 +146,7 @@ public class WorkerSequential implements Worker {
         String expectedNode = e.getNode();
         String expectedStatus = e.getStatus();
         String producedNode = p.getNode();
-        String producedStatus = e.getStatus();
+        String producedStatus = p.getStatus();
         return expectedNode.equals(producedNode) && expectedStatus.equals(producedStatus);
     }
 
@@ -194,7 +194,7 @@ public class WorkerSequential implements Worker {
         for(ShapeMapResultValidation e: expected){
             for(ShapeMapResultValidation p: produced){
                 if(e.getNode().equals(p.getNode()))
-                    cleanProduced.add(new ShapeMapResultValidation(e.getNode(),e.getShape(),e.getStatus(),e.getAppInfo(),e.getReason()));
+                    cleanProduced.add(new ShapeMapResultValidation(p.getNode(),p.getShape(),p.getStatus(),p.getAppInfo(),p.getReason()));
             }
         }
         return cleanProduced;

@@ -24,7 +24,7 @@
 
 .test-element{
     display: grid;
-    grid-template-columns:  2%  20%  20%  15%  13% 13% 13%  20% ;
+    grid-template-columns:  2%  80%  13% 13%  20% ;
     align-items: center;
     padding-top: 1vh;
     border-top: 1px solid #f3f0f0;
@@ -370,3 +370,28 @@ animation: spin 2s linear infinite;
     box-shadow:  none !important;
 }
 
+
+
+#customers {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  #customers td, #customers th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  #customers tr:nth-child(even){background-color: #def8e5;}
+  #customers tr:nth-child(odd){background-color: #def8e5;}
+
+  #customers tr:hover {background-color: #ddd;}
+  
+  #customers th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #39aa56;
+    color: white;
+  }

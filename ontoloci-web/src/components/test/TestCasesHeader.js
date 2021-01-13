@@ -26,7 +26,7 @@ function TestCasesHeader(){
         execution_date } = useContext(TestCasesContext);
 
     const getSvgStatus = function(){
-        if(buildStatus=='success')
+        if(buildStatus==='success')
           return <SuccessIcon/>
         return <FailureIcon/>
     }
@@ -37,7 +37,7 @@ function TestCasesHeader(){
         return (
         <h3 className={buildStatus}>
           {title}  
-          <a className={linkClass +buildStatus} href={"https://github.com/"+owner+"/"+repo+"/"+path}  target="_blank">{specialContent}</a>
+          <a className={linkClass +buildStatus} href={"https://github.com/"+owner+"/"+repo+"/"+path}  target="_blank" rel="noopener noreferrer" >{specialContent}</a>
           {" "+commitName+" "}
         </h3>)
       }
@@ -52,7 +52,7 @@ function TestCasesHeader(){
         <div>
             <RepoIcon/>
             <span>
-                <a href={getRepoPath(owner,repo)} target="_blank">{owner}/{repo}</a>
+                <a href={getRepoPath(owner,repo)} target="_blank" rel="noopener noreferrer">{owner}/{repo}</a>
             </span>
         </div>
     
@@ -64,7 +64,7 @@ function TestCasesHeader(){
         <div>
             <CommitIcon/>
             <span>
-                <a href={getCommitPath(owner,repo,commit)} target="_blank">{"["+commitId+"] "+commitName}</a></span>
+                <a href={getCommitPath(owner,repo,commit)} target="_blank" rel="noopener noreferrer">{"["+commitId+"] "+commitName}</a></span>
         </div>
         
         <div>
@@ -75,7 +75,7 @@ function TestCasesHeader(){
         <div>
             <BranchIcon/>
             <span className="branch-name">
-                <a href={getBranhcPath(owner,repo,branch)} target="_blank">{branch}</a>
+                <a href={getBranhcPath(owner,repo,branch)} target="_blank" rel="noopener noreferrer">{branch}</a>
             </span>
       </div>
     </div>

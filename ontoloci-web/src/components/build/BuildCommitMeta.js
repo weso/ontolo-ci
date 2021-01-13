@@ -8,7 +8,7 @@ function BuildCommitMeta(){
 
     return (
         <div className="dashboard-element-info build-metadata">
-            {prNumber!='none' ?
+            {prNumber!=='none' ?
                 <div className="logo-container">
                     <div className="logo">
                         <CommitIcon/>

@@ -9,9 +9,9 @@ function BuildStauts(){
     const {buildStatus,SUCCESS_BUILD,FAILURE_BUILD} = useContext(BuildContext);
 
     const getSvgStatus = function(){
-        if(buildStatus==SUCCESS_BUILD)
+        if(buildStatus===SUCCESS_BUILD)
             return <SuccessIcon/>
-        if(buildStatus==FAILURE_BUILD)
+        if(buildStatus===FAILURE_BUILD)
             return <FailureIcon/>
 
         return <CanceledIcon/>

@@ -1,7 +1,5 @@
 import React , {useState} from 'react';
 import { Collapse} from 'reactstrap';
-import { Button,Accordion  } from 'react-bootstrap';
-import { LazyLog } from 'react-lazylog';
 import '../css/testcase.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ClockIcon from './icon/CalendarIcon';
@@ -18,7 +16,7 @@ function OCITest(props){
         executionTime} = props;
 
     const [isOpen, setIsOpen] = useState(true);
-    
+
     const toggle = () => setIsOpen(!isOpen);
 
     return (
@@ -26,30 +24,8 @@ function OCITest(props){
         <div className={"test-element" + " test-element-"+status}>
             <div className="test-element-field test-element-name">
                 <h3 className="field-title">TEST NAME</h3>
-                <span>{ ((testName).length > 30) ? 
-                (((testName).substring(0,30-3)) + '...') : 
-                testName }
+                <span>{testName.charAt(0).toUpperCase() + testName.slice(1)}
                 </span>
-            </div>
-
-            <div className="test-element-field test-element-data">
-                <h3 className="field-title">DATA NODE</h3>
-                <span>{dataNode}</span>
-            </div>
-
-            <div className="test-element-field test-element-shape">
-                <h3 className="field-title">SHAPE</h3>
-                <span>{shape}</span>
-            </div>
-
-            <div className="test-element-field test-element-validation-result">
-                <h3 className="field-title">STATUS</h3>
-                <span>{validationStatus}</span>
-            </div>
-
-            <div className="test-element-field test-element-validation-result">
-                <h3 className="field-title">EXPECTED STATUS</h3>
-                <span>{expectedValidationStatus}</span>
             </div>
 
             <div className="test-element-field ">
@@ -70,7 +46,7 @@ function OCITest(props){
     </div>
     <Collapse isOpen={isOpen} >
         <div className="test-element-log">
-        <table className="table table-hover table-sm ">
+        <table id="customers">
         <thead>
     <tr>
     
@@ -112,3 +88,38 @@ function OCITest(props){
 export default OCITest;
 
 /*<LazyLog enableSearch url="http://localhost:3000/examplelog.log" />*/
+
+/**
+ * import { Button,Accordion  } from 'react-bootstrap';
+import { LazyLog } from 'react-lazylog';
+ */
+
+/**
+ *  <span>{ ((testName).length > 30) ? 
+                (((testName).substring(0,30-3)) + '...') : 
+                testName }
+                </span>
+ */
+
+ /**
+  *  <div className="test-element-field test-element-data">
+                <h3 className="field-title">DATA NODE</h3>
+                <span>{dataNode}</span>
+            </div>
+
+            <div className="test-element-field test-element-shape">
+                <h3 className="field-title">SHAPE</h3>
+                <span>{shape}</span>
+            </div>
+
+            <div className="test-element-field test-element-validation-result">
+                <h3 className="field-title">STATUS</h3>
+                <span>{validationStatus}</span>
+            </div>
+
+            <div className="test-element-field test-element-validation-result">
+                <h3 className="field-title">EXPECTED STATUS</h3>
+                <span>{expectedValidationStatus}</span>
+            </div>
+
+  */

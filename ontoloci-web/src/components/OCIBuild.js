@@ -23,14 +23,14 @@ function OCIBuild(props){
     const getBuildPath = function(){
         let link = `/tests/${build.id}`;
         let noLink = '/';
-        return getBuildStatus() == CANCELLED_BUILD ? noLink :link;
+        return getBuildStatus() === CANCELLED_BUILD ? noLink :link;
     }
 
     const getBuildClass = function(){
         let dashboard = 'dashboard-element ';
         let disabled = dashboard + 'disabled-build';
         let enabled = dashboard +'dashboard-element-'+getBuildStatus();
-        return getBuildStatus() == CANCELLED_BUILD ? disabled :enabled;
+        return getBuildStatus() === CANCELLED_BUILD ? disabled :enabled;
     }
 
 
