@@ -3,6 +3,7 @@ package es.weso.ontoloci.worker.test;
 import es.weso.ontoloci.persistence.PersistedTestCase;
 import es.weso.ontoloci.persistence.PersistedTestCaseResult;
 import es.weso.ontoloci.persistence.PersistedTestCaseResultStatus;
+import es.weso.ontoloci.worker.validation.ShapeMapResultValidation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,32 +28,22 @@ public class TestCaseResult {
     // Non final fields.
     private TestCaseResultStatus status;
     private Map<String, String> metadata;
+    private ShapeMapResultValidation resultValidation;
+
 
     public static PersistedTestCaseResult toPersistedTestCaseResult(TestCaseResult testCaseResult) {
-
-        LOGGER.debug(String.format("NEW creating a new PersistedTestCaseResult from a static factory and from a TestCaseResult"));
 
         LOGGER.debug(String.format("INTERNAL invoking the translation from TestCase to PersistedTestCase"));
         final PersistedTestCase persistedTestCase = TestCase.toPersistedTestCase(testCaseResult.getTestCase());
 
         LOGGER.debug(String.format("INTERNAL invoking the translation from TestCaseResult to PersistedTestCaseResult"));
-
         final PersistedTestCaseResult ptestCaseR = PersistedTestCaseResult.from(persistedTestCase);
-
         ptestCaseR.setMetadata(testCaseResult.getMetadata());
 
-        LOGGER.debug(String.format("INTERNAL invoking the change of state of the PersistedTestCaseResult with name=[%s] from [%s] to [%s]",
-                ptestCaseR.getTestCase().getName(),
-                ptestCaseR.getStatus(),
-                testCaseResult.getStatus())
-        );
+        LOGGER.debug(String.format("INTERNAL invoking the change of state of the PersistedTestCaseResult with name=[%s] from [%s] to [%s]", ptestCaseR.getTestCase().getName(), ptestCaseR.getStatus(), testCaseResult.getStatus()));
         final PersistedTestCaseResultStatus persistedStatus = TestCaseResultStatus.toPersistedTestCaseResultStatus(testCaseResult.getStatus());
 
-        LOGGER.debug(String.format("INTERNAL created PersistedTestCaseResultStatus with status=[%s] form a TestCaseResultStatus with status=[%s]",
-                ptestCaseR.getStatus(),
-                testCaseResult.getStatus())
-        );
-
+        LOGGER.debug(String.format("INTERNAL created PersistedTestCaseResultStatus with status=[%s] form a TestCaseResultStatus with status=[%s]", ptestCaseR.getStatus(), testCaseResult.getStatus()));
         ptestCaseR.setStatus(persistedStatus);
 
         return  ptestCaseR;
@@ -60,10 +51,7 @@ public class TestCaseResult {
 
     public static TestCaseResult from(PersistedTestCaseResult persistedTestCaseResult) {
 
-        LOGGER.debug(
-                String.format("NEW creating a new TestCaseResult from a static factory and from a" +
-                        " PersistedTestCaseResult")
-        );
+        LOGGER.debug(String.format("NEW creating a new TestCaseResult from a static factory and from a" + " PersistedTestCaseResult"));
 
         return new TestCaseResult(
                 TestCase.from(persistedTestCaseResult.getTestCase()),
@@ -84,6 +72,8 @@ public class TestCaseResult {
         return new TestCaseResult(testCase, TestCaseResultStatus.WAITING, new HashMap<>());
     }
 
+
+
     /**
      * Private constructor for test case results where need to set the test case,
      * the initial status and the metadata map.
@@ -99,6 +89,9 @@ public class TestCaseResult {
 
         LOGGER.debug("Creating new test case result for");
     }
+
+
+
 
     /**
      * Gets the test case linked with this result test case.
@@ -145,22 +138,43 @@ public class TestCaseResult {
     }
 
 
-
+    /**
+     * Sets the metadata
+     * @param metadata
+     */
     public void setMetadata(Map<String, String> metadata) {
         this.metadata = metadata;
     }
 
+    /**
+     * Adds a new field to the metadata map
+     *
+     * @param key   of the new field
+     * @param value of the new field
+     */
     public void addMetadata(String key,String value){
         this.metadata.put(key,value);
     }
 
+    /**
+     * Gets the result validation as a ShapeMapResultValidation
+     * @return result of the validation
+     */
+    public ShapeMapResultValidation getResultValidation() { return resultValidation; }
+
+    /**
+     * Sets the resultValidation
+     * @param resultValidation
+     */
+    public void setResultValidation(ShapeMapResultValidation resultValidation) { this.resultValidation = resultValidation; }
 
     @Override
     public String toString() {
         return "TestCaseResult{" +
-                    "testCase=" + testCase +
-                    ", metadata=" + metadata +
-                    ", status=" + status +
+                "testCase=" + testCase +
+                ", status=" + status +
+                ", metadata=" + metadata +
+                ", resultValidation=" + resultValidation +
                 '}';
     }
 }

@@ -12,23 +12,34 @@ public class ShapeMapResultValidation {
     private String status;
     private String appInfo;
     private String reason;
-
-    public ShapeMapResultValidation(){}
+    private PrefixedNode nodePrefix;
+    private PrefixedNode shapePrefix;
 
     /**
-     * Default constructor. Takes the node, shape and status value of the result
-     * validation.
+     * Default constructor
+     */
+    public ShapeMapResultValidation(){}
+
+
+    /**
+     * Parametrized constructor
      *
      * @param node
      * @param shape
      * @param status
+     * @param info
+     * @param reason
+     * @param nodePrefix
+     * @param shapePrefix
      */
-    public ShapeMapResultValidation(String node, String shape, String status,String appInfo,String reason) {
+    public ShapeMapResultValidation(String node, String shape, String status, String info, String reason, PrefixedNode nodePrefix, PrefixedNode shapePrefix) {
         this.node = node;
         this.shape = shape;
         this.status = status;
-        this.appInfo = appInfo;
         this.reason = reason;
+        this.appInfo = info;
+        this.nodePrefix = nodePrefix;
+        this.shapePrefix = shapePrefix;
     }
 
     /**
@@ -76,6 +87,33 @@ public class ShapeMapResultValidation {
         return reason;
     }
 
+    /**
+     * Gets the node prefix
+     *
+     * @return node prefix
+     */
+    public PrefixedNode getNodePrefix() { return nodePrefix; }
+
+    /**
+     * Sets the node prefix
+     *
+     * @param  nodePrefix
+     */
+    public void setNodePrefix(PrefixedNode nodePrefix) { this.nodePrefix = nodePrefix; }
+
+    /**
+     * Gets the shape prefix
+     *
+     * @return shape prefix
+     */
+    public PrefixedNode getShapePrefix() { return shapePrefix; }
+
+    /**
+     * Sets the shape prefix
+     *
+     * @param  shapePrefix
+     */
+    public void setShapePrefix(PrefixedNode shapePrefix) { this.shapePrefix = shapePrefix; }
 
     @Override
     public String toString() {
@@ -85,6 +123,8 @@ public class ShapeMapResultValidation {
                 ", status='" + status + '\'' +
                 ", appInfo='" + appInfo + '\'' +
                 ", reason='" + reason + '\'' +
+                ", nodePrefix=" + nodePrefix +
+                ", shapePrefix=" + shapePrefix +
                 '}';
     }
 
@@ -114,4 +154,19 @@ public class ShapeMapResultValidation {
         return this.getStatus().equals(((ShapeMapResultValidation) r).getStatus());
     }
 
+
+    /**
+     * Returns an instance of this class as a processable json for the frontend.
+     *
+     * @return ShapeMapResultValidation as a json
+     */
+    public String toJson() {
+        return "\"ShapeMapResultValidation\":{ "+
+                "\"node\":\""+nodePrefix.getPrefixedNode()+"\","+
+                "\"shape\":\""+shapePrefix.getPrefixedNode()+"\","+
+                "\"status\":\""+status+"\","+
+                "\"appInfo\":\""+appInfo+"\","+
+                "\"reason\":\""+reason+"\""+
+            "}";
+    }
 }

@@ -9,13 +9,30 @@ function OCITest(props){
     const {
         status,
         testName,
-        dataNode,
-        shape,
-        validationStatus,
-        expectedValidationStatus,
+        expectedSM_in,
+        producedSM_in,
+        expectedSM_out,
+        producedSM_out,
         executionTime} = props;
 
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
+
+
+    const getTableContent = function(){
+        let pasrsedProduced = JSON.parse(producedSM_out);
+        console.log(pasrsedProduced)
+        return Object.keys(pasrsedProduced).map((p,index)=>{
+            let result = pasrsedProduced[p];
+            return (<tr className={status}>
+                <td>{result.node}</td>
+                <td>{result.shape}</td>
+                <td>{result.status}</td>
+                <td>confortmant</td>
+        </tr>)
+        })
+    }
+   
+    
 
     const toggle = () => setIsOpen(!isOpen);
 
@@ -50,34 +67,16 @@ function OCITest(props){
         <thead>
     <tr>
     
-      <th scope="col">Data Node</th>
-      <th scope="col">Shape</th>
-      <th scope="col">Status</th>
-      <th scope="col">Expected Status</th>
+      <th className={status} scope="col">Data Node</th>
+      <th className={status} scope="col">Shape</th>
+      <th className={status} scope="col">Status</th>
+      <th className={status} scope="col">Expected Status</th>
     </tr>
   </thead>
   <tbody>
-    <tr>
-    
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-     
-      <td>Larry</td>
-      <td>the Bird</td>
-      <td>@twitter</td>
-      <td>@mdo</td>
-    </tr>
+    {    
+        getTableContent()
+    }
   </tbody>
   </table>
         </div>

@@ -9,13 +9,21 @@ import es.weso.ontoloci.worker.build.BuildResultStatus;
 import es.weso.ontoloci.worker.test.TestCase;
 import es.weso.ontoloci.worker.test.TestCaseResult;
 import es.weso.ontoloci.worker.test.TestCaseResultStatus;
+import es.weso.ontoloci.worker.validation.PrefixedNode;
 import es.weso.ontoloci.worker.validation.ResultValidation;
 import es.weso.ontoloci.worker.validation.ShapeMapResultValidation;
 import es.weso.ontoloci.worker.validation.Validate;
+import es.weso.rdf.Prefix;
+import es.weso.rdf.PrefixMap;
+import es.weso.rdf.nodes.IRI;
 import es.weso.shapeMaps.ShapeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import scala.Tuple3;
+import scala.util.Either;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
 /**
@@ -117,7 +125,7 @@ public class WorkerSequential implements Worker {
      * @param resultValidation  result of the validation
      * @param testCaseResult    test case result
      */
-    private void compareResults(ResultValidation resultValidation,TestCaseResult testCaseResult) {
+    private void compareResults(ResultValidation resultValidation,TestCaseResult testCaseResult){
         List<ShapeMapResultValidation> expected = getExpectedResult(resultValidation);
         List<ShapeMapResultValidation> produced = getProducedResult(resultValidation);
         TestCaseResultStatus status = TestCaseResultStatus.SUCCESS;
@@ -129,9 +137,10 @@ public class WorkerSequential implements Worker {
             }
         }
         testCaseResult.setStatus(status);
-        testCaseResult.addMetadata("produced",produced.toString());
-        testCaseResult.addMetadata("expected",expected.toString());
+        testCaseResult.addMetadata("produced",toJson(produced));
+        testCaseResult.addMetadata("expected",toJson(expected));
     }
+    
 
     /**
      * Compares two shapeMap results.
@@ -170,18 +179,33 @@ public class WorkerSequential implements Worker {
 
     /**
      * Gets the expected result from a ResultValidation object as a list of shapeMaps result validation.
+     * Sets the prefixes for each ShapeMapResultValidation.
      *
      * @param resultValidation result of validation
      * @return expected result
      */
     private List<ShapeMapResultValidation> getExpectedResult(ResultValidation resultValidation){
-        return getResultFromValidation(resultValidation.getExpectedShapeMap());
+        final List<ShapeMapResultValidation> expected =  getResultFromValidation(resultValidation.getExpectedShapeMap());
+        // Now add the prefixes
+        for(ShapeMapResultValidation e: expected){
+            String node = e.getNode().substring(1, e.getNode().length() - 1 );
+            String shape = e.getShape().substring(1, e.getNode().length() - 1 );
+            PrefixedNode nodePrefix = getPrefix(resultValidation.getResultShapeMap().nodesPrefixMap(),node);
+            PrefixedNode shapePrefix = getPrefix(resultValidation.getExpectedShapeMap().shapesPrefixMap(),shape);
+
+            e.setNodePrefix(nodePrefix);
+            e.setShapePrefix(shapePrefix);
+        }
+        return expected;
     }
+
+
 
     /**
      * Gets the produced result from a ResultValidation object as a list of shapeMaps result validation.
      * The shex validator usually infers more things that we need, so we are only keeping shape map results
      * that are in the expected result too.
+     * It also sets the prefixes for each ShapeMapResultValidation.
      *
      * @param resultValidation result of validation
      * @return produced result
@@ -193,11 +217,41 @@ public class WorkerSequential implements Worker {
 
         for(ShapeMapResultValidation e: expected){
             for(ShapeMapResultValidation p: produced){
-                if(e.getNode().equals(p.getNode()))
-                    cleanProduced.add(new ShapeMapResultValidation(p.getNode(),p.getShape(),p.getStatus(),p.getAppInfo(),p.getReason()));
+                if(e.getNode().equals(p.getNode())){
+                    String node = p.getNode().substring(1, p.getNode().length() - 1 );
+                    String shape = p.getShape().substring(1, p.getNode().length() - 1 );
+                    String status = p.getStatus();
+                    String info = p.getAppInfo();
+                    String reason = p.getReason();
+                    PrefixedNode nodePrefix = getPrefix(resultValidation.getResultShapeMap().nodesPrefixMap(),node);
+                    PrefixedNode shapePrefix = getPrefix(resultValidation.getExpectedShapeMap().shapesPrefixMap(),shape);
+
+                    cleanProduced.add(new ShapeMapResultValidation(node,shape,status,info,reason,nodePrefix,shapePrefix));
+                }
             }
         }
         return cleanProduced;
+    }
+
+    /***
+     * Given an iri as a string, looks for the appropriate prefix in a PrefixMap
+     *
+     * @param prefixMap where to look for
+     * @param iriStr    iri as a string
+     * @return  prefix as a PrefixNode obj
+     */
+    private PrefixedNode getPrefix(PrefixMap prefixMap, String iriStr) {
+        PrefixedNode prefix = new PrefixedNode();
+
+        try {
+            IRI iri = new IRI(new URI(iriStr));
+            Either<String, Tuple3<Prefix, IRI, String>> prefixLocalName = prefixMap.getPrefixLocalName(iri);
+            Tuple3<Prefix, IRI, String> tuple =  prefixLocalName.toOption().get();
+            prefix = new PrefixedNode(tuple._1().str(),tuple._2().str(),tuple._3());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+         return prefix;
     }
 
     /**
@@ -253,6 +307,21 @@ public class WorkerSequential implements Worker {
         buildMetadata.put("execution_time",getBuildTime());
         buildMetadata.put("execution_date", String.valueOf(System.currentTimeMillis()));
         return buildMetadata;
+    }
+
+    /**
+     * Given a list of result shape maps validation, returns a processable json for the front
+     *
+     * @param results   list of result shape maps validation
+     * @return results as a json
+     */
+    private String toJson(List<ShapeMapResultValidation> results) {
+        String json="{";
+        for(ShapeMapResultValidation s:results){
+            json+=s.toJson()+",";
+        }
+        json=json.substring(0,json.length()-1)+"}";
+        return json.replace("\n", "").replace("\r", "");
     }
 
 
@@ -316,5 +385,6 @@ public class WorkerSequential implements Worker {
         final double seconds = (double)executionTimeNS/ 1_000_000_000;
         return String.format("%f sec",seconds);
     }
+
 
 }

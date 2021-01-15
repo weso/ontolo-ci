@@ -383,15 +383,28 @@ animation: spin 2s linear infinite;
     padding: 8px;
   }
   
-  #customers tr:nth-child(even){background-color: #def8e5;}
-  #customers tr:nth-child(odd){background-color: #def8e5;}
 
-  #customers tr:hover {background-color: #ddd;}
-  
+  #customers tr{
+    color:#222 !important;
+  }
+
+  #customers tr.success{background-color: #def8e5;}
+  #customers tr.failure{background-color: #fad0d0;}
+
+
+ 
   #customers th {
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: left;
+  }
+
+  #customers th.success{
     background-color: #39aa56;
-    color: white;
+    color:white !important;
+  }
+
+  #customers th.failure{
+    background-color: #db4545;
+    color:white !important;
   }

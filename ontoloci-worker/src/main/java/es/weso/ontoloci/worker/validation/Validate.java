@@ -90,15 +90,4 @@ public class Validate {
 				e -> IO.raiseError(new RuntimeException("Cannot parse RDF from str: " + str + ":" + e.getMessage())));
 	}
 
-	public IO<String> getContents(String fileName) {
-		try {
-			Path path = Paths.get(fileName);
-			List<String> lines = Files.readAllLines(path);
-			String str = String.join("\n", lines);
-			return IO.apply(() -> str);
-		} catch (IOException e) {
-			return IO.raiseError(e);
-		}
-	}
-
 }

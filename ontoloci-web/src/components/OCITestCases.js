@@ -74,10 +74,10 @@ function OCITestCases() {
                       key = {id}
                       testName= {test.testCase.name}
                       status ={test.status.toLowerCase()}
-                      dataNode={test.testCase.expectedShapeMap.split("@")[0]}
-                      shape={test.testCase.expectedShapeMap.split("@")[1]}
-                      validationStatus={test.metadata.validation_status}
-                      expectedValidationStatus={test.metadata.expected_validation_status}
+                      expectedSM_in={test.testCase.expectedShapeMap}
+                      producedSM_in={test.testCase.producedShapeMap}
+                      expectedSM_out={test.metadata.expected}
+                      producedSM_out={test.metadata.produced}
                       executionTime={test.metadata.execution_time}/>
             })}                         
             </div>
