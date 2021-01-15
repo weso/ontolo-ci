@@ -139,12 +139,15 @@ public class WorkerSequential implements Worker {
         testCaseResult.setStatus(status);
         testCaseResult.addMetadata("produced",toJson(produced));
         testCaseResult.addMetadata("expected",toJson(expected));
+        testCaseResult.addMetadata("produced_output",resultValidation.getResultShapeMap().toJson().spaces2());
+        testCaseResult.addMetadata("expected_output",resultValidation.getExpectedShapeMap().toJson().spaces2());
     }
-    
+
 
     /**
      * Compares two shapeMap results.
      * Two shapeMap results are the same if they have the same node and the same status.
+     * Returns true in case the shape maps are the same.
      *
      * @param e the first shapeMap result
      * @param p the second shapeMap result
@@ -188,11 +191,8 @@ public class WorkerSequential implements Worker {
         final List<ShapeMapResultValidation> expected =  getResultFromValidation(resultValidation.getExpectedShapeMap());
         // Now add the prefixes
         for(ShapeMapResultValidation e: expected){
-            String node = e.getNode().substring(1, e.getNode().length() - 1 );
-            String shape = e.getShape().substring(1, e.getNode().length() - 1 );
-            PrefixedNode nodePrefix = getPrefix(resultValidation.getResultShapeMap().nodesPrefixMap(),node);
-            PrefixedNode shapePrefix = getPrefix(resultValidation.getExpectedShapeMap().shapesPrefixMap(),shape);
-
+            PrefixedNode nodePrefix = getPrefix(resultValidation.getResultShapeMap().nodesPrefixMap(),e.getNode());
+            PrefixedNode shapePrefix = getPrefix(resultValidation.getExpectedShapeMap().shapesPrefixMap(),e.getShape());
             e.setNodePrefix(nodePrefix);
             e.setShapePrefix(shapePrefix);
         }
@@ -218,8 +218,8 @@ public class WorkerSequential implements Worker {
         for(ShapeMapResultValidation e: expected){
             for(ShapeMapResultValidation p: produced){
                 if(e.getNode().equals(p.getNode())){
-                    String node = p.getNode().substring(1, p.getNode().length() - 1 );
-                    String shape = p.getShape().substring(1, p.getNode().length() - 1 );
+                    String node = p.getNode();
+                    String shape = p.getShape();
                     String status = p.getStatus();
                     String info = p.getAppInfo();
                     String reason = p.getReason();
@@ -244,7 +244,8 @@ public class WorkerSequential implements Worker {
         PrefixedNode prefix = new PrefixedNode();
 
         try {
-            IRI iri = new IRI(new URI(iriStr));
+            String subIri = iriStr.substring(1, iriStr.length() - 1 );
+            IRI iri = new IRI(new URI(subIri));
             Either<String, Tuple3<Prefix, IRI, String>> prefixLocalName = prefixMap.getPrefixLocalName(iri);
             Tuple3<Prefix, IRI, String> tuple =  prefixLocalName.toOption().get();
             prefix = new PrefixedNode(tuple._1().str(),tuple._2().str(),tuple._3());

@@ -41,6 +41,8 @@ function OCITestCases() {
   }
 
 
+
+
   useEffect(() => {
     getTestCases()
   }, []);
@@ -74,10 +76,10 @@ function OCITestCases() {
                       key = {id}
                       testName= {test.testCase.name}
                       status ={test.status.toLowerCase()}
-                      expectedSM_in={test.testCase.expectedShapeMap}
-                      producedSM_in={test.testCase.producedShapeMap}
-                      expectedSM_out={test.metadata.expected}
-                      producedSM_out={test.metadata.produced}
+                      expected={test.metadata.expected}
+                      produced={test.metadata.produced}
+                      expected_output={test.metadata.expected_output}
+                      produced_output={test.metadata.produced_output}
                       executionTime={test.metadata.execution_time}/>
             })}                         
             </div>

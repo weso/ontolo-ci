@@ -1,40 +1,23 @@
 import React , {useState} from 'react';
-import { Collapse} from 'reactstrap';
 import '../css/testcase.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ClockIcon from './icon/CalendarIcon';
+import ResultsTable from './test/ResultsTable'
+
 
 function OCITest(props){
 
-    const {
-        status,
-        testName,
-        expectedSM_in,
-        producedSM_in,
-        expectedSM_out,
-        producedSM_out,
-        executionTime} = props;
+    const { status,
+            testName,
+            expected,
+            produced,
+            expected_output,
+            produced_output,
+            executionTime} = props;
 
-    const [isOpen, setIsOpen] = useState(false);
+    const [showResults, setShowResults] = useState(false);
 
-
-    const getTableContent = function(){
-        let pasrsedProduced = JSON.parse(producedSM_out);
-        console.log(pasrsedProduced)
-        return Object.keys(pasrsedProduced).map((p,index)=>{
-            let result = pasrsedProduced[p];
-            return (<tr className={status}>
-                <td>{result.node}</td>
-                <td>{result.shape}</td>
-                <td>{result.status}</td>
-                <td>confortmant</td>
-        </tr>)
-        })
-    }
-   
-    
-
-    const toggle = () => setIsOpen(!isOpen);
+    const toggle = () => setShowResults(!showResults);
 
     return (
     <div className="test-element-container">
@@ -61,64 +44,12 @@ function OCITest(props){
             <div>
         </div>
     </div>
-    <Collapse isOpen={isOpen} >
-        <div className="test-element-log">
-        <table id="customers">
-        <thead>
-    <tr>
-    
-      <th className={status} scope="col">Data Node</th>
-      <th className={status} scope="col">Shape</th>
-      <th className={status} scope="col">Status</th>
-      <th className={status} scope="col">Expected Status</th>
-    </tr>
-  </thead>
-  <tbody>
-    {    
-        getTableContent()
-    }
-  </tbody>
-  </table>
-        </div>
-    </Collapse>
+    <ResultsTable   status={status}
+                    showResults={showResults}
+                    expected={expected}
+                    produced={produced}
+                    produced_output={produced_output}/>
 </div>) 
 }
 
 export default OCITest;
-
-/*<LazyLog enableSearch url="http://localhost:3000/examplelog.log" />*/
-
-/**
- * import { Button,Accordion  } from 'react-bootstrap';
-import { LazyLog } from 'react-lazylog';
- */
-
-/**
- *  <span>{ ((testName).length > 30) ? 
-                (((testName).substring(0,30-3)) + '...') : 
-                testName }
-                </span>
- */
-
- /**
-  *  <div className="test-element-field test-element-data">
-                <h3 className="field-title">DATA NODE</h3>
-                <span>{dataNode}</span>
-            </div>
-
-            <div className="test-element-field test-element-shape">
-                <h3 className="field-title">SHAPE</h3>
-                <span>{shape}</span>
-            </div>
-
-            <div className="test-element-field test-element-validation-result">
-                <h3 className="field-title">STATUS</h3>
-                <span>{validationStatus}</span>
-            </div>
-
-            <div className="test-element-field test-element-validation-result">
-                <h3 className="field-title">EXPECTED STATUS</h3>
-                <span>{expectedValidationStatus}</span>
-            </div>
-
-  */

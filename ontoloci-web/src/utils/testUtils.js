@@ -3,7 +3,7 @@ export function getHeaderInfo(commit,commitId,prNumber){
     let path = 'pull/'+prNumber;
     let linkClass = 'pr-link ';
     let specialContent = ' #'+prNumber+' ';
-    if(prNumber === undefined){
+    if(prNumber === 'none'){
       title = 'Push';
       path = 'commit/'+commit;
       linkClass = 'commit-link ';

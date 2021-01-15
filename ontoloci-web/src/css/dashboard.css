@@ -24,7 +24,7 @@
 }
 
 
- h2 {
+h2 {
     margin-top: 2vh;
 }
 
@@ -145,9 +145,14 @@ a:hover{
     fill:  #39aa56;
 }
 
+.top-panel > .icon-check-success{
+    margin-left: 2vh;
+}
+
+
 .icon-check-failure{
     margin-top: 0.5vh;
-    height: 2.5vh;
+    height: 3vh;
     fill:  #db4545;
 }
 
@@ -157,9 +162,6 @@ a:hover{
     height: 2.5vh;
     fill:  #db8945;
 }
-
-
-
 
 
 .pr-id{

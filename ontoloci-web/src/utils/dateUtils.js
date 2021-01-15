@@ -16,7 +16,9 @@ function getFormatedDate(miliseconds) {
     }
 
     if(hours>0){
-      return hours +" hours ago";
+      if(hours>1)
+        return hours +" hours ago";
+      return hours +" hour ago";
     }
 
     if(minutes>0){

@@ -35,7 +35,7 @@ function TestCasesHeader(){
     const getHeader = function(){
         let {title,path,linkClass,specialContent} = getHeaderInfo(commit,commitId,prNumber);
         return (
-        <h3 className={buildStatus}>
+        <h3 className={'test-header-title '+buildStatus}>
           {title}  
           <a className={linkClass +buildStatus} href={"https://github.com/"+owner+"/"+repo+"/"+path}  target="_blank" rel="noopener noreferrer" >{specialContent}</a>
           {" "+commitName+" "}
@@ -43,7 +43,7 @@ function TestCasesHeader(){
       }
 
     return (
-    <div className={"build-panel border-success"}>
+    <div className={"build-panel border-"+buildStatus}>
         <div className="top-panel">
             {getSvgStatus()}
             {getHeader()}
