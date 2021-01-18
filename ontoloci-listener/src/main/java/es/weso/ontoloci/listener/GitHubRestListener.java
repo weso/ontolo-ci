@@ -1,10 +1,8 @@
 package es.weso.ontoloci.listener;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import es.weso.ontoloci.scheduler.Scheduler;
 import es.weso.ontoloci.worker.build.Build;
-import org.apache.jena.base.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -21,12 +19,23 @@ public class GitHubRestListener {
     // LOGGER CREATION
     private static final Logger LOGGER = LoggerFactory.getLogger(GitHubRestListener.class);
 
-    private static final String REPO_KEY = "repository";
-    private static final String OWNER_KEY = "owner";
-    private static final String BRANCH_KEY = "branch";
+    private static final String GITHUB_PUSH_EVENT = "push";
+    private static final String GITHUB_PULL_REQUEST_EVENT = "pull_request";
 
-    @RequestMapping(value = "/push",method = RequestMethod.POST)
-    public void pushListener(@RequestBody Map<String, Object> payload) {
+
+    @RequestMapping("/")
+    public void listen(@RequestHeader("X-GitHub-Event") String event, @RequestBody Map<String, Object> payload) {
+        // We only listen to these two type of events.
+        LOGGER.debug("GITHUB-EVENT- "+ event);
+        if(Objects.equals(event, GITHUB_PUSH_EVENT))
+            handlePush(payload);
+        if(Objects.equals(event, GITHUB_PULL_REQUEST_EVENT))
+            handlePullRequest(payload);
+
+    }
+
+
+    public void handlePush(Map<String, Object> payload) {
             Map<String, Object> repositoryData = (Map<String, Object>) payload.get("repository");
             Map<String, Object> ownerData = (Map<String, Object>) repositoryData.get("owner");
             ArrayList<Map<String, Object>> commitData = (ArrayList<Map<String, Object>>) payload.get("commits");
@@ -37,18 +46,12 @@ public class GitHubRestListener {
             final String repo = (String) repositoryData.get("name");
             final String branch = ((String) payload.get("ref")).split("refs/heads/")[1];
             final String commit = (String) commitData.get(0).get("id");
-            final String commmitId = String.valueOf(commit).substring(0,6);
-            final String commmitName = (String) commitData.get(0).get("message");
+            final String commitId = String.valueOf(commit).substring(0,6);
+            final String commitName = (String) commitData.get(0).get("message");
+            final String prNumber = "none";
 
             // Add the metadata.
-            Map<String, String> metadata = new HashMap<>();
-            metadata.put("owner", owner);
-            metadata.put("repo", repo);
-            metadata.put("branch", branch);
-            metadata.put("commit", commit);
-            metadata.put("commitId", commmitId);
-            metadata.put("commitName", commmitName);
-
+            Map<String, String> metadata = fillMetadata(owner,repo,branch,commit,commitId,commitName,prNumber);
             // We set the metadata.
             build.setMetadata(metadata);
 
@@ -57,8 +60,8 @@ public class GitHubRestListener {
 
     }
 
-    @RequestMapping(value = "/pull_request",method = RequestMethod.POST)
-    public void pullRequestListener(@RequestBody Map<String, Object> payload) {
+
+    public void handlePullRequest(@RequestBody Map<String, Object> payload) {
 
         if(!payload.get("action").equals("closed")) {
             Map<String, Object> pullRequest = (Map<String, Object>) payload.get("pull_request");
@@ -72,25 +75,29 @@ public class GitHubRestListener {
             final String repo = (String) repoData.get("name");
             final String branch = (String) headData.get("ref");
             final String commit = (String) headData.get("sha");
-            final String commmitId = String.valueOf(commit).substring(0, 6);
-            final String commmitName = (String) pullRequest.get("title");
+            final String commitId = String.valueOf(commit).substring(0, 6);
+            final String commitName = (String) pullRequest.get("title");
             final String prNumber = String.valueOf(payload.get("number"));
 
             // Add the metadata.
-            Map<String, String> metadata = new HashMap<>();
-            metadata.put("owner", owner);
-            metadata.put("repo", repo);
-            metadata.put("branch", branch);
-            metadata.put("commit", commit);
-            metadata.put("commitId", commmitId);
-            metadata.put("commitName", commmitName);
-            metadata.put("prNumber", prNumber);
-
+            Map<String, String> metadata = fillMetadata(owner,repo,branch,commit,commitId,commitName,prNumber);
             // We set the metadata.
             build.setMetadata(metadata);
 
             // Instantiate the scheduler.
             Scheduler.getInstance().scheduleBuild(build);
         }
+    }
+
+    private Map<String, String> fillMetadata(String owner,String repo,String branch,String commit,String commitId,String commitName,String prNumber){
+        Map<String, String> metadata = new HashMap<>();
+        metadata.put("owner", owner);
+        metadata.put("repo", repo);
+        metadata.put("branch", branch);
+        metadata.put("commit", commit);
+        metadata.put("commitId", commitId);
+        metadata.put("commitName", commitName);
+        metadata.put("prNumber", prNumber);
+        return metadata;
     }
 }

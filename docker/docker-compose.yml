@@ -3,11 +3,21 @@ version: '3.1'
 services:
 
   # This is the container for the web gui.
-  ontoloci-web:
-    image: ontoloci-web
+  #ontoloci-web:
+   # image: ontoloci-web
+  # build:
+  #    context: ../ontoloci-web
+  #    dockerfile: Dockerfile
+  #  ports:
+  #    - 80:3000
+  #  stdin_open: true # Needed to keep the image alive.
+
+  # This is the container for the back
+  ontoloci-back:
+    image: ontoloci-back
     build:
-      context: ../ontoloci-web
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: ontoloci-server-igniter/Dockerfile
     ports:
-      - 80:3000
+      - 8090:8090
     stdin_open: true # Needed to keep the image alive.

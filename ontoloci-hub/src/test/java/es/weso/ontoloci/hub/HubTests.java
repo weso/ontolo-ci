@@ -29,10 +29,4 @@ public class HubTests {
 
     }
 
-
-    @Test
-    public void getPersonalTokenTest(){
-        GitHubRepositoryProvider gitHubService = GitHubRepositoryProvider.empty();
-        gitHubService.getPersonalAccessToken("");
-    }
 }

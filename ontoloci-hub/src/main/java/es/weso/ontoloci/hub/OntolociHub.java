@@ -3,14 +3,13 @@ package es.weso.ontoloci.hub;
 import es.weso.ontoloci.hub.build.HubBuild;
 
 /**
- * Interface for ontoloci hub.
- *
- * @author Fablo Menéndez Suárez
+ * This interface sets the contract for all the hub possible implementations
+ * @author Pablo Menéndez Suárez
  */
 public interface OntolociHub {
 
     /**
-     * Add the test to an empty build object.
+     * Add the tests to an empty build object.
      *
      * @param hubBuild to populate with test cases.
      * @return the populated hub build.
@@ -18,6 +17,12 @@ public interface OntolociHub {
     HubBuild addTestsToBuild(HubBuild hubBuild);
 
 
+    /**
+     * Updates an existing checkrun with a new status and a output message
+     *
+     * @param conclusion    new status
+     * @param output        output message
+     */
     void updateCheckRun(String conclusion,String output);
 
 }

@@ -3,6 +3,7 @@ package es.weso.ontoloci.worker.build;
 import es.weso.ontoloci.hub.build.HubBuild;
 import es.weso.ontoloci.hub.test.HubTestCase;
 import es.weso.ontoloci.worker.test.TestCase;
+import org.apache.http.entity.StringEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +14,7 @@ public class Build {
     // LOGGER CREATION
     private static final Logger LOGGER = LoggerFactory.getLogger(Build.class);
 
+    private String id;
     private Map<String, String> metadata;
     private Collection<TestCase> testCases;
 
@@ -44,6 +46,7 @@ public class Build {
      * @param testCases from which to create the build.
      */
     private Build(final Collection<TestCase> testCases,Map<String, String> metadata) {
+        this.id = UUID.randomUUID().toString();
         this.testCases = testCases;
         this.metadata = metadata;
 
@@ -128,5 +131,20 @@ public class Build {
     }
 
 
+    public String getId() {
+        return id;
+    }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Build{" +
+                "id='" + id + '\'' +
+                ", metadata=" + metadata +
+                ", testCases=" + testCases +
+                '}';
+    }
 }

@@ -5,18 +5,20 @@ import java.io.IOException;
 import java.util.Collection;
 
 /**
- * TO-DO
+ * This interface sets the contract for all the repository providers possible implementations
+ * @author Pablo Menéndez
  */
 public interface RepositoryProvider {
 
     /**
-     * Gets a collection of test cases from a concrete commit of a repository service repository.
+     * Gets a collection of test cases from a specific commit of a repository provider.
      *
      * @param owner                 of the repository
      * @param repo                  name of the repository
-     * @param commit                of the repository
+     * @param commit                sha of the commit
      *
      * @return test cases
+     * @throws IOException
      */
     Collection<HubTestCase> getTestCases(
             final String owner,
@@ -25,5 +27,36 @@ public interface RepositoryProvider {
     ) throws IOException;
 
 
-    void updateCheckRun(String authToken, String checkRunId, String owner, String repo, String conclusion, String output);
+    /**
+     * Creates a checkrun for a specific commit of a repository
+     *
+     * @param owner     of the repository
+     * @param repo      name of the repository
+     * @param commit    sha of the commit
+     *
+     * @return  id of the created checkrun
+     * @throws IOException
+     */
+    String createCheckRun(
+            final String owner,
+            final String repo,
+            final String commit) throws IOException;
+
+    /**
+     * Updates the checkrun status for a specific checkRunId of a repository
+     *
+     * @param checkRunId            id of the checkRun
+     * @param owner                 of the repository
+     * @param repo                  name of the repository
+     * @param conclusion            new status of the checkrun
+     * @param output                message
+     *
+     * @throws IOException
+     */
+    void updateCheckRun(
+            final String checkRunId,
+            final String owner,
+            final String repo,
+            final String conclusion,
+            final String output) throws IOException;
 }

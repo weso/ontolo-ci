@@ -1,6 +1,5 @@
 package es.weso.ontoloci.hub.utils;
 
-import fansi.Str;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.commons.io.FileUtils;
@@ -20,22 +19,29 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.Scanner;
 
+/**
+ * This class provides a static method to obtain a JWT by the current time and the AppId signed with a private Key
+ * The AppId and the private key are defined in the secrets folder. This folder will not be uploaded to GitHub or any other repository provider.
+ *
+ * @author Pablo Menéndez Suárez
+ */
 public class KeyUtils {
 
-    // APP ID
+    // Private key path
     private static final String PRIVATE_KEY_PAHT = "secrets/server-pkcs8.key";
-    // PRIVATE KEY
+    // APP ID path
     private static final String APP_ID_PATH = "secrets/ocitest.appid";
-    // CLIENT ID
-    private static final String CLIENT_ID_PATH = "secrets/client.id";
-    // CLIENT SECRET
-    private static final String CLIENT_SECRET_PATH = "secrets/client.secret";
 
+    /**
+     * Gets a JSON Web Token by the current time and the AppId signed with a private Key
+     * Inspired on https://docs.github.com/en/free-pro-team@latest/developers/apps/authenticating-with-github-apps#jwt-payload
+     * @return
+     */
     public static String getJWT() {
 
         //The JWT signature algorithm we will be using to sign the token
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.RS256;
-        String appId = getAppId();
+        String appId = getFileConten(APP_ID_PATH);
         Instant now = Instant.now();
 
         PrivateKey privateKey = KeyUtils.loadPrivateKey(PRIVATE_KEY_PAHT);
@@ -51,19 +57,12 @@ public class KeyUtils {
     }
 
 
-    public static String getClientId(){
-        return getSecret(CLIENT_ID_PATH);
-    }
-
-    public static String getClientSecret(){
-        return getSecret(CLIENT_SECRET_PATH);
-    }
-
-    private static String getAppId(){
-        return getSecret(APP_ID_PATH);
-    }
-
-    private static String getSecret(String path){
+    /**
+     * Gets the content of a file
+     * @param path of the file
+     * @return content as a string
+     */
+    private static String getFileConten(String path){
         String appId = "";
         try {
             File myObj = new File(path);
@@ -79,7 +78,12 @@ public class KeyUtils {
         return appId;
     }
 
-    public static PrivateKey loadPrivateKey(String path)  {
+    /**
+     * Allows loading a private key contained in a file
+     * @param path to the private key file
+     * @return PrivateKey
+     */
+    private static PrivateKey loadPrivateKey(String path)  {
         String privateKeyPEM = null;
         try {
             privateKeyPEM = FileUtils.readFileToString(new File(path), StandardCharsets.UTF_8);

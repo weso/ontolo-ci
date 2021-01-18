@@ -50,7 +50,7 @@ public class WorkerTest {
             //Transform the returned HubBuild to a Build and overwrites the result
             build = build.from(hubBuild);
         }
-
+/*
         @Test
         public void validationTest() throws JsonProcessingException {
 
@@ -177,26 +177,5 @@ public class WorkerTest {
                 testCase.getExpectedShapeMap()).unsafeRunSync();
     }
 
-    private List<ShapeMapResultValidation> getProducedShapeMap(ResultValidation result){
-        ObjectMapper jsonMapper = new ObjectMapper(new JsonFactory());
-        try {
-            return Arrays.asList(
-                    jsonMapper.readValue(result.getResultShapeMap().toJson().spaces2(), ShapeMapResultValidation[].class));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private List<ShapeMapResultValidation> getExpectedShapeMap(ResultValidation result){
-        ObjectMapper jsonMapper = new ObjectMapper(new JsonFactory());
-        try {
-            return Arrays.asList(
-                    jsonMapper.readValue(result.getExpectedShapeMap().toJson().spaces2(), ShapeMapResultValidation[].class));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
+*/
 }

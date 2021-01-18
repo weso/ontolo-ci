@@ -1,7 +1,4 @@
 
-
-
-
 .main-2{
     display: grid;
     justify-content: center;
@@ -20,18 +17,14 @@
     grid-template-rows: 30% auto;
     grid-template-columns: 100%;
     height: 100%;
-    border-top: 1px solid #f3f0f0;
-    border-bottom: 1px solid #f3f0f0;
-    border-right: 1px solid #f3f0f0;
+    border-top: 1px solid #f3f0f0 !important; 
+    border-bottom: 1px solid #f3f0f0 !important;
+    border-right: 1px solid #f3f0f0 !important;
     margin-top: 1.5vh;
 }
 
 
-
-
-
-
- h2 {
+h2 {
     margin-top: 2vh;
 }
 
@@ -63,6 +56,41 @@
     margin-bottom: 1vh;
 }
 
+@media (max-width: 1450px) {
+    
+    .main-2{
+        grid-template-columns: 90%;
+    }
+
+}
+
+
+@media (max-width: 800px) {
+    
+  
+    .dashboard-element{
+        grid-template-columns: 100%;
+        grid-template-rows:  repeat(6,auto);
+        max-height: 35vh;
+        justify-content: flex-start !important;
+        padding-left: 3vh;
+    }
+
+    .dashboard-element-info{
+
+        justify-content: flex-start !important;
+    }
+
+    .dashboard-element-logo{
+        justify-content: center !important;
+        margin-left: -2vh ;
+    }
+
+    .dashboard-element-status{
+        justify-content: flex-start  !important;
+        height: 100% !important;
+    }
+}
 
 
 
@@ -83,15 +111,15 @@ a:hover{
     height: 80%;
 }
 
-.dashboard-element-logo-pass{
+.dashboard-element-logo-success{
     border-right: 3px solid #39aa56;
 }
 
-.dashboard-element-logo-fail{
+.dashboard-element-logo-failure{
     border-right: 3px solid #db4545;
 }
 
-.dashboard-element-logo-exception{
+.dashboard-element-logo-cancelled{
     border-right: 3px solid #db8945;
 }
 
@@ -111,27 +139,29 @@ a:hover{
     height: 80%;
 }
 
-.icon-check-pass{
+.icon-check-success{
     margin-top: 0.5vh;
     height: 2.5vh;
     fill:  #39aa56;
 }
 
-.icon-check-fail{
+.top-panel > .icon-check-success{
+    margin-left: 2vh;
+}
+
+
+.icon-check-failure{
     margin-top: 0.5vh;
-    height: 2.5vh;
+    height: 3vh;
     fill:  #db4545;
 }
 
 
-.icon-check-exception{
+.icon-check-cancelled{
     margin-top: 0.5vh;
     height: 2.5vh;
     fill:  #db8945;
 }
-
-
-
 
 
 .pr-id{

@@ -11,7 +11,7 @@ def example():
 @app.route('/github-proxy',methods=['POST'])
 def github_proxy():
     github_header = request.headers.get('X-GitHub-Event')
-    url = 'http://156.35.82.21:80/api/v1/github/'+ github_header
+    url = 'http://156.35.82.21:8089/api/v1/github/'+ github_header
     data = json.loads(request.data)
     requests.post(url,json=data)
     return "SUCCESS"
