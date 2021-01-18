@@ -15,6 +15,8 @@ function ResultsTable(props){
     const getTableContent = function(){
         let parsedExpected = JSON.parse(expected);
         let parsedProduced = JSON.parse(produced);
+        console.log({expected:expected})
+        console.log({parsedProduced:parsedProduced,parsedExpected:parsedExpected})
         return Object.keys(parsedProduced).map((p,index)=>{
             let result = parsedProduced;
             let expectedIndex =Object.keys(parsedExpected)[index];

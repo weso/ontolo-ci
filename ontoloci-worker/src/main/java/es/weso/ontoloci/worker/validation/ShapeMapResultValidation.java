@@ -1,4 +1,7 @@
 package es.weso.ontoloci.worker.validation;
+
+import java.util.UUID;
+
 /**
  * Models a test case result. It is composed by a node, a node and a status.
  *
@@ -7,6 +10,7 @@ package es.weso.ontoloci.worker.validation;
  */
 public class ShapeMapResultValidation {
 
+    private String id;
     private String node;
     private String shape;
     private String status;
@@ -16,9 +20,11 @@ public class ShapeMapResultValidation {
     private PrefixedNode shapePrefix;
 
     /**
-     * Default constructor
+     * Default constructor. Needed for the json parsers
      */
-    public ShapeMapResultValidation(){}
+    public ShapeMapResultValidation(){
+        this.id = UUID.randomUUID().toString();
+    }
 
 
     /**
@@ -33,6 +39,7 @@ public class ShapeMapResultValidation {
      * @param shapePrefix
      */
     public ShapeMapResultValidation(String node, String shape, String status, String info, String reason, PrefixedNode nodePrefix, PrefixedNode shapePrefix) {
+        this.id = UUID.randomUUID().toString();
         this.node = node;
         this.shape = shape;
         this.status = status;
@@ -161,7 +168,7 @@ public class ShapeMapResultValidation {
      * @return ShapeMapResultValidation as a json
      */
     public String toJson() {
-        return "\"ShapeMapResultValidation\":{ "+
+        return "\"SMRValidation-"+id+"\":{ "+
                 "\"node\":\""+nodePrefix.getPrefixedNode()+"\","+
                 "\"shape\":\""+shapePrefix.getPrefixedNode()+"\","+
                 "\"status\":\""+status+"\","+

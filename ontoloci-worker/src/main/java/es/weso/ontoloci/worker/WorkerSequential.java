@@ -120,7 +120,13 @@ public class WorkerSequential implements Worker {
     /**
      * Compares the produced validation results with the expected validation results.
      * If any produced shapeMap status has not the same expected status then the test has failed.
-     * The produced and the expected results are added to the test metadata.
+     * Then produced and expected results are stored in the metadata of the TestCaseResult:
+     *
+     *  - Produced: Represents the produced ShapeMap where the nodes and the shapes are prefixed
+     *  - Expected: Represents the expected ShapeMap where the nodes and the shapes are prefixed
+     *  - Produced_output: Represents the full produced ShapeMap
+     *  - Expected_output: Represents the full expected ShapeMap
+     *
      *
      * @param resultValidation  result of the validation
      * @param testCaseResult    test case result
@@ -132,8 +138,9 @@ public class WorkerSequential implements Worker {
 
         for(ShapeMapResultValidation e: expected){
             for(ShapeMapResultValidation p: produced){
-                if(!compareShapeMapResult(e,p))
-                    status = TestCaseResultStatus.FAILURE;
+                if(checkNodes(e,p))
+                    if(!checkStatus(e,p))
+                        status = TestCaseResultStatus.FAILURE;
             }
         }
         testCaseResult.setStatus(status);
@@ -144,22 +151,32 @@ public class WorkerSequential implements Worker {
     }
 
 
+
+
     /**
-     * Compares two shapeMap results.
-     * Two shapeMap results are the same if they have the same node and the same status.
-     * Returns true in case the shape maps are the same.
+     * Checks if the passed nodes of a ShapeMap result are the same
      *
      * @param e the first shapeMap result
-     * @param p the second shapeMap result
-     *
-     * @return if the shapeMap results are equals or not
+     * @param p the first shapeMap result
+     * @return  if the nodes are the same
      */
-    private boolean compareShapeMapResult(ShapeMapResultValidation e,ShapeMapResultValidation p){
+    private boolean checkNodes(ShapeMapResultValidation e,ShapeMapResultValidation p){
         String expectedNode = e.getNode();
-        String expectedStatus = e.getStatus();
         String producedNode = p.getNode();
+        return  expectedNode.equals(producedNode);
+    }
+
+    /**
+     * Checks if the status of the passed ShapeMap result are the same
+     *
+     * @param e the first shapeMap result
+     * @param p the first shapeMap result
+     * @return  if the statuses are the same
+     */
+    private boolean checkStatus(ShapeMapResultValidation e,ShapeMapResultValidation p){
+        String expectedStatus = e.getStatus();
         String producedStatus = p.getStatus();
-        return expectedNode.equals(producedNode) && expectedStatus.equals(producedStatus);
+        return  expectedStatus.equals(producedStatus);
     }
 
 
