@@ -1,6 +1,7 @@
 package es.weso.ontoloci.hub;
 
 import es.weso.ontoloci.hub.build.HubBuild;
+import es.weso.ontoloci.hub.exceptions.EmptyContentFileException;
 import es.weso.ontoloci.hub.repository.impl.GitHubRepositoryProvider;
 import es.weso.ontoloci.hub.test.HubTestCase;
 import org.slf4j.Logger;
@@ -108,6 +109,10 @@ public class OntolociHubImplementation implements OntolociHub {
             LOGGER.error(String.format("ERROR while getting any file at getTestCases from GitHubRepositoryProvider: %s",e.getMessage()));
             addFilleNotFoundMetadata(metadata);
         }
+        catch (EmptyContentFileException e) {
+            LOGGER.error(String.format("ERROR while getting the HubTestCases at getTestCases from GitHubRepositoryProvider: %s",e.getMessage()));
+            addEmptyContentFilleMetadata(metadata);
+        }
         catch (Exception e) {
             LOGGER.error(String.format("ERROR while getting the HubTestCases at getTestCases from GitHubRepositoryProvider: %s",e.getMessage()));
             addExceptionMetadata(metadata);
@@ -123,6 +128,10 @@ public class OntolociHubImplementation implements OntolociHub {
      */
     private void addFilleNotFoundMetadata(Map<String,String> metadata){
         fillMetadataException(metadata,"FileNotFound","Some file was not found");
+    }
+
+    private void addEmptyContentFilleMetadata(Map<String,String> metadata){
+        fillMetadataException(metadata,"EmptyContentFile","Some files have not content");
     }
 
     /**

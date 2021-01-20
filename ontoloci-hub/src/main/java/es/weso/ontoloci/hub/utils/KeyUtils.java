@@ -28,9 +28,9 @@ import java.util.Scanner;
 public class KeyUtils {
 
     // Private key path
-    private static final String PRIVATE_KEY_PAHT = "secrets/server-pkcs8.key";
+    private static final String PRIVATE_KEY_PAHT = "ontoloci-hub/secrets/server-pkcs8.key";
     // APP ID path
-    private static final String APP_ID_PATH = "secrets/ocitest.appid";
+    private static final String APP_ID_PATH = "ontoloci-hub/secrets/ocitest.appid";
 
     /**
      * Gets a JSON Web Token by the current time and the AppId signed with a private Key

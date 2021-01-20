@@ -41,33 +41,15 @@ public class WorkerTest {
             metadataExample.put("repo",repo);
             metadataExample.put("branch",branch);
             build.setMetadata(metadataExample);
-
-            OntolociHubImplementation ontolocyHub = new OntolociHubImplementation();
-            //Transform the current build to a HubBuild
-            HubBuild hubBuild = build.toHubBuild();
-            //Add the tests
-            hubBuild = ontolocyHub.addTestsToBuild(hubBuild);
-            //Transform the returned HubBuild to a Build and overwrites the result
-            build = build.from(hubBuild);
         }
-/*
+
         @Test
-        public void validationTest() throws JsonProcessingException {
-
-            for(TestCase testCase : build.getTestCases()) {
-                ResultValidation result = validate(testCase);
-
-                assertTrue(result.getExpectedShapeMap().toJson().spaces2().length() > 0);
-
-                List<ShapeMapResultValidation> produced = getProducedShapeMap(result);
-                List<ShapeMapResultValidation> expected = getExpectedShapeMap(result);
-
-                assertTrue(expected.get(0).equals(produced.get(0)));
-            }
+        public void validationTest(){
+            
         }
 
 
-
+/*
     @Test
     public void metadataTest() {
 

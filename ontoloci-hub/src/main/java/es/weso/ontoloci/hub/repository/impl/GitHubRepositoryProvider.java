@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import es.weso.ontoloci.hub.exceptions.EmptyContentFileException;
 import es.weso.ontoloci.hub.manifest.Manifest;
 import es.weso.ontoloci.hub.manifest.ManifestEntry;
 import es.weso.ontoloci.hub.repository.RepositoryConfiguration;
@@ -409,6 +410,8 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
                 String result =  IOUtils.toString(instream, "UTF-8");
                 if(result.startsWith("404:"))
                     throw new FileNotFoundException();
+                if(result.length()<=0)
+                    throw new EmptyContentFileException();
                 return result;
             }
         }
@@ -476,7 +479,8 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
      */
     private HttpGet getGitHubGetAuth(String path){
         HttpGet httpGet = getGitHubGet(path);
-        httpGet.setHeader("Authorization", "Bearer "+KeyUtils.getJWT());
+        String jwt = "Bearer "+KeyUtils.getJWT();
+        httpGet.setHeader("Authorization", jwt);
         return httpGet;
     }
 

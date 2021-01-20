@@ -13,14 +13,14 @@ function ResultsTable(props){
     const toggle = () => setShowSM(!showSM);
 
     const getTableContent = function(){
+        console.log({expected:expected})
         let parsedExpected = JSON.parse(expected);
         let parsedProduced = JSON.parse(produced);
-        console.log({expected:expected})
-        console.log({parsedProduced:parsedProduced,parsedExpected:parsedExpected})
+        //console.log({parsedProduced:parsedProduced,parsedExpected:parsedExpected})
         return Object.keys(parsedProduced).map((p,index)=>{
             let result = parsedProduced;
             let expectedIndex =Object.keys(parsedExpected)[index];
-            return (<tr className={status}>
+            return (<tr className={status} key={result[p].node}>
                 <td>{result[p].node}</td>
                 <td>{result[p].shape}</td>
                 <td>{result[p].status}</td>
@@ -51,7 +51,7 @@ function ResultsTable(props){
             </table>
         </div>
         <Button  variant="link" onClick={toggle}>Shape Map</Button>
-        <Collapse isOpen={showSM} className>
+        <Collapse isOpen={showSM}>
             <JSONPretty id="json-pretty" data={produced_output}></JSONPretty>
         </Collapse>
     </Collapse>) 
