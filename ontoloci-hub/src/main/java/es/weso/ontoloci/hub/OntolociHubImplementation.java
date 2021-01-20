@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- *
+ * OntolociHub implementation
  * @author Pablo Menéndez Suárez
  */
 public class OntolociHubImplementation implements OntolociHub {

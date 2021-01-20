@@ -46,7 +46,7 @@ public class KeyUtils {
         // We need the absolutepath because when the project is deployed the root folder is ontolocy,
         // while if we are running the hub tests the root folder is ontoloci-hub
         String absolutepath = KeyUtils.class.getProtectionDomain().getCodeSource().getLocation().getPath().split("/ontolo-ci/")[0];
-        
+
         String appId = getFileConten(absolutepath+APP_ID_PATH);
         Instant now = Instant.now();
 

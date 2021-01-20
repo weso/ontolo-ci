@@ -179,7 +179,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
      * @param output                message
      */
     @Override
-    public void updateCheckRun(String checkRunId, String owner, String repo, String conclusion,String output) throws IOException {
+    public String updateCheckRun(String checkRunId, String owner, String repo, String conclusion,String output) throws IOException {
 
         LOGGER.debug( String.format("Updating CheckRun = [%s] for user=[%s] and repo =[%s] ",checkRunId,owner,repo));
 
@@ -194,10 +194,11 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
         // 5. Set the request params
         httpatch  = addUpdateCheckRunParams(httpatch,conclusion,output);
         // 6. Perform the request
-        executeRequest(httpclient,httpatch);
+        String result = executeRequest(httpclient,httpatch);
 
         LOGGER.debug( String.format("CheckRun updated = [%s] for user=[%s] and repo =[%s] ",checkRunId,owner,repo));
 
+        return result;
     }
 
     /**
