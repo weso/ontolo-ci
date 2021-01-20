@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
@@ -28,9 +29,9 @@ import java.util.Scanner;
 public class KeyUtils {
 
     // Private key path
-    private static final String PRIVATE_KEY_PAHT = "ontoloci-hub/secrets/server-pkcs8.key";
+    private static final String PRIVATE_KEY_PAHT = "/ontolo-ci/ontoloci-hub/secrets/server-pkcs8.key";
     // APP ID path
-    private static final String APP_ID_PATH = "ontoloci-hub/secrets/ocitest.appid";
+    private static final String APP_ID_PATH = "/ontolo-ci/ontoloci-hub/secrets/ocitest.appid";
 
     /**
      * Gets a JSON Web Token by the current time and the AppId signed with a private Key
@@ -39,14 +40,19 @@ public class KeyUtils {
      */
     public static String getJWT() {
 
-        //The JWT signature algorithm we will be using to sign the token
+        // The JWT signature algorithm we will be using to sign the token
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.RS256;
-        String appId = getFileConten(APP_ID_PATH);
+
+        // We need the absolutepath because when the project is deployed the root folder is ontolocy,
+        // while if we are running the hub tests the root folder is ontoloci-hub
+        String absolutepath = KeyUtils.class.getProtectionDomain().getCodeSource().getLocation().getPath().split("/ontolo-ci/")[0];
+        
+        String appId = getFileConten(absolutepath+APP_ID_PATH);
         Instant now = Instant.now();
 
-        PrivateKey privateKey = KeyUtils.loadPrivateKey(PRIVATE_KEY_PAHT);
+        PrivateKey privateKey = KeyUtils.loadPrivateKey(absolutepath+PRIVATE_KEY_PAHT);
 
-        //Let's set the JWT Claims
+        // Let's set the JWT Claims
         String jwt = Jwts.builder()
                 .setIssuedAt(Date.from(now))
                 .setExpiration(Date.from(now.plus(5L, ChronoUnit.MINUTES)))
