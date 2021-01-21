@@ -3,8 +3,10 @@ package es.weso.ontoloci.listener;
 
 import es.weso.ontoloci.scheduler.Scheduler;
 import es.weso.ontoloci.worker.build.Build;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringApplication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -22,6 +24,9 @@ public class GitHubRestListener {
     private static final String GITHUB_PUSH_EVENT = "push";
     private static final String GITHUB_PULL_REQUEST_EVENT = "pull_request";
 
+    public static void main(String... args) {
+        SpringApplication.run(GitHubRestListener.class, args);
+    }
 
     @RequestMapping("/")
     public void listen(@RequestHeader("X-GitHub-Event") String event, @RequestBody Map<String, Object> payload) {
@@ -31,8 +36,8 @@ public class GitHubRestListener {
             handlePush(payload);
         if(Objects.equals(event, GITHUB_PULL_REQUEST_EVENT))
             handlePullRequest(payload);
-
     }
+
 
 
     public void handlePush(Map<String, Object> payload) {
@@ -61,7 +66,7 @@ public class GitHubRestListener {
     }
 
 
-    public void handlePullRequest(@RequestBody Map<String, Object> payload) {
+    public void handlePullRequest(Map<String, Object> payload) {
 
         if(!payload.get("action").equals("closed")) {
             Map<String, Object> pullRequest = (Map<String, Object>) payload.get("pull_request");
@@ -88,6 +93,7 @@ public class GitHubRestListener {
             Scheduler.getInstance().scheduleBuild(build);
         }
     }
+
 
     private Map<String, String> fillMetadata(String owner,String repo,String branch,String commit,String commitId,String commitName,String prNumber){
         Map<String, String> metadata = new HashMap<>();
