@@ -20,7 +20,8 @@ function ResultsTable(props){
         return Object.keys(parsedProduced).map((p,index)=>{
             let result = parsedProduced;
             let expectedIndex =Object.keys(parsedExpected)[index];
-            return (<tr className={status} key={result[p].node}>
+            let rowStatus = result[p].status == parsedExpected[expectedIndex].status ? "success" : "failure";
+            return (<tr className={rowStatus} key={result[p].node}>
                 <td>{result[p].node}</td>
                 <td>{result[p].shape}</td>
                 <td>{result[p].status}</td>

@@ -60,7 +60,8 @@ public class Scheduler {
         while(!this.buildStack.isEmpty()) {
             LOGGER.debug("Scheduler consuming " + this.buildStack.getFirst());
             this.workerExecutor.executeBuild(this.buildStack.getFirst());
-            this.buildStack.removeFirst();
+            if(!this.buildStack.isEmpty())
+                this.buildStack.removeFirst();
         }
     }
 }
