@@ -188,7 +188,7 @@ public class WorkerSequential implements Worker {
      */
     private ResultValidation validateTest(TestCase testCase){
         Validate v = new Validate();
-        ResultValidation resultValidation = v.validateStrExpected(
+        ResultValidation resultValidation = v.validateStrResultValidation(
                 testCase.getOntology(),
                 testCase.getInstances(),
                 testCase.getSchema(),

@@ -26,27 +26,79 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class WorkerTest {
 
-        // Repository data example
-        private final static String owner = "mistermboy";
-        private final static String repo = "oci-test";
-        private final static String branch = "main";
+    // Repository for testing
+    private final static String DEFAULT_OWNER = "weso";
+    private final static String DEFAULT_REPO = "ontolo-ci-test";
+    private final static String DEFAULT_COMMIT = "1ad23547eca78153327b4b0c005a43f0907964c1";
 
-        private static Build build;
+    private static Build build;
 
-        @BeforeAll
-        public static void setUp(){
-            build = Build.from(new ArrayList<>());
-            Map<String,String> metadataExample = new HashMap<>();
-            metadataExample.put("owner",owner);
-            metadataExample.put("repo",repo);
-            metadataExample.put("branch",branch);
-            build.setMetadata(metadataExample);
-        }
+    @BeforeAll
+    public static void setUp(){
+        build = Build.from(new ArrayList<>());
+        Map<String,String> metadataExample = new HashMap<>();
+        metadataExample.put("owner",DEFAULT_OWNER);
+        metadataExample.put("repo",DEFAULT_REPO);
+        metadataExample.put("commit",DEFAULT_COMMIT);
+        build.setMetadata(metadataExample);
+    }
 
-        @Test
-        public void validationTest(){
-            
-        }
+
+
+    @Test
+    public void workerExecutorTest(){
+
+        WorkerSequential workerSequential = new WorkerSequential();
+        WorkerExecutor workerExecutor = WorkerExecutor.from(workerSequential);
+        BuildResult buildResult = workerExecutor.executeBuild(build);
+
+        assertNotNull(buildResult);
+        assertTrue(buildResult.getTestCaseResults().size()>0);
+
+    }
+
+    @Test
+    public void workerSequentialTest(){
+
+        OntolociHubImplementation ontolociHubImplementation = new OntolociHubImplementation();
+        HubBuild hubBuild = build.toHubBuild();
+        hubBuild = ontolociHubImplementation.addTestsToBuild(hubBuild);
+        build = Build.from(hubBuild);
+
+        WorkerSequential workerSequential = new WorkerSequential();
+        BuildResult buildResult = workerSequential.executeBuild(build);
+
+        assertNotNull(buildResult);
+        assertTrue(buildResult.getTestCaseResults().size()>0);
+
+    }
+
+    @Test
+    public void validationTest(){
+
+        OntolociHubImplementation ontolociHubImplementation = new OntolociHubImplementation();
+        HubBuild hubBuild = build.toHubBuild();
+        hubBuild = ontolociHubImplementation.addTestsToBuild(hubBuild);
+        build = Build.from(hubBuild);
+
+        TestCase testCase = build.getTestCases().iterator().next();
+        Validate v = new Validate();
+        ResultValidation resultValidation = new ResultValidation();
+
+        assertNull(resultValidation.getResultShapeMap());
+        assertNull(resultValidation.getExpectedShapeMap());
+
+        resultValidation = v.validateStrResultValidation(
+                testCase.getOntology(),
+                testCase.getInstances(),
+                testCase.getSchema(),
+                testCase.getProducedShapeMap(),
+                testCase.getExpectedShapeMap()).unsafeRunSync();
+
+        assertNotNull(resultValidation.getResultShapeMap());
+        assertNotNull(resultValidation.getExpectedShapeMap());
+
+    }
 
 
 /*
@@ -148,16 +200,8 @@ public class WorkerTest {
         assertTrue(buildResult.getTestCaseResults().size()>0);
     }
 
-
-    private ResultValidation validate(TestCase testCase){
-        Validate v = new Validate();
-        return  v.validateStrExpected(
-                testCase.getOntology(),
-                testCase.getInstances(),
-                testCase.getSchema(),
-                testCase.getProducedShapeMap(),
-                testCase.getExpectedShapeMap()).unsafeRunSync();
-    }
-
 */
+
+
+
 }

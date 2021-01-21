@@ -37,14 +37,14 @@ public class Validate {
 	 * This method performs the validation given the data as a String. Uses an
 	 * ontology for the validation. Pass this parameter as an empty string in order
 	 * not to use an ontology. This method doesn't support different formats for the
-	 * inputs. Returns the result as a ShapeMap.
+	 * inputs. Returns the result as a ShapeMap object.
 	 * 
-	 * @param dataStr     RDF data in Turtle syntax
-	 * @param ontologyStr Ontology in Turtle syntax (or empty string to not use an
-	 *                    ontology)
-	 * @param schemaStr   Schema in ShEx syntax
-	 * @param shapeMapStr ShapeMap in ShapeMap syntax
-	 * @return ResultShapeMap Validation result as a ShapeMap
+	 * @param dataStr     		RDF data in Turtle syntax
+	 * @param ontologyStr 		Ontology in Turtle syntax (or empty string in order not to use an ontology)
+	 * @param schemaStr   		Schema in ShEx syntax
+	 * @param shapeMapStr 		ShapeMap in ShapeMap syntax
+	 *
+	 * @return Validation result as a ResultShapeMap
 	 */
 	public IO<ResultShapeMap> validateStr(String dataStr, String ontologyStr, String schemaStr, String shapeMapStr) {
 		return readRDFStr(dataStr, "TURTLE").flatMap(rdfData -> readRDFStr(ontologyStr, "TURTLE")
@@ -62,7 +62,22 @@ public class Validate {
 																resultShapeMap -> IO.pure(resultShapeMap))))))))));
 	}
 
-	public IO<ResultValidation> validateStrExpected(String ontologyStr, String dataStr, String schemaStr, String shapeMapStr,String expectedShapeMapStr) {
+
+	/**
+	 * This method performs the validation given the data as a String. Uses an
+	 * ontology for the validation. Pass this parameter as an empty string in order
+	 * not to use an ontology. This method doesn't support different formats for the
+	 * inputs. Returns the result as a ResultValidation object.
+	 *
+	 * @param ontologyStr 			Ontology in Turtle syntax (or empty string in order not to use an ontology)
+	 * @param dataStr     			RDF data in Turtle syntax
+	 * @param schemaStr   			Schema in ShEx syntax
+	 * @param shapeMapStr 			ShapeMap in ShapeMap syntax
+	 * @param expectedShapeMapStr 	Expected ShapeMap in ShapeMap syntax
+	 *
+	 * @return Validation result as a ResultValidation
+	 */
+	public IO<ResultValidation> validateStrResultValidation(String ontologyStr, String dataStr, String schemaStr, String shapeMapStr,String expectedShapeMapStr) {
 		return readRDFStr(dataStr, "TURTLE").flatMap(rdfData -> readRDFStr(ontologyStr, "TURTLE")
 				.flatMap(ontologyData -> rdfData.merge(ontologyData).flatMap(merged -> Schema
 						.fromString(schemaStr, "SHEXC", none, noneRDF)
@@ -85,7 +100,7 @@ public class Validate {
 
 
 
-	public IO<RDFAsJenaModel> readRDFStr(String str, String format) {
+	private IO<RDFAsJenaModel> readRDFStr(String str, String format) {
 		return RDFAsJenaModel.fromChars(str, format, none).handleErrorWith(
 				e -> IO.raiseError(new RuntimeException("Cannot parse RDF from str: " + str + ":" + e.getMessage())));
 	}

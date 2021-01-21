@@ -14,18 +14,18 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class HubTests {
 
-    // Repository data example
+    // Repository for testing
     private final static String DEFAULT_OWNER = "weso";
     private final static String DEFAULT_REPO = "ontolo-ci-test";
-    private final static String DEFAULT_BRANCH = "main";
-
     private final static String DEFAULT_COMMIT = "1ad23547eca78153327b4b0c005a43f0907964c1";
+
     private final static String EXCEPTION_COMMIT = "b01db1082105ea0600bbf983bbff775aa563263b";
     private final static String FILE_NOT_FOUND_COMMIT = "dd34aac295450521ec0698bd8c0a768897f7915c";
+    private final static String EMPTY_FILE_COMMIT = "1e874d755408e40840c90f043acc941dc705e398";
 
 
     @Test
-    public void addTestsToBuildTest() throws IOException {
+    public void addTestsToBuildTest(){
 
         OntolociHubImplementation ontolociHubImplementation = new OntolociHubImplementation();
 
@@ -44,7 +44,7 @@ public class HubTests {
 
 
     @Test
-    public void addTestsToBuildWithExceptionsTest() throws IOException {
+    public void addTestsToBuildWithExceptionsTest(){
 
         OntolociHubImplementation ontolociHubImplementation = new OntolociHubImplementation();
 
@@ -67,7 +67,7 @@ public class HubTests {
     }
 
     @Test
-    public void addTestsToBuildWithoutExceptionsTest() throws IOException {
+    public void addTestsToBuildWithoutExceptionsTest(){
 
         OntolociHubImplementation ontolociHubImplementation = new OntolociHubImplementation();
 
@@ -90,7 +90,7 @@ public class HubTests {
     }
 
     @Test
-    public void fileNotFoundTest() throws IOException {
+    public void fileNotFoundTest(){
 
         OntolociHubImplementation ontolociHubImplementation = new OntolociHubImplementation();
 
@@ -112,14 +112,42 @@ public class HubTests {
         assertNotNull(hubBuild.getMetadata().get("checkTitle"));
         assertEquals(hubBuild.getMetadata().get("exceptions"),"true");
         assertEquals(hubBuild.getMetadata().get("checkTitle"),"FileNotFound");
+
     }
+
+    @Test
+    public void emptyContentFileTest() throws IOException {
+
+        OntolociHubImplementation ontolociHubImplementation = new OntolociHubImplementation();
+
+        HubBuild hubBuild = HubBuild.from();
+        Map<String,String> metadata = new HashMap<>();
+        metadata.put("owner", DEFAULT_OWNER);
+        metadata.put("repo",DEFAULT_REPO);
+        metadata.put("commit", EMPTY_FILE_COMMIT);
+        hubBuild.setMetadata(metadata);
+
+        assertTrue(hubBuild.getTestCases().size()<=0);
+        assertNull(hubBuild.getMetadata().get("exceptions"));
+        assertNull(hubBuild.getMetadata().get("checkTitle"));
+
+        hubBuild = ontolociHubImplementation.addTestsToBuild(hubBuild);
+
+        assertTrue(hubBuild.getTestCases().size()<=0);
+        assertNotNull(hubBuild.getMetadata().get("exceptions"));
+        assertNotNull(hubBuild.getMetadata().get("checkTitle"));
+        assertEquals(hubBuild.getMetadata().get("exceptions"),"true");
+        assertEquals(hubBuild.getMetadata().get("checkTitle"),"EmptyContentFile");
+
+    }
+
 
 
     @Test
     public void getTestCasesFromGHRepoTest() throws IOException {
 
         GitHubRepositoryProvider gitHubService = GitHubRepositoryProvider.empty();
-        Collection<HubTestCase> testCases = gitHubService.getTestCases(DEFAULT_OWNER,DEFAULT_REPO, DEFAULT_BRANCH);
+        Collection<HubTestCase> testCases = gitHubService.getTestCases(DEFAULT_OWNER,DEFAULT_REPO, DEFAULT_COMMIT);
         assertNotNull(testCases);
         assertFalse(testCases.isEmpty());
         assertEquals(testCases.size(),2);
@@ -130,7 +158,7 @@ public class HubTests {
     public void createGHCheckRunTest() throws IOException {
 
         GitHubRepositoryProvider gitHubService = GitHubRepositoryProvider.empty();
-        String checkRunId = gitHubService.createCheckRun(DEFAULT_OWNER,DEFAULT_REPO, DEFAULT_BRANCH);
+        String checkRunId = gitHubService.createCheckRun(DEFAULT_OWNER,DEFAULT_REPO,DEFAULT_COMMIT);
         assertTrue(checkRunId.length()>=1);
         assertNotNull(checkRunId);
 
@@ -141,7 +169,7 @@ public class HubTests {
     public void updateGHCheckRunTest() throws IOException {
 
         GitHubRepositoryProvider gitHubService = GitHubRepositoryProvider.empty();
-        String checkRunId = gitHubService.createCheckRun(DEFAULT_OWNER,DEFAULT_REPO, DEFAULT_BRANCH);
+        String checkRunId = gitHubService.createCheckRun(DEFAULT_OWNER,DEFAULT_REPO,DEFAULT_COMMIT);
 
         assertTrue(checkRunId.length()>=1);
         assertNotNull(checkRunId);
@@ -150,10 +178,8 @@ public class HubTests {
 
         assertTrue(result.length()>=1);
         assertNotNull(result);
+
     }
 
-
-
-    // CREAR TEST NEGATIVOS
 
 }

@@ -411,7 +411,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
                 String result =  IOUtils.toString(instream, "UTF-8");
                 if(result.startsWith("404:"))
                     throw new FileNotFoundException();
-                if(result.length()<=0)
+                if(result.replace("\n","").replace("\r","").length()<=0)
                     throw new EmptyContentFileException();
                 return result;
             }
