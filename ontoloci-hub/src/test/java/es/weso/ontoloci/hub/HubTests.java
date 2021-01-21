@@ -14,11 +14,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class HubTests {
 
-    // Repository for testing
+    // Repository for testing (https://github.com/weso/ontolo-ci-test)
     private final static String DEFAULT_OWNER = "weso";
     private final static String DEFAULT_REPO = "ontolo-ci-test";
     private final static String DEFAULT_COMMIT = "1ad23547eca78153327b4b0c005a43f0907964c1";
-
     private final static String EXCEPTION_COMMIT = "b01db1082105ea0600bbf983bbff775aa563263b";
     private final static String FILE_NOT_FOUND_COMMIT = "dd34aac295450521ec0698bd8c0a768897f7915c";
     private final static String EMPTY_FILE_COMMIT = "1e874d755408e40840c90f043acc941dc705e398";
