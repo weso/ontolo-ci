@@ -17,7 +17,7 @@ services:
     image: ontoloci-back
     build:
       context: ..
-      dockerfile: ontoloci-server-igniter/Dockerfile
+      dockerfile: Dockerfile
     ports:
       - 8090:8090
     stdin_open: true # Needed to keep the image alive.

@@ -3,6 +3,8 @@ package es.weso.ontoloci.hub.utils;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,10 +30,13 @@ import java.util.Scanner;
  */
 public class KeyUtils {
 
+    // LOGGER CREATION
+    private static final Logger LOGGER = LoggerFactory.getLogger(KeyUtils.class);
+
     // Private key path
-    private static final String PRIVATE_KEY_PAHT = "/ontolo-ci/ontoloci-hub/secrets/server-pkcs8.key";
+    private static final String PRIVATE_KEY_PAHT = "/ontolo-ci/secrets/server-pkcs8.key";
     // APP ID path
-    private static final String APP_ID_PATH = "/ontolo-ci/ontoloci-hub/secrets/ocitest.appid";
+    private static final String APP_ID_PATH = "/ontolo-ci/secrets/ocitest.appid";
 
     /**
      * Gets a JSON Web Token by the current time and the AppId signed with a private Key
@@ -45,9 +50,11 @@ public class KeyUtils {
 
         // We need the absolutepath because when the project is deployed the root folder is ontolocy,
         // while if we are running the hub tests the root folder is ontoloci-hub
-        String absolutepath = KeyUtils.class.getProtectionDomain().getCodeSource().getLocation().getPath().split("/ontolo-ci/")[0];
+        String absolutepath = KeyUtils.class.getProtectionDomain().getCodeSource().getLocation().getPath().split("/ontolo-ci/")[0].substring(1);
+        LOGGER.debug("[FILE_PATH] + "+absolutepath+APP_ID_PATH);
+        LOGGER.debug("[USER_PATH] + "+System.getProperty("user.dir"));
 
-        String appId = getFileConten(absolutepath+APP_ID_PATH);
+        String appId = "86397";
         Instant now = Instant.now();
 
         PrivateKey privateKey = KeyUtils.loadPrivateKey(absolutepath+PRIVATE_KEY_PAHT);
@@ -68,7 +75,7 @@ public class KeyUtils {
      * @param path of the file
      * @return content as a string
      */
-    private static String getFileConten(String path){
+    private static String getFileContent(String path){
         String appId = "";
         try {
             File myObj = new File(path);
@@ -78,6 +85,8 @@ public class KeyUtils {
             }
             myReader.close();
         } catch (FileNotFoundException e) {
+            LOGGER.info("[FILE_PATH] + "+path);
+            LOGGER.info("[USER_PATH] + "+System.getProperty("user.dir"));
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
