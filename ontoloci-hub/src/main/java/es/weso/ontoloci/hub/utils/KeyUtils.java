@@ -34,9 +34,11 @@ public class KeyUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(KeyUtils.class);
 
     // Private key path
-    private static final String PRIVATE_KEY_PAHT = "/secrets/server-pkcs8.key";
+    private static final String PRIVATE_KEY_PAHT = "/ontolo-ci/secrets/server-pkcs8.key";
+    private static final String DOCKER_PRIVATE_KEY_PAHT = "/secrets/server-pkcs8.key";
     // APP ID path
-    private static final String APP_ID_PATH = "/secrets/ocitest.appid";
+    private static final String APP_ID_PATH = "/ontolo-ci/secrets/ocitest.appid";
+    private static final String DOCKER_APP_ID_PATH = "/secrets/ocitest.appid";
 
     /**
      * Gets a JSON Web Token by the current time and the AppId signed with a private Key
@@ -48,17 +50,20 @@ public class KeyUtils {
         // The JWT signature algorithm we will be using to sign the token
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.RS256;
 
-        // We need the absolutepath because when the project is deployed the root folder is ontolocy,
+        // We need the absolutepath because when the project is deployed the root folder is ontolo-cy,
         // while if we are running the hub tests the root folder is ontoloci-hub
-        //String absolutepath = KeyUtils.class.getProtectionDomain().getCodeSource().getLocation().getPath().split("/ontolo-ci/")[0].substring(1);
-        //String absolutepath = KeyUtils.class.getProtectionDomain().getCodeSource().getLocation().getPath().substring(1);
-        LOGGER.debug("[FILE_PATH] + "+APP_ID_PATH);
-        LOGGER.debug("[USER_PATH] + "+System.getProperty("user.dir"));
+        // Also in Docker the absolute path it´s different
+        String[] absolutepath = KeyUtils.class.getProtectionDomain().getCodeSource().getLocation().getPath().split("/ontolo-ci/");
+        String appIdPath = DOCKER_APP_ID_PATH;
+        String keyPath = DOCKER_PRIVATE_KEY_PAHT;
+        if(absolutepath.length>1){
+            appIdPath = absolutepath[0]+APP_ID_PATH;
+            keyPath = absolutepath[0]+PRIVATE_KEY_PAHT;
+        }
 
-        String appId = getFileContent(APP_ID_PATH);
+        String appId = getFileContent(appIdPath);
         Instant now = Instant.now();
-
-        PrivateKey privateKey = KeyUtils.loadPrivateKey(PRIVATE_KEY_PAHT);
+        PrivateKey privateKey = KeyUtils.loadPrivateKey(keyPath);
 
         // Let's set the JWT Claims
         String jwt = Jwts.builder()
