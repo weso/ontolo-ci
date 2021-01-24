@@ -3,11 +3,14 @@ package es.weso.ontoloci.hub.utils;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
@@ -27,10 +30,15 @@ import java.util.Scanner;
  */
 public class KeyUtils {
 
+    // LOGGER CREATION
+    private static final Logger LOGGER = LoggerFactory.getLogger(KeyUtils.class);
+
     // Private key path
-    private static final String PRIVATE_KEY_PAHT = "secrets/server-pkcs8.key";
+    private static final String PRIVATE_KEY_PAHT = "/ontolo-ci/secrets/server-pkcs8.key";
+    private static final String DOCKER_PRIVATE_KEY_PAHT = "/secrets/server-pkcs8.key";
     // APP ID path
-    private static final String APP_ID_PATH = "secrets/ocitest.appid";
+    private static final String APP_ID_PATH = "/ontolo-ci/secrets/ocitest.appid";
+    private static final String DOCKER_APP_ID_PATH = "/secrets/ocitest.appid";
 
     /**
      * Gets a JSON Web Token by the current time and the AppId signed with a private Key
@@ -39,14 +47,25 @@ public class KeyUtils {
      */
     public static String getJWT() {
 
-        //The JWT signature algorithm we will be using to sign the token
+        // The JWT signature algorithm we will be using to sign the token
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.RS256;
-        String appId = getFileConten(APP_ID_PATH);
+
+        // We need the absolutepath because when the project is deployed the root folder is ontolo-cy,
+        // while if we are running the hub tests the root folder is ontoloci-hub
+        // Also in Docker the absolute path it´s different
+        String[] absolutepath = KeyUtils.class.getProtectionDomain().getCodeSource().getLocation().getPath().split("/ontolo-ci/");
+        String appIdPath = DOCKER_APP_ID_PATH;
+        String keyPath = DOCKER_PRIVATE_KEY_PAHT;
+        if(absolutepath.length>1){
+            appIdPath = absolutepath[0]+APP_ID_PATH;
+            keyPath = absolutepath[0]+PRIVATE_KEY_PAHT;
+        }
+
+        String appId = getFileContent(appIdPath);
         Instant now = Instant.now();
+        PrivateKey privateKey = KeyUtils.loadPrivateKey(keyPath);
 
-        PrivateKey privateKey = KeyUtils.loadPrivateKey(PRIVATE_KEY_PAHT);
-
-        //Let's set the JWT Claims
+        // Let's set the JWT Claims
         String jwt = Jwts.builder()
                 .setIssuedAt(Date.from(now))
                 .setExpiration(Date.from(now.plus(5L, ChronoUnit.MINUTES)))
@@ -62,7 +81,7 @@ public class KeyUtils {
      * @param path of the file
      * @return content as a string
      */
-    private static String getFileConten(String path){
+    private static String getFileContent(String path){
         String appId = "";
         try {
             File myObj = new File(path);
@@ -72,6 +91,8 @@ public class KeyUtils {
             }
             myReader.close();
         } catch (FileNotFoundException e) {
+            LOGGER.info("[FILE_PATH] + "+path);
+            LOGGER.info("[USER_PATH] + "+System.getProperty("user.dir"));
             System.out.println("An error occurred.");
             e.printStackTrace();
         }

@@ -24,27 +24,6 @@ public class TestCase {
     private final String producedShapeMap;
     private final String expectedShapeMap;
 
-    public static PersistedTestCase toPersistedTestCase(TestCase testCase) {
-       return new PersistedTestCase(
-                testCase.name,
-                testCase.ontology,
-                testCase.instances,
-                testCase.schema,
-                testCase.producedShapeMap,
-                testCase.expectedShapeMap
-        );
-    }
-
-    public static TestCase from(PersistedTestCase persistedTestCase) {
-        return new TestCase(
-                persistedTestCase.getName(),
-                persistedTestCase.getOntology(),
-                persistedTestCase.getInstances(),
-                persistedTestCase.getSchema(),
-                persistedTestCase.getProducedShapeMap(),
-                persistedTestCase.getExpectedShapeMap()
-        );
-    }
 
     /**
      * The default constructor is a basic all-args constructor. All the arguments
@@ -75,6 +54,28 @@ public class TestCase {
         this.expectedShapeMap = expectedShapeMap;
 
         LOGGER.debug("Creating a test case ");
+    }
+
+    public static PersistedTestCase toPersistedTestCase(TestCase testCase) {
+        return new PersistedTestCase(
+                testCase.name,
+                testCase.ontology,
+                testCase.instances,
+                testCase.schema,
+                testCase.producedShapeMap,
+                testCase.expectedShapeMap
+        );
+    }
+
+    public static TestCase from(PersistedTestCase persistedTestCase) {
+        return new TestCase(
+                persistedTestCase.getName(),
+                persistedTestCase.getOntology(),
+                persistedTestCase.getInstances(),
+                persistedTestCase.getSchema(),
+                persistedTestCase.getProducedShapeMap(),
+                persistedTestCase.getExpectedShapeMap()
+        );
     }
 
     /**

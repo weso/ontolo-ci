@@ -51,9 +51,10 @@ public interface RepositoryProvider {
      * @param conclusion            new status of the checkrun
      * @param output                message
      *
+     * @return  info of the updated checkrun
      * @throws IOException
      */
-    void updateCheckRun(
+    String updateCheckRun(
             final String checkRunId,
             final String owner,
             final String repo,

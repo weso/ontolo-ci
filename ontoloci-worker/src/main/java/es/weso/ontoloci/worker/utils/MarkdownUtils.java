@@ -13,7 +13,7 @@ public class MarkdownUtils {
      * Ahora puede haber más de un expected y produced status
      * ya que puede ser que para un test haya más de una shape en el shapemap
      *
-     */
+
 
     public static String getMarkDownFromTests(Collection<TestCaseResult> tests){
         String md = "| Result   | Test Name |Data Node | Shape | Status | Time  \\n";
@@ -32,6 +32,12 @@ public class MarkdownUtils {
             md+="| "+result+" | "+name+" | "+dataNode+" | "+shape+" | "+status+" | "+executionTime+" \\n";
         }
         return md;
+    }
+
+     */
+
+    public static String getMarkDownFromTests(Collection<TestCaseResult> tests){
+        return "markdown-off";
     }
 
 }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import es.weso.ontoloci.hub.exceptions.EmptyContentFileException;
 import es.weso.ontoloci.hub.manifest.Manifest;
 import es.weso.ontoloci.hub.manifest.ManifestEntry;
 import es.weso.ontoloci.hub.repository.RepositoryConfiguration;
@@ -178,7 +179,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
      * @param output                message
      */
     @Override
-    public void updateCheckRun(String checkRunId, String owner, String repo, String conclusion,String output) throws IOException {
+    public String updateCheckRun(String checkRunId, String owner, String repo, String conclusion,String output) throws IOException {
 
         LOGGER.debug( String.format("Updating CheckRun = [%s] for user=[%s] and repo =[%s] ",checkRunId,owner,repo));
 
@@ -193,10 +194,11 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
         // 5. Set the request params
         httpatch  = addUpdateCheckRunParams(httpatch,conclusion,output);
         // 6. Perform the request
-        executeRequest(httpclient,httpatch);
+        String result = executeRequest(httpclient,httpatch);
 
         LOGGER.debug( String.format("CheckRun updated = [%s] for user=[%s] and repo =[%s] ",checkRunId,owner,repo));
 
+        return result;
     }
 
     /**
@@ -409,6 +411,8 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
                 String result =  IOUtils.toString(instream, "UTF-8");
                 if(result.startsWith("404:"))
                     throw new FileNotFoundException();
+                if(result.replace("\n","").replace("\r","").length()<=0)
+                    throw new EmptyContentFileException();
                 return result;
             }
         }
@@ -476,7 +480,8 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
      */
     private HttpGet getGitHubGetAuth(String path){
         HttpGet httpGet = getGitHubGet(path);
-        httpGet.setHeader("Authorization", "Bearer "+KeyUtils.getJWT());
+        String jwt = "Bearer "+KeyUtils.getJWT();
+        httpGet.setHeader("Authorization", jwt);
         return httpGet;
     }
 

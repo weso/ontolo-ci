@@ -6,7 +6,7 @@ import CanceledIcon from '../icon/CanceledIcon';
 
 function BuildStauts(){
 
-    const {buildStatus,SUCCESS_BUILD,FAILURE_BUILD} = useContext(BuildContext);
+    const {buildStatus,checkTitle,SUCCESS_BUILD,FAILURE_BUILD} = useContext(BuildContext);
 
     const getSvgStatus = function(){
         if(buildStatus===SUCCESS_BUILD)
@@ -14,7 +14,7 @@ function BuildStauts(){
         if(buildStatus===FAILURE_BUILD)
             return <FailureIcon/>
 
-        return <CanceledIcon/>
+        return <CanceledIcon checkTitle={checkTitle}/>
     }
 
     return (<div className="dashboard-element-status">

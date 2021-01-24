@@ -13,6 +13,7 @@
     <artifactId>server-igniter</artifactId>
     <version>0.0.1</version>
 
+
     <dependencies>
         <dependency>
             <groupId>es.weso.ontoloci</groupId>
@@ -31,6 +32,19 @@
             <artifactId>spring-boot-starter-web</artifactId>
             <version>2.3.4.RELEASE</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-test-autoconfigure</artifactId>
+            <version>2.3.4.RELEASE</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>5.2.9.RELEASE</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -38,18 +52,10 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <!-- Build an executable JAR -->
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
+                <version>2.4.0</version>
                 <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>es.weso.ontoloci.OntolociIgniter</mainClass>
-                        </manifest>
-                    </archive>
+                    <skip>false</skip>
+                    <mainClass>es.weso.ontoloci.OntolociIgniter</mainClass>
                 </configuration>
             </plugin>
         </plugins>

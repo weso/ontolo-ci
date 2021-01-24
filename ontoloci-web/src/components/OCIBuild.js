@@ -34,6 +34,7 @@ function OCIBuild(props){
     }
 
 
+    console.log(build)
     return (
 
     <Link to={getBuildPath()} className={getBuildClass()}>
@@ -44,6 +45,7 @@ function OCIBuild(props){
                 CANCELLED_BUILD:CANCELLED_BUILD,
                 build:build,                
                 buildStatus:getBuildStatus(),
+                checkTitle:build.metadata.checkTitle,
                 owner:build.metadata.owner,
                 repo:build.metadata.repo,
                 branchName:build.metadata.branch,
