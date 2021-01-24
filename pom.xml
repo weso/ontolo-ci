@@ -14,7 +14,6 @@
         <module>ontoloci-persistence</module>
         <module>ontoloci-api</module>
         <module>ontoloci-server-igniter</module>
-		<module>ontoloci-qwe</module>
 	</modules>
 
 	<properties>
