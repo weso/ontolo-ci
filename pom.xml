@@ -14,6 +14,7 @@
         <module>ontoloci-persistence</module>
         <module>ontoloci-api</module>
         <module>ontoloci-server-igniter</module>
+		<module>cucumber</module>
 	</modules>
 
 	<properties>
