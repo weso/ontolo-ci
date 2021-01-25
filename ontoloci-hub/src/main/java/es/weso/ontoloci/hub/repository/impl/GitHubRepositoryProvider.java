@@ -43,7 +43,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
 
     private final static String GITHUB_RAW_REQUEST      =   "https://raw.githubusercontent.com/";
     private final static String GITHUB_API_REQUEST      =   "https://api.github.com/";
-    private final static String INSTALLATION_REQUEST    =   "https://api.github.com/app/installations";
+    private final static String INSTALLATION_REQUEST    =   "https://api.github.com/users/USERNAME/installation";
 
     private final static String YAML_FILE_NAME          =   ".oci.yml";
     private final static String SLASH                   =   "/";
@@ -224,10 +224,12 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
 
         // Create the HttpClient
         HttpClient httpclient = HttpClients.createDefault();
+        // Set the specific path
+        String path = INSTALLATION_REQUEST.replace("USERNAME",user);
         // Create the appropriate HTTP method for the request
-        HttpGet httpget = getGitHubGetAuth(INSTALLATION_REQUEST);
+        HttpGet httpGet = getGitHubGetAuth(path);
         // Perform the request
-        String response = executeRequest(httpclient,httpget);
+        String response = executeRequest(httpclient,httpGet);
         // Obtain the installationId from the response
         String installationId = getInstallationIdFromResponse(response,user);
 
@@ -428,15 +430,10 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
      * @return installationId
      */
     private String getInstallationIdFromResponse(String result,String owner) {
-        List<Map<String,Object>> installations = null;
+        Map<String,Object> installation = null;
         try {
-            installations = this.jsonMapper.readValue(result, List.class);
-            for (Map<String, Object> installation : installations) {
-                String accountData = (String) ((Map<String, Object>) installation.get("account")).get("login");
-                if (accountData.equals(owner))
-                    return String.valueOf(installation.get("id"));
-
-            }
+            installation = this.jsonMapper.readValue(result, Map.class);
+            return String.valueOf(installation.get("id"));
         }catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -479,6 +476,13 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
      * @return GET request
      */
     private HttpGet getGitHubGetAuth(String path){
+        HttpGet httpGet = getGitHubGet(path);
+        String jwt = "Bearer "+KeyUtils.getJWT();
+        httpGet.setHeader("Authorization", jwt);
+        return httpGet;
+    }
+
+    private HttpGet getGitHubPostAuth(String path){
         HttpGet httpGet = getGitHubGet(path);
         String jwt = "Bearer "+KeyUtils.getJWT();
         httpGet.setHeader("Authorization", jwt);
