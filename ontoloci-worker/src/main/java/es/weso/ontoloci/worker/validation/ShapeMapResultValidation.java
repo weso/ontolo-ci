@@ -10,7 +10,6 @@ import java.util.UUID;
  */
 public class ShapeMapResultValidation {
 
-    private String id;
     private String node;
     private String shape;
     private String status;
@@ -22,9 +21,7 @@ public class ShapeMapResultValidation {
     /**
      * Default constructor. Needed for the json parsers
      */
-    public ShapeMapResultValidation(){
-        this.id = UUID.randomUUID().toString();
-    }
+    public ShapeMapResultValidation(){}
 
 
     /**
@@ -39,7 +36,6 @@ public class ShapeMapResultValidation {
      * @param shapePrefix
      */
     public ShapeMapResultValidation(String node, String shape, String status, String info, String reason, PrefixedNode nodePrefix, PrefixedNode shapePrefix) {
-        this.id = UUID.randomUUID().toString();
         this.node = node;
         this.shape = shape;
         this.status = status;
@@ -168,7 +164,7 @@ public class ShapeMapResultValidation {
      * @return ShapeMapResultValidation as a json
      */
     public String toJson() {
-        return "\"SMRValidation-"+id+"\":{ "+
+        return "{ "+
                 "\"node\":\""+nodePrefix.getPrefixedNode()+"\","+
                 "\"shape\":\""+shapePrefix.getPrefixedNode()+"\","+
                 "\"status\":\""+status+"\","+

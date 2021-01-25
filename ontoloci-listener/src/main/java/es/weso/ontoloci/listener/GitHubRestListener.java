@@ -45,6 +45,11 @@ public class GitHubRestListener {
             Map<String, Object> ownerData = (Map<String, Object>) repositoryData.get("owner");
             ArrayList<Map<String, Object>> commitData = (ArrayList<Map<String, Object>>) payload.get("commits");
 
+            // We don´t want to do nothing if there is nothing to commit
+            // This usually happens with the push of a new branch
+            if(commitData.size()<=0)
+                return;
+
             final Build build = Build.from();
             // Parse the content and create the test cases array.
             final String owner = (String) ownerData.get("name");
@@ -70,13 +75,13 @@ public class GitHubRestListener {
 
         if(!payload.get("action").equals("closed")) {
             Map<String, Object> pullRequest = (Map<String, Object>) payload.get("pull_request");
-            Map<String, Object> userData = (Map<String, Object>) pullRequest.get("user");
             Map<String, Object> headData = (Map<String, Object>) pullRequest.get("head");
             Map<String, Object> repoData = (Map<String, Object>) headData.get("repo");
+            Map<String, Object> ownerData = (Map<String, Object>) repoData.get("owner");
 
             final Build build = Build.from();
             // Parse the content and create the test cases array.
-            final String owner = (String) userData.get("login");
+            final String owner = (String) ownerData.get("login");
             final String repo = (String) repoData.get("name");
             final String branch = (String) headData.get("ref");
             final String commit = (String) headData.get("sha");

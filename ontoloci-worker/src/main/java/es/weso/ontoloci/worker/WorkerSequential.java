@@ -334,11 +334,11 @@ public class WorkerSequential implements Worker {
      * @return results as a json
      */
     private String toJson(List<ShapeMapResultValidation> results) {
-        String json="{";
+        String json="[";
         for(ShapeMapResultValidation s:results){
             json+=s.toJson()+",";
         }
-        json=json.substring(0,json.length()-1)+"}";
+        json=json.substring(0,json.length()-1)+"]";
         return json.replace("\n", "").replace("\r", "");
     }
 
