@@ -15,15 +15,14 @@ public class MarkdownUtils {
 
 
     public static String getMarkDownFromTests(Collection<TestCaseResult> tests){
-
-        String md = "## Test Results \\n";
-
+        String md = "";
         for(TestCaseResult test : tests){
             String name = test.getTestCase().getName().replace("\n", "");
+            String capitalizeName = name.substring(0, 1).toUpperCase() + name.substring(1);
             String executionTime = test.getMetadata().get("execution_time").replace("\n", "");
             String testResult = getTestCaseResult(test);
 
-            md +="### "+testResult+" "+name+ " ( "+executionTime+" ) \\n";
+            md +="### "+capitalizeName+ " ( "+executionTime+" ) "+testResult+"\\n";
             md += "| Result   | Data Node | Shape | Status   \\n";
             md += "|----------|-----------|----------|-------\\n";
 

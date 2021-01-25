@@ -312,16 +312,12 @@ public class WorkerSequential implements Worker {
      */
     private Map<String, String> fillBuildMetadata(Build build,BuildResultStatus buildStatus){
         final Map<String, String> buildMetadata = new HashMap<>(build.getMetadata());
-        String checkTitle = "Build Passing";
-        String checkBody = "All the tests has passed without problems";
 
-        if(buildStatus == BuildResultStatus.FAILURE){
-          checkTitle = "Build Passing";
-          checkBody = "All the tests has passed without problems";
-        }
+        String checkTitle = "Build Passing";
+        if(buildStatus == BuildResultStatus.FAILURE)
+          checkTitle = "Build Failing";
 
         buildMetadata.put("checkTitle",checkTitle);
-        buildMetadata.put("checkBody",checkBody);
         buildMetadata.put("execution_time",getBuildTime());
         buildMetadata.put("execution_date", String.valueOf(System.currentTimeMillis()));
         return buildMetadata;
