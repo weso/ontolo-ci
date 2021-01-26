@@ -23,10 +23,11 @@ public class MarkdownUtils {
             String testResult = getTestCaseResult(test);
 
             md +="### "+capitalizeName+ " ( "+executionTime+" ) "+testResult+"\\n";
-            md += "| Result   | Data Node | Shape | Status   \\n";
-            md += "|----------|-----------|----------|-------\\n";
+            md += "| Result   | Data Node | Shape | Status | ExpectedStatus   \\n";
+            md += "|----------|-----------|----------|-------|-------\\n";
 
             List<ShapeMapResultValidation> produced = MarkdownUtils.getResults(test.getMetadata().get("produced"));
+
             List<ShapeMapResultValidation> expected = MarkdownUtils.getResults(test.getMetadata().get("expected"));
 
             for(int i=0;i<produced.size();i++){

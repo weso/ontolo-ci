@@ -34,8 +34,8 @@ public class KeyUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(KeyUtils.class);
 
     // Private key path
-    private static final String PRIVATE_KEY_PAHT = "/ontolo-ci/secrets/server-pkcs8.key";
-    private static final String DOCKER_PRIVATE_KEY_PAHT = "/secrets/server-pkcs8.key";
+    private static final String PRIVATE_KEY_PAHT = "/ontolo-ci/secrets/ontoloci-pkcs8.key";
+    private static final String DOCKER_PRIVATE_KEY_PAHT = "/secrets/ontoloci-pkcs8.key";
     // APP ID path
     private static final String APP_ID_PATH = "/ontolo-ci/secrets/ocitest.appid";
     private static final String DOCKER_APP_ID_PATH = "/secrets/ocitest.appid";
