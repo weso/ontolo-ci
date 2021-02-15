@@ -1,3 +1,7 @@
+## HerculesCRUE's fork of onotolo-ci
+
+This is HerculesCRUE's fork of onotolo-ci. The Ontolo-CI project's main README follows.
+
 ## Welcome to Ontolo-CI
 
 Ontolo-CI is a docker based system that integrates with GitHub to provide a continuos integration system for ontologies. It uses [Shape Expressions](http://shex.io) and test instances in order to validate ontologies.
