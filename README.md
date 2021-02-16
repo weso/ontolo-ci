@@ -1,3 +1,14 @@
+![](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/images/logos_feder.png)
+
+| Entregable     | Sistema de integración continua para ontologías              |
+| -------------- | ------------------------------------------------------------ |
+| Fecha          | 16/02/2021                                                   |
+| Proyecto       | [ASIO](https://www.um.es/web/hercules/proyectos/asio) (Arquitectura Semántica e Infraestructura Ontológica) en el marco de la iniciativa [Hércules](https://www.um.es/web/hercules/) para la Semántica de Datos de Investigación de Universidades que forma parte de [CRUE-TIC](https://www.crue.org/proyecto/hercules/) |
+| Módulo         | Control efectivo de versiones de ontologías                  |
+| Tipo           | Software                                                     |
+| Objetivo       | Sistema encargado de ejecutar la integración continua de ontologías a través de shape expressions sobre Git[Hub] Flow |
+| Estado         | **80%** Todos los casos de usos de este sistema han sido implementados. Actualmente documentando manuales técnicos y no técnicos |
+
 ## HerculesCRUE's fork of onotolo-ci
 
 This is HerculesCRUE's fork of onotolo-ci. The Ontolo-CI project's main README follows.
