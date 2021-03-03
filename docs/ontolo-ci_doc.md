@@ -55,10 +55,13 @@ La integración continua de software dispone de un gran ecosistema de herramient
 
 Ontolo-ci es un sistema de integración continua de ontologías inspirado en [Travis](https://travis-ci.com/plans), que permite la ejecución de test para ontologías de manera automática sobre repositorios de GitHub. Las pruebas que realiza ontolo-ci sobre la ontología están basadas en test definidos mediante [Shape Expressions](https://shex.io/).
 
+## Estrategía de solución
+Para construir ontolo-ci y dar solución al problema planteado anteriormente es la creación de una API rest que sea capaz de:
+ * Escuchar los cambios que se produzcan sobre el repositorio de la ontología y 
+ * Llevar a cabo la ejecución de los test
+ * Publicar los resultados obtenidos
+
 Cada vez que se produce un cambio sobre el repositorio de la ontología, ontolo-ci recoge ese cambio y ejecuta todas las pruebas que se encuentren definidas. Una vez terminado este proceso, ontolo-ci notifica los resultados directamente sobre el propio repositorio, así como en su propia página web. En ambos lugares podemos observar los resultados de cada una de las pruebas.
-
-## Solution Strategy
-
 
 ## Building Block View
 
