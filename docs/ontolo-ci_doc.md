@@ -7,7 +7,7 @@
 | Módulo         | Infraestructura Ontológica                                   |
 | Tipo           | Método y Software                                        |
 | Objetivo       | Este documento consiste en la especificación del sistema de sincronización continua de ontologías. |
-| Estado         | **100%** El sistema se encuentra ya en funcionamiento y deplegado |
+| Estado         | **100%**  |
 | Próximos pasos ||
 |Repositorio de Software Asociado|https://github.com/HerculesCRUE/ontolo-ci |<!-- slide -->
 
