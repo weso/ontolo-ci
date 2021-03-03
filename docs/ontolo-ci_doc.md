@@ -13,17 +13,40 @@
 
 
 
-# Hercules synchronization module architecture
+# Módulo de Integración continua de ontologías 
 
-## Introduction and Goals
+## Introducción y objetivos 
+Este documento incluye la documentación arquitectónica para el módulo de integración continua de ontologías, en adelante llamado ontolo-ci, que forma parte de la infraestructura ontológica del Proyecto Hércules.
+
+La estructura de este documento sigue la plantilla  [arc42](https://arc42.org/) para la documentación de arquitecturas de software y sistemas.
 
 ### Requirements Overview
+El objetivo general de ontolo-ci es realizar una validación continua de las ontologías contenidas en un sistema de control de versiones mediante un sistema de test basado en [Shape Expressions](https://shex.io/).
 
-### Quality Goals
+Puede encontrar un análisis más completo de los requisitos del sistema en la sección __Análisis de requisitos__.
+
+### Objetivos de calidad
+En esta sección enumeraremos los objetivos de máxima calidad para la arquitectura del sistema:
+
+| Prioridad | Objetivo | Escenario |
+| ---- | ----------- | -------- |
+| 1 | Fleibilidad |  Aunque la implementación inicial del sistema funcionará a través del sistema de control de versiones GitHub, se deberá poder extender a otros sistemas de control de versiones de manera sencilla.|
+| 1 | Tolerancia a fallos | En caso de que falle uno de los componentes que rodean al sistema de integración continua, el sistema debe poder seguir funcionando y mantener los demás objetivos de calidad siempre que sea posible. |
 
 ### Stakeholders
+ Role/Name   | Description                   | Expectations              |
+| ----------- | ------------------------- | ------------------------- |
+| Expertos de dominio | Usuario que modifica el contenido de la ontología a través de la interfaz de usuario proporcionada por el servicio de publicación de ontologías. | Cuando se realiza un cambio a través de la interfaz de usuario, el contenido de las ontologías en el sistema de control de versiones debe ser coherente con estos cambios. |
+| Ingeniero de ontologías | Usuario que modifica el contenido de la ontología directamente desde el sistema de control de versiones. | Cuando se modifica la ontología sobre el sistema de control de versiones, el sistema de integración continua debe realizar una ejecución automática de los test que validan la ontología |
 
-## Architecture Constraints
+
+## Restricciones de Arquitectura
+| Restricción | Descripción                            |
+|:---------:|----------------------------------------|
+|     R1    | El sistema debe ser desarrollado bajo la licencia [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.html). |
+|     R2    | El sistema debe ser independiente de la plataforma y debe poder ejecutarse en los principales sistemas operativos  (Windows™, Linux, and Mac-OS™). |
+|     R3    | El sistema debe poder ejecutarse desde la linea de comandos |
+|     R4    | El sistema de versiones de control utilizado para almacenar las ontologías estará basado en git. |
 
 ## System Scope and Context
 
