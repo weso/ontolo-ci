@@ -7,14 +7,12 @@ import es.weso.ontoloci.persistence.mongo.OntolociInMemoryDAO;
 import es.weso.ontoloci.worker.build.Build;
 import es.weso.ontoloci.worker.build.BuildResult;
 import es.weso.ontoloci.worker.build.BuildResultStatus;
-import es.weso.ontoloci.worker.test.TestCaseResult;
 import es.weso.ontoloci.worker.utils.MarkdownUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.weso.ontoloci.hub.OntolociHubImplementation;
+import es.weso.ontoloci.hub.HubImplementation;
 
-import javax.swing.plaf.ButtonUI;
 import java.util.*;
 
 public class WorkerExecutor implements Worker {
@@ -57,11 +55,11 @@ public class WorkerExecutor implements Worker {
     public BuildResult executeBuild(Build build) {
         LOGGER.debug("Executing build: " + build);
         // 1. Create a Hub instance
-        OntolociHubImplementation ontolocyHub = new OntolociHubImplementation();
+        HubImplementation ontolocyHub = new HubImplementation();
         // 2. Transform the current build to a HubBuild
         HubBuild hubBuild = build.toHubBuild();
         // 3. Add the tests to the build
-        hubBuild = ontolocyHub.addTestsToBuild(hubBuild);
+        hubBuild = ontolocyHub.fillBuild(hubBuild);
         // 4. Transform the HubBuild to a worker build
         build = Build.from(hubBuild);
         // 5. Execute worker in case everything went right
@@ -94,7 +92,7 @@ public class WorkerExecutor implements Worker {
      * @param ontolocyHub hub
      * @param buildResult build result
      */
-    private void updateCheckRun(OntolociHubImplementation ontolocyHub, BuildResult buildResult) {
+    private void updateCheckRun(HubImplementation ontolocyHub, BuildResult buildResult) {
         String conclusion = getConclusion(buildResult);
         String output = getOutput(buildResult);
         ontolocyHub.updateCheckRun(conclusion,output);

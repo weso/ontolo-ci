@@ -1,7 +1,6 @@
 package es.weso.ontoloci.worker;
 
-import com.google.common.collect.ImmutableCollection;
-import es.weso.ontoloci.hub.OntolociHubImplementation;
+import es.weso.ontoloci.hub.HubImplementation;
 import es.weso.ontoloci.hub.build.HubBuild;
 import es.weso.ontoloci.worker.build.Build;
 import es.weso.ontoloci.worker.build.BuildResult;
@@ -81,9 +80,9 @@ public class WorkerTest {
     @Test
     public void workerSequentialTest(){
 
-        OntolociHubImplementation ontolociHubImplementation = new OntolociHubImplementation();
+        HubImplementation ontolociHubImplementation = new HubImplementation();
         HubBuild hubBuild = defaultBuild.toHubBuild();
-        hubBuild = ontolociHubImplementation.addTestsToBuild(hubBuild);
+        hubBuild = ontolociHubImplementation.fillBuild(hubBuild);
         defaultBuild = Build.from(hubBuild);
 
         WorkerSequential workerSequential = new WorkerSequential();
@@ -173,9 +172,9 @@ public class WorkerTest {
     @Test
     public void validationTest(){
 
-        OntolociHubImplementation ontolociHubImplementation = new OntolociHubImplementation();
+        HubImplementation ontolociHubImplementation = new HubImplementation();
         HubBuild hubBuild = defaultBuild.toHubBuild();
-        hubBuild = ontolociHubImplementation.addTestsToBuild(hubBuild);
+        hubBuild = ontolociHubImplementation.fillBuild(hubBuild);
         defaultBuild = Build.from(hubBuild);
 
         TestCase testCase = defaultBuild.getTestCases().iterator().next();
@@ -193,9 +192,9 @@ public class WorkerTest {
     @Test
     public void validationWithExpectedResultTest(){
 
-        OntolociHubImplementation ontolociHubImplementation = new OntolociHubImplementation();
+        HubImplementation ontolociHubImplementation = new HubImplementation();
         HubBuild hubBuild = defaultBuild.toHubBuild();
-        hubBuild = ontolociHubImplementation.addTestsToBuild(hubBuild);
+        hubBuild = ontolociHubImplementation.fillBuild(hubBuild);
         defaultBuild = Build.from(hubBuild);
 
         TestCase testCase = defaultBuild.getTestCases().iterator().next();

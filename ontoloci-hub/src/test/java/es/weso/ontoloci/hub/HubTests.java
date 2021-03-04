@@ -26,7 +26,7 @@ public class HubTests {
     @Test
     public void addTestsToBuildTest(){
 
-        OntolociHubImplementation ontolociHubImplementation = new OntolociHubImplementation();
+        HubImplementation ontolociHubImplementation = new HubImplementation();
 
         HubBuild hubBuild = HubBuild.from();
         Map<String,String> metadata = new HashMap<>();
@@ -36,7 +36,7 @@ public class HubTests {
         hubBuild.setMetadata(metadata);
 
         assertTrue(hubBuild.getTestCases().size()<=0);
-        hubBuild = ontolociHubImplementation.addTestsToBuild(hubBuild);
+        hubBuild = ontolociHubImplementation.fillBuild(hubBuild);
         assertTrue(hubBuild.getTestCases().size()>0);
 
     }
@@ -45,7 +45,7 @@ public class HubTests {
     @Test
     public void addTestsToBuildWithExceptionsTest(){
 
-        OntolociHubImplementation ontolociHubImplementation = new OntolociHubImplementation();
+        HubImplementation ontolociHubImplementation = new HubImplementation();
 
         HubBuild hubBuild = HubBuild.from();
         Map<String,String> metadata = new HashMap<>();
@@ -57,7 +57,7 @@ public class HubTests {
         assertTrue(hubBuild.getTestCases().size()<=0);
         assertNull(hubBuild.getMetadata().get("exceptions"));
 
-        hubBuild = ontolociHubImplementation.addTestsToBuild(hubBuild);
+        hubBuild = ontolociHubImplementation.fillBuild(hubBuild);
 
         assertTrue(hubBuild.getTestCases().size()<=0);
         assertNotNull(hubBuild.getMetadata().get("exceptions"));
@@ -68,7 +68,7 @@ public class HubTests {
     @Test
     public void addTestsToBuildWithoutExceptionsTest(){
 
-        OntolociHubImplementation ontolociHubImplementation = new OntolociHubImplementation();
+        HubImplementation ontolociHubImplementation = new HubImplementation();
 
         HubBuild hubBuild = HubBuild.from();
         Map<String,String> metadata = new HashMap<>();
@@ -80,7 +80,7 @@ public class HubTests {
         assertTrue(hubBuild.getTestCases().size()<=0);
         assertNull(hubBuild.getMetadata().get("exceptions"));
 
-        hubBuild = ontolociHubImplementation.addTestsToBuild(hubBuild);
+        hubBuild = ontolociHubImplementation.fillBuild(hubBuild);
 
         assertTrue(hubBuild.getTestCases().size()>0);
         assertNotNull(hubBuild.getMetadata().get("exceptions"));
@@ -91,7 +91,7 @@ public class HubTests {
     @Test
     public void fileNotFoundTest(){
 
-        OntolociHubImplementation ontolociHubImplementation = new OntolociHubImplementation();
+        HubImplementation ontolociHubImplementation = new HubImplementation();
 
         HubBuild hubBuild = HubBuild.from();
         Map<String,String> metadata = new HashMap<>();
@@ -104,7 +104,7 @@ public class HubTests {
         assertNull(hubBuild.getMetadata().get("exceptions"));
         assertNull(hubBuild.getMetadata().get("checkTitle"));
 
-        hubBuild = ontolociHubImplementation.addTestsToBuild(hubBuild);
+        hubBuild = ontolociHubImplementation.fillBuild(hubBuild);
 
         assertTrue(hubBuild.getTestCases().size()<=0);
         assertNotNull(hubBuild.getMetadata().get("exceptions"));
@@ -117,7 +117,7 @@ public class HubTests {
     @Test
     public void emptyContentFileTest() throws IOException {
 
-        OntolociHubImplementation ontolociHubImplementation = new OntolociHubImplementation();
+        HubImplementation ontolociHubImplementation = new HubImplementation();
 
         HubBuild hubBuild = HubBuild.from();
         Map<String,String> metadata = new HashMap<>();
@@ -130,7 +130,7 @@ public class HubTests {
         assertNull(hubBuild.getMetadata().get("exceptions"));
         assertNull(hubBuild.getMetadata().get("checkTitle"));
 
-        hubBuild = ontolociHubImplementation.addTestsToBuild(hubBuild);
+        hubBuild = ontolociHubImplementation.fillBuild(hubBuild);
 
         assertTrue(hubBuild.getTestCases().size()<=0);
         assertNotNull(hubBuild.getMetadata().get("exceptions"));

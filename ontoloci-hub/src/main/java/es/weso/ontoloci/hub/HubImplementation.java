@@ -15,10 +15,10 @@ import java.util.*;
  * OntolociHub implementation
  * @author Pablo Menéndez Suárez
  */
-public class OntolociHubImplementation implements OntolociHub {
+public class HubImplementation implements Hub {
 
     // LOGGER CREATION
-    private static final Logger LOGGER = LoggerFactory.getLogger(OntolociHubImplementation.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(HubImplementation.class);
 
     // Instantiate the github service.
     final GitHubRepositoryProvider gitHubProvider;
@@ -28,7 +28,7 @@ public class OntolociHubImplementation implements OntolociHub {
     private String currentCommit;
     private String currentCheckRunId;
 
-    public OntolociHubImplementation() {
+    public HubImplementation() {
 
         LOGGER.debug("Creating a new OntolociHubImplementation from the public constructor");
 
@@ -42,7 +42,7 @@ public class OntolociHubImplementation implements OntolociHub {
      * @return the populated hub build.
      */
     @Override
-    public HubBuild addTestsToBuild(HubBuild hubBuild) {
+    public HubBuild fillBuild(HubBuild hubBuild) {
 
         // Parse the data from the build.
         currentOwner  = hubBuild.getMetadata().get("owner");
