@@ -89,6 +89,7 @@ En este nivel detallaremos cada uno de los bloques del sistema identificados ant
 ![](./images/ontolo-ci-scheduler.png)
 ![](./images/ontolo-ci-worker-1.png)
 ![](./images/ontolo-ci-worker-2.png)
+![](./images/ontolo-ci-hub.png)
 
 
 ## Runtime View
