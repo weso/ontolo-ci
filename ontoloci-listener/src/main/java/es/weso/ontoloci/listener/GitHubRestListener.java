@@ -1,9 +1,8 @@
 package es.weso.ontoloci.listener;
 
 
-import es.weso.ontoloci.scheduler.Scheduler;
+import es.weso.ontoloci.scheduler.SchedulerImpl;
 import es.weso.ontoloci.worker.build.Build;
-import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -16,7 +15,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/v1/github")
-public class GitHubRestListener {
+public class GitHubRestListener implements RepositoryRestListener{
 
     // LOGGER CREATION
     private static final Logger LOGGER = LoggerFactory.getLogger(GitHubRestListener.class);
@@ -40,7 +39,7 @@ public class GitHubRestListener {
 
 
 
-    public void handlePush(Map<String, Object> payload) {
+    private void handlePush(Map<String, Object> payload) {
             Map<String, Object> repositoryData = (Map<String, Object>) payload.get("repository");
             Map<String, Object> ownerData = (Map<String, Object>) repositoryData.get("owner");
             ArrayList<Map<String, Object>> commitData = (ArrayList<Map<String, Object>>) payload.get("commits");
@@ -66,12 +65,12 @@ public class GitHubRestListener {
             build.setMetadata(metadata);
 
             // Instantiate the scheduler.
-            Scheduler.getInstance().scheduleBuild(build);
+            SchedulerImpl.getInstance().scheduleBuild(build);
 
     }
 
 
-    public void handlePullRequest(Map<String, Object> payload) {
+    private void handlePullRequest(Map<String, Object> payload) {
 
         if(!payload.get("action").equals("closed")) {
             Map<String, Object> pullRequest = (Map<String, Object>) payload.get("pull_request");
@@ -95,7 +94,7 @@ public class GitHubRestListener {
             build.setMetadata(metadata);
 
             // Instantiate the scheduler.
-            Scheduler.getInstance().scheduleBuild(build);
+            SchedulerImpl.getInstance().scheduleBuild(build);
         }
     }
 
