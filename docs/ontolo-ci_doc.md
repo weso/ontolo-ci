@@ -64,7 +64,7 @@ Para construir ontolo-ci y dar solución al problema planteado anteriormente es 
 Cada vez que se produce un cambio sobre el repositorio de la ontología, ontolo-ci recoge ese cambio y ejecuta todas las pruebas que se encuentren definidas. Una vez terminado este proceso, ontolo-ci notifica los resultados directamente sobre el propio repositorio, así como en su propia página web. En ambos lugares podemos observar los resultados de cada una de las pruebas.
 
 ## Building Block View
-
+![](./images/ontolo-ci-bbview.png)
 
 ### Whitebox ontolo-ci
 
