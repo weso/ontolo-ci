@@ -63,14 +63,31 @@ Para construir ontolo-ci y dar solución al problema planteado anteriormente es 
 
 Cada vez que se produce un cambio sobre el repositorio de la ontología, ontolo-ci recoge ese cambio y ejecuta todas las pruebas que se encuentren definidas. Una vez terminado este proceso, ontolo-ci notifica los resultados directamente sobre el propio repositorio, así como en su propia página web. En ambos lugares podemos observar los resultados de cada una de las pruebas.
 
-## Building Block View
+## Vista de construcción en bloques
+La vista de construcción en bloques muestra la descomposición estática del sistema en bloques de construcción (módulos, componentes, subsistemas, clases, interfaces, paquetes, bibliotecas, marcos, capas, particiones, niveles, funciones, macros, operaciones, estructuras de datos, ...) así como sus dependencias (relaciones, asociaciones, ...).
+
+El siguiente diagrama muestra la descomposición estática de la construccióndel sistema en bloques:
 ![](./images/ontolo-ci-bbview.png)
+
+Ahora describiremos brevemenete los elementos principales que componen esta vista.
 
 ### Whitebox ontolo-ci
 
 #### Contained Blackboxes
+Los siguientes componenetes han sido encontrados:
+* listener: Este componente es el punto de entrada del subsistema que utilizarán otros sistemas externos. Para ello, ofrece una interfaz externa, denominada OnWebhook, que se encarga de recibir los datos sobre las actualizaciones de ontologías del sistema de control de versiones. Además, este componente es el encargado de crear objetos de tipo Build. Los objetos Build están presentes durante todo el ciclo de vida de ontolo-ci. Representan una ejecución de los tests sobre un estado concreto del repositorio de control de versiones. El listener es el encargado no solamente de crear estos objetos si no también de rellenarlos con la información que le llega del sistema de control de versiones.
+* scheduler: Este componente es el encargado de decidir en que momento se deben ejecutar las builds. De tal manera que si le llegan muchas builds sea capaz de gestionar el orden en que estas se han de ejecutar.
+* worker: Este componente es el encargado de llevar a cabo la ejecución de los test una vez la build ha sido rellenada con lost test oportunos.
+* hub: El hub es el componente que se comunica con el sistema de control de versiones. Es el encargado de obtener los ficheros que se corresponden con la nueva build, así como de postear los resultados de los test en el sistema de control de versiones.
+* api: La api expone un endpoint para ser consumido por la web. Devuelve los datos de las builds que ya ha finalizado.
+* web: Este componente representa una página web donde se pueden ver los resultados de todas las builds que se han llevado a cabo.
 
 ### Level 2
+En este nivel detallaremos cada uno de los bloques del sistema identificados anteriormente en el nivel 1.
+
+![](./images/ontolo-ci-listener.png)
+![](./images/ontolo-ci-scheduler.png)
+![](./images/ontolo-ci-worker-1.png)
 
 
 ## Runtime View
@@ -88,6 +105,7 @@ Cada vez que se produce un cambio sobre el repositorio de la ontología, ontolo-
 
 
 ## Design Decisions
+singleton, adapter...
 
 ## Risks and Technical Debts
 
