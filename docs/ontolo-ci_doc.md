@@ -20,7 +20,7 @@ Este documento incluye la documentación arquitectónica para el módulo de inte
 
 La estructura de este documento sigue la plantilla  [arc42](https://arc42.org/) para la documentación de arquitecturas de software y sistemas.
 
-### Requirements Overview
+### Resumen de Requisitos
 El objetivo general de ontolo-ci es realizar una validación continua de las ontologías contenidas en un sistema de control de versiones mediante un sistema de test basado en [Shape Expressions](https://shex.io/).
 
 Puede encontrar un análisis más completo de los requisitos del sistema en la sección __Análisis de requisitos__.
