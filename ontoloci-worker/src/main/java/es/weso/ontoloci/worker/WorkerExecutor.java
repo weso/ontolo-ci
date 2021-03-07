@@ -92,9 +92,33 @@ public class WorkerExecutor implements Worker {
      * @return build result after the execution or empty build
      */
     private BuildResult executeWorker(Build build){
-      return !hasExceptions(build) ?
-              this.worker.executeBuild(build) :
-              BuildResult.from(build.getId(),build.getMetadata(),BuildResultStatus.CANCELLED,new ArrayList<>());
+        if(hasExceptions(build)){
+            return BuildResult.from(build.getId(),build.getMetadata(),BuildResultStatus.CANCELLED,new ArrayList<>());
+        }
+
+        BuildResult buildResult;
+        try {
+
+             buildResult = this.worker.executeBuild(build);
+
+        }catch (RuntimeException e){
+
+            LOGGER.error(String.format("ERROR while trying to validate build=[%s]",build));
+            Map<String,String> metadata = fillMetadataException(build.getMetadata(),"ValidationError","Error during validation");
+            buildResult = BuildResult.from(build.getId(),metadata,BuildResultStatus.CANCELLED,new ArrayList<>());
+
+        }
+
+        return buildResult;
+    }
+
+    private Map<String,String> fillMetadataException(Map<String,String> metadata,String checkTitle,String checkBody){
+        Map<String,String> newMap = new HashMap<>(metadata);
+        newMap.put("exceptions","true");
+        newMap.put("checkTitle",checkTitle);
+        newMap.put("checkBody",checkBody);
+        newMap.put("execution_date",String.valueOf(System.currentTimeMillis()));
+        return newMap;
     }
 
     /**

@@ -26,6 +26,8 @@ public class MockedRepositoryProvider implements RepositoryProvider {
                 return getFileNotFoundTestCases();
             case EMPTY_FILE_COMMIT:
                 return getEmptyFileTestCases();
+            case WRONG_FILE_CONTENT_COMMIT:
+                return getWrongFileContentTestCases();
             default:
                 return getSuccessFullTestCases();
 
@@ -55,6 +57,14 @@ public class MockedRepositoryProvider implements RepositoryProvider {
         throw new EmptyContentFileException();
     }
 
+
+    private Collection<HubTestCase> getWrongFileContentTestCases(){
+        Collection<HubTestCase> testCases = new ArrayList<>();
+        for(int i=1;i<=3;i++){
+            testCases.add(new HubTestCase("Mocked Test "+i,"fail",instances,getSchema(i),getSMIn(i),getSMOut(i)));
+        }
+        return testCases;
+    }
 
     private Collection<HubTestCase> getSuccessFullTestCases(){
         Collection<HubTestCase> testCases = new ArrayList<>();
@@ -112,6 +122,7 @@ public class MockedRepositoryProvider implements RepositoryProvider {
     private final static String FILE_NOT_FOUND_COMMIT = "FILE_NOT_FOUND_COMMIT";
     private final static String EMPTY_FILE_COMMIT = "EMPTY_FILE_COMMIT";
     private final static String FAILURE_COMMIT = "FAILURE_COMMIT";
+    private final static String WRONG_FILE_CONTENT_COMMIT = "WRONG_FILE_CONTENT_COMMIT";
 
 
     private final static String ontology = "@prefix weso: <http://www.weso.com/> . @prefix owl: <http://www.w3.org/2002/07/owl#> . weso:Investigador a owl:Class . weso:Doctor a owl:Class . weso:Estudiante a owl:Class . ";
