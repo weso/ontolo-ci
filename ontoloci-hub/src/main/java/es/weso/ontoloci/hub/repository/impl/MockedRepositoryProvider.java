@@ -18,6 +18,8 @@ public class MockedRepositoryProvider implements RepositoryProvider {
     @Override
     public Collection<HubTestCase> getTestCases(String owner, String repo, String commit) throws Exception {
         switch (commit) {
+            case FAILURE_COMMIT:
+                return getFailureTestCases();
             case EXCEPTION_COMMIT:
                 return getExceptionTestCases();
             case FILE_NOT_FOUND_COMMIT:
@@ -62,7 +64,11 @@ public class MockedRepositoryProvider implements RepositoryProvider {
         return testCases;
     }
 
-
+    private Collection<HubTestCase> getFailureTestCases(){
+        Collection<HubTestCase> testCases = new ArrayList<>();
+        testCases.add(new HubTestCase("Mocked Failure Test",ontology,instances,schema1,shapeMapIn1,failedShapeMapOut1));
+        return testCases;
+    }
 
 
     private String getSchema(int i){
@@ -105,20 +111,24 @@ public class MockedRepositoryProvider implements RepositoryProvider {
     private final static String EXCEPTION_COMMIT = "EXCEPTION_COMMIT";
     private final static String FILE_NOT_FOUND_COMMIT = "FILE_NOT_FOUND_COMMIT";
     private final static String EMPTY_FILE_COMMIT = "EMPTY_FILE_COMMIT";
+    private final static String FAILURE_COMMIT = "FAILURE_COMMIT";
+
 
     private final static String ontology = "@prefix weso: <http://www.weso.com/> . @prefix owl: <http://www.w3.org/2002/07/owl#> . weso:Investigador a owl:Class . weso:Doctor a owl:Class . weso:Estudiante a owl:Class . ";
-    private final static String instances = "@prefix weso: <http://www.weso.com/> . @prefix owl: <http://www.w3.org/2002/07/owl#> . weso:Labra a weso:Investigador . weso:Oscar a Weso:Doctor . weso:Pablo a Weso:Estudiante . ";
+    private final static String instances = "@prefix weso: <http://www.weso.com/> . @prefix owl: <http://www.w3.org/2002/07/owl#> . weso:Labra a weso:Investigador . weso:Oscar a weso:Doctor . weso:Pablo a weso:Estudiante . ";
 
-    private final static String schema1 = "prefix weso: <http://www.weso.com/> prefix owl: <http://www.w3.org/2002/07/owl#> weso:ShapePrueba1{ a [weso:Investigador] }";
-    private final static String schema2 = "prefix weso: <http://www.weso.com/> prefix owl: <http://www.w3.org/2002/07/owl#> weso:ShapePrueba2{ a [weso:Doctor] } ";
-    private final static String schema3 = "prefix weso: <http://www.weso.com/> prefix owl: <http://www.w3.org/2002/07/owl#> weso:ShapePrueba3{ a [weso:Estudiante] } ";
+    private final static String schema1 = "prefix weso: <http://www.weso.com/> prefix owl: <http://www.w3.org/2002/07/owl#> weso:ShapeTest1{ a [weso:Investigador] }";
+    private final static String schema2 = "prefix weso: <http://www.weso.com/> prefix owl: <http://www.w3.org/2002/07/owl#> weso:ShapeTest2{ a [weso:Doctor] } ";
+    private final static String schema3 = "prefix weso: <http://www.weso.com/> prefix owl: <http://www.w3.org/2002/07/owl#> weso:ShapeTest3{ a [weso:Estudiante] } ";
 
-    private final static String shapeMapIn1 = "weso:Labra@:weso:ShapeTest1";
-    private final static String shapeMapIn2 = "weso:Oscar@:weso:ShapeTest2";
-    private final static String shapeMapIn3 = "weso:Pablo@:weso:ShapeTest3";
+    private final static String shapeMapIn1 = "weso:Labra@weso:ShapeTest1";
+    private final static String shapeMapIn2 = "weso:Oscar@weso:ShapeTest2";
+    private final static String shapeMapIn3 = "weso:Pablo@weso:ShapeTest3";
 
-    private final static String shapeMapOut1 = "weso:Labra@:weso:ShapeTest1";
-    private final static String shapeMapOut2 = "weso:Oscar@:weso:ShapeTest2";
-    private final static String shapeMapOut3 = "weso:Pablo@:weso:ShapeTest3";
+    private final static String shapeMapOut1 = "weso:Labra@weso:ShapeTest1";
+    private final static String shapeMapOut2 = "weso:Oscar@weso:ShapeTest2";
+    private final static String shapeMapOut3 = "weso:Pablo@weso:ShapeTest3";
+
+    private final static String failedShapeMapOut1 = "weso:Labra@!weso:ShapeTest1";
 
 }

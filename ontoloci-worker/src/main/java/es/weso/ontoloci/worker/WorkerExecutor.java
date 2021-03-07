@@ -65,7 +65,7 @@ public class WorkerExecutor implements Worker {
     public BuildResult executeBuild(Build build) {
         LOGGER.debug("Executing build: " + build);
         // 1. Create a Hub instance
-        HubImplementation ontolocyHub = new HubImplementation(GitHubRepositoryProvider.empty());
+        HubImplementation ontolocyHub = new HubImplementation(repositoryProvider);
         // 2. Transform the current build to a HubBuild
         HubBuild hubBuild = build.toHubBuild();
         // 3. Add the tests to the build
