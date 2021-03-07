@@ -10,6 +10,10 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8090:8090
+    environment:
+      ONTOLOCI_GITHUB_APP_ID: "GITHUB_APP_ID"
+      ONTOLOCI_GITHUB_KEY_PATH: "GITHUB_KEY_PATH (ex: /ontoloci-pkcs8.key)"
+
     stdin_open: true # Needed to keep the image alive.
 
   # This is the container for the web gui.

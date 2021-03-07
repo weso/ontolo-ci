@@ -2,6 +2,7 @@ package es.weso.ontoloci.hub;
 
 import es.weso.ontoloci.hub.build.HubBuild;
 import es.weso.ontoloci.hub.exceptions.EmptyContentFileException;
+import es.weso.ontoloci.hub.repository.RepositoryProvider;
 import es.weso.ontoloci.hub.repository.impl.GitHubRepositoryProvider;
 import es.weso.ontoloci.hub.test.HubTestCase;
 import org.slf4j.Logger;
@@ -21,18 +22,19 @@ public class HubImplementation implements Hub {
     private static final Logger LOGGER = LoggerFactory.getLogger(HubImplementation.class);
 
     // Instantiate the github service.
-    final GitHubRepositoryProvider gitHubProvider;
+    final RepositoryProvider repositoryProvider;
 
     private String currentOwner;
     private String currentRepo;
     private String currentCommit;
     private String currentCheckRunId;
 
-    public HubImplementation() {
+    public HubImplementation(RepositoryProvider repositoryProvider) {
 
         LOGGER.debug("Creating a new OntolociHubImplementation from the public constructor");
+        LOGGER.debug("Repository Provider: "+repositoryProvider.toString());
+        this.repositoryProvider = repositoryProvider;
 
-        gitHubProvider = GitHubRepositoryProvider.empty();
     }
 
     /**
@@ -67,7 +69,7 @@ public class HubImplementation implements Hub {
     public void updateCheckRun(String conclusion,String output){
         LOGGER.debug("Updating GitHub ChekRun=[%s] for [%s,%s,%s] with status=[%s] and msg=[%s]",currentCheckRunId,currentOwner,currentRepo,currentCommit,conclusion,output);
         try {
-            gitHubProvider.updateCheckRun(currentCheckRunId,currentOwner,currentRepo,conclusion,output);
+            repositoryProvider.updateCheckRun(currentCheckRunId,currentOwner,currentRepo,conclusion,output);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -80,7 +82,7 @@ public class HubImplementation implements Hub {
     private String createGitHubCheckRun(){
         LOGGER.debug("Creating GitHub ChekRun for [%s,%s,%s]",currentOwner,currentRepo,currentCommit);
         try {
-            return gitHubProvider.createCheckRun(currentOwner,currentRepo,currentCommit);
+            return repositoryProvider.createCheckRun(currentOwner,currentRepo,currentCommit);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -100,21 +102,21 @@ public class HubImplementation implements Hub {
         Map<String,String> metadata = new HashMap<>(hubBuild.getMetadata());
 
         try {
-            final Collection<HubTestCase> testsCases = gitHubProvider.getTestCases(currentOwner, currentRepo, currentCommit);
+            final Collection<HubTestCase> testsCases = repositoryProvider.getTestCases(currentOwner, currentRepo, currentCommit);
             // Populate the hub build with the computed test cases.
             hubBuild.setTestCases(testsCases);
             metadata.put("exceptions","false");
 
         }catch (FileNotFoundException e) {
-            LOGGER.error(String.format("ERROR while getting any file at getTestCases from GitHubRepositoryProvider: %s",e.getMessage()));
+            LOGGER.error(String.format("ERROR while getting any file at getTestCases from RepositoryProvider: %s", repositoryProvider));
             addFilleNotFoundMetadata(metadata);
         }
         catch (EmptyContentFileException e) {
-            LOGGER.error(String.format("ERROR while getting the HubTestCases at getTestCases from GitHubRepositoryProvider: %s",e.getMessage()));
+            LOGGER.error(String.format("ERROR while getting the HubTestCases at getTestCases from RepositoryProvider: %s",repositoryProvider));
             addEmptyContentFilleMetadata(metadata);
         }
         catch (Exception e) {
-            LOGGER.error(String.format("ERROR while getting the HubTestCases at getTestCases from GitHubRepositoryProvider: %s",e.getMessage()));
+            LOGGER.error(String.format("ERROR while getting the HubTestCases at getTestCases from RepositoryProvider: %s",repositoryProvider));
             addExceptionMetadata(metadata);
         }
 
