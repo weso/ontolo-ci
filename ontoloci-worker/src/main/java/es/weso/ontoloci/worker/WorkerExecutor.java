@@ -1,6 +1,8 @@
 package es.weso.ontoloci.worker;
 
 import es.weso.ontoloci.hub.build.HubBuild;
+import es.weso.ontoloci.hub.repository.RepositoryProvider;
+import es.weso.ontoloci.hub.repository.impl.GitHubRepositoryProvider;
 import es.weso.ontoloci.persistence.OntolociDAO;
 import es.weso.ontoloci.persistence.PersistedBuildResult;
 import es.weso.ontoloci.persistence.mongo.OntolociInMemoryDAO;
@@ -19,7 +21,9 @@ public class WorkerExecutor implements Worker {
 
     // LOGGER CREATION
     private static final Logger LOGGER = LoggerFactory.getLogger(BuildResult.class);
+
     private final Worker worker;
+    private final RepositoryProvider repositoryProvider;
     private final OntolociDAO persistence = OntolociInMemoryDAO.instance();
 
     /**
@@ -27,17 +31,23 @@ public class WorkerExecutor implements Worker {
      * @param worker from which to create the new WorkerExecutor.
      * @return the new WorkerExecutor instance.
      */
+    public static WorkerExecutor from(Worker worker, RepositoryProvider repositoryProvider) {
+        LOGGER.debug("Static factory creating a new worker executor for " + worker+ " and "+ repositoryProvider);
+        return new WorkerExecutor(worker,repositoryProvider);
+    }
+
     public static WorkerExecutor from(Worker worker) {
         LOGGER.debug("Static factory creating a new worker executor for " + worker);
-        return new WorkerExecutor(worker);
+        return new WorkerExecutor(worker,GitHubRepositoryProvider.empty());
     }
     
     /**
      * Main constructor for the worker executor class. This is intended for dependency injection.
      * @param worker to execute the builds.
      */
-    private WorkerExecutor(final Worker worker) {
+    private WorkerExecutor(final Worker worker, RepositoryProvider repositoryProvider) {
         this.worker = worker;
+        this.repositoryProvider = repositoryProvider;
     }
 
     /**
@@ -55,7 +65,7 @@ public class WorkerExecutor implements Worker {
     public BuildResult executeBuild(Build build) {
         LOGGER.debug("Executing build: " + build);
         // 1. Create a Hub instance
-        HubImplementation ontolocyHub = new HubImplementation();
+        HubImplementation ontolocyHub = new HubImplementation(GitHubRepositoryProvider.empty());
         // 2. Transform the current build to a HubBuild
         HubBuild hubBuild = build.toHubBuild();
         // 3. Add the tests to the build

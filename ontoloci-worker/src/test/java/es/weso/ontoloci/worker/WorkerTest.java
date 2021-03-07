@@ -63,7 +63,7 @@ public class WorkerTest {
         metadata.put("commit",EMPTY_FILE_COMMIT);
         emptyFileBuild.setMetadata(new HashMap<>(metadata));
     }
-
+/*
 
     @Test
     public void workerExecutorTest(){
@@ -92,6 +92,8 @@ public class WorkerTest {
         assertTrue(buildResult.getTestCaseResults().size()>0);
 
     }
+
+
 
     @Test
     public void metadataTest() {
@@ -189,6 +191,7 @@ public class WorkerTest {
         assertTrue(resultValidation.toJson().spaces2().length()>0);
     }
 
+
     @Test
     public void validationWithExpectedResultTest(){
 
@@ -216,5 +219,5 @@ public class WorkerTest {
 
     }
 
-
+*/
 }
