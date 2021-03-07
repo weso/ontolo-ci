@@ -50,6 +50,7 @@ public class WorkerSequential implements Worker {
      */
     @Override
     public BuildResult executeBuild(Build build) {
+
         // 1. Init counting execution time of the build
         startBuildCrono();
         // 2. Validate tests
@@ -66,6 +67,7 @@ public class WorkerSequential implements Worker {
         buildResult.setStatus(buildResultStatus);
         // 8. Finally return the Build result.
         return buildResult;
+
     }
 
 
