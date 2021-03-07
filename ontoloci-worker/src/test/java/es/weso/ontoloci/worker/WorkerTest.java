@@ -21,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class WorkerTest {
 
-    // Repository for testing (https://github.com/weso/ontolo-ci-test)
     private final static String DEFAULT_OWNER = "weso";
     private final static String DEFAULT_REPO = "ontolo-ci-test";
     private final static String DEFAULT_COMMIT = "DEFAULT_COMMIT";
@@ -29,12 +28,14 @@ public class WorkerTest {
     private final static String EXCEPTION_COMMIT = "EXCEPTION_COMMIT";
     private final static String FILE_NOT_FOUND_COMMIT = "FILE_NOT_FOUND_COMMIT";
     private final static String EMPTY_FILE_COMMIT = "EMPTY_FILE_COMMIT";
+    private final static String WRONG_FILE_CONTENT_COMMIT = "WRONG_FILE_CONTENT_COMMIT";
 
     private static Build defaultBuild;
     private static Build failureBuild;
     private static Build cancelledBuild;
     private static Build fileNotFoundBuild;
     private static Build emptyFileBuild;
+    private static Build wrongContentFileBuild;
 
 
     @BeforeAll
@@ -63,6 +64,12 @@ public class WorkerTest {
         emptyFileBuild = Build.from(new ArrayList<>());
         metadata.put("commit",EMPTY_FILE_COMMIT);
         emptyFileBuild.setMetadata(new HashMap<>(metadata));
+
+        wrongContentFileBuild = Build.from(new ArrayList<>());
+        metadata.put("commit",WRONG_FILE_CONTENT_COMMIT);
+        wrongContentFileBuild.setMetadata(new HashMap<>(metadata));
+
+
     }
 
     @Test
@@ -168,6 +175,16 @@ public class WorkerTest {
         assertEquals(buildResult.getStatus(), BuildResultStatus.CANCELLED);
         assertEquals(buildResult.getMetadata().get("exceptions"), "true");
         assertEquals(buildResult.getMetadata().get("checkTitle"), "EmptyContentFile");
+    }
+
+    @Test
+    public void buildValidationErrorExceptionTest() {
+        WorkerSequential workerSequential = new WorkerSequential();
+        WorkerExecutor workerExecutor = WorkerExecutor.from(workerSequential,MockedRepositoryProvider.empty());
+        BuildResult buildResult = workerExecutor.executeBuild(wrongContentFileBuild);
+        assertEquals(buildResult.getStatus(), BuildResultStatus.CANCELLED);
+        assertEquals(buildResult.getMetadata().get("exceptions"), "true");
+        assertEquals(buildResult.getMetadata().get("checkTitle"), "ValidationError");
     }
 
 
