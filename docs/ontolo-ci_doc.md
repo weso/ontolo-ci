@@ -113,6 +113,10 @@ En este nivel detallaremos cada uno de los bloques del sistema identificados ant
 * BuildResultStatus: Enumerado que define los distintos estados que puede atravesar una BuildResult.
 * TestCaseResult: Entidad que representa el resultado de un caso de prueba tras su validación. Dispone de una serie de metadatos donde se almacenan los tiempos de ejecución. Posee un estado que representa el estado de ejecución en el que se encuentra.
 * TestCaseResultStatus: Enumerado que define los distintos estados que puede atravesar una TestCaseResult.
+* ShapeMapResultValidation: Representación simplificada de una validación entre un nodo y una shape a modo de ShapeMap. Contiene el nodo, la shape, el estado (conformant o nonconformant) e información de la validación.
+* PrefixNode: Entidad para representar un nodo prefijado.
+* Validate: Realiza la validación de datos en rdf mediante Shape Expressions.
+* ResultValidation: Objeto resultante de la validación realizada en la clase Validate. Contiene un shape map resultante y uno esperado.
 
 ![](./images/ontolo-ci-worker-2.png)
 #### Hub
