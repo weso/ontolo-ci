@@ -85,11 +85,22 @@ Los siguientes componenetes han sido encontrados:
 ### Level 2
 En este nivel detallaremos cada uno de los bloques del sistema identificados anteriormente en el nivel 1.
 
+#### Listener
+* RepositoryRestListener: Define una interfaz para escuchar de los distintos repositorios de control de versiones.
+* GitHubRestListener: Implementación de la interfaz RepositoryRestListener para el repositorio de control de versiones GitHub.
 ![](./images/ontolo-ci-listener.png)
+#### Scheduler
+* Scheduler: Define un contrato con el módulo listener. Permite añadir builds a la lista de builds que se deben ejecutar.
+* SchedulerImpl: Implementación concreta del scheduler.
 ![](./images/ontolo-ci-scheduler.png)
+#### Api
+* OntolociAPI: Define una interfaz para proveer las distintas builds ejecutadas en el sistema.
+* SpringBootOntolociAPI: Implementa la interfaz OntolociAPI. Ofrece una API rest para ser consumida desde la web.
 ![](./images/ontolo-ci-api.png)
+#### Worker
 ![](./images/ontolo-ci-worker-1.png)
 ![](./images/ontolo-ci-worker-2.png)
+#### Hub
 ![](./images/ontolo-ci-hub.png)
 
 
