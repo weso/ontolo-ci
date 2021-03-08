@@ -88,17 +88,32 @@ En este nivel detallaremos cada uno de los bloques del sistema identificados ant
 #### Listener
 * RepositoryRestListener: Define una interfaz para escuchar de los distintos repositorios de control de versiones.
 * GitHubRestListener: Implementación de la interfaz RepositoryRestListener para el repositorio de control de versiones GitHub.
+
 ![](./images/ontolo-ci-listener.png)
 #### Scheduler
 * Scheduler: Define un contrato con el módulo listener. Permite añadir builds a la lista de builds que se deben ejecutar.
-* SchedulerImpl: Implementación concreta del scheduler.
+* SchedulerImpl: Implementación concreta del scheduler
+
 ![](./images/ontolo-ci-scheduler.png)
 #### Api
 * OntolociAPI: Define una interfaz para proveer las distintas builds ejecutadas en el sistema.
 * SpringBootOntolociAPI: Implementa la interfaz OntolociAPI. Ofrece una API rest para ser consumida desde la web.
+
 ![](./images/ontolo-ci-api.png)
 #### Worker
+* Worker: Define un contrato para el scheduler.
+* WorkerExecutor: Implementa la interfaz Worker. Es el encargado de comunicarse con el Hub para obtener los casos de prueba y para actualizar la información del repositorio una vez se ha llevado a cabo la validación, la cúal se delega en el worker secuencial.
+* WorkerSequential: Es el encargado de llevar a cabo la validación de los casos de prueba de una build.
+
 ![](./images/ontolo-ci-worker-1.png)
+
+* Build: Entidad que representa los casos de prueba a ejecutar de un repositorio concreto. Cada build tiene un identificador único, una colección de casos de prueba y una serie de metadatos. En los metadatos se encuentra toda la información relativa al repositorio donde se ha producido un cambio y donde se encuentran los casos de prueba.
+* TestCase: Entidad que representa un caso de prueba. Cada caso de prueba está formado por: nombre, ontología, instancias, schema, shape map de entrada y shape map esperado.
+* BuildResult: Entidad que representa los casos de prueba ejecutados de un repositorio concreto. Se encuentra formado por un identificador único, una colección de resultados de casos de prueba y una serie de metadatos. Entre los metadatos, además de los que contenía la build previamente, disponemos del tiempo de ejecución total de la build y shapeMaps resultantes y esperados. Por último, dispone de un estado que representa representa el estado de ejecución en el que se encuentra.
+* BuildResultStatus: Enumerado que define los distintos estados que puede atravesar una BuildResult.
+* TestCaseResult: Entidad que representa el resultado de un caso de prueba tras su validación. Dispone de una serie de metadatos donde se almacenan los tiempos de ejecución. Posee un estado que representa el estado de ejecución en el que se encuentra.
+* TestCaseResultStatus: Enumerado que define los distintos estados que puede atravesar una TestCaseResult.
+
 ![](./images/ontolo-ci-worker-2.png)
 #### Hub
 ![](./images/ontolo-ci-hub.png)
