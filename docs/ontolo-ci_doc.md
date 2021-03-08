@@ -119,7 +119,18 @@ En este nivel detallaremos cada uno de los bloques del sistema identificados ant
 * ResultValidation: Objeto resultante de la validación realizada en la clase Validate. Contiene un shape map resultante y uno esperado.
 
 ![](./images/ontolo-ci-worker-2.png)
+
 #### Hub
+* Hub: Define un contrato para el worker.
+* HubImplementation: Implementa las operaciones definidas en la interfaz Hub. Recibe un objeto RepositoryProvider y delega en él las llamadas a los sistemas de control de versiones.
+* RepositoryProvider: Define una interfaz para cada una de las implementaciones concretas de sistemas de control de versiones, como por ejemplo GitHub.
+* GitHubRepositoryProvider: Implementa la interfaz RepositoryProvider. Se encarga de realizar la comunicación entre el Hub y GitHub.
+* HubBuild: Representa una build (definida anteriormente) adaptada al dominio del Hub.
+* HubTestCase: Representa una caso de prueba (definido anteriormente) adaptada al dominio del Hub.
+* Manifest: Entidad que representa el objeto manifest.json en el que se definen los casos de prueba.
+* ManifestEntry: Entidad que representa cada uno de los casos de prueba definidos dentro del manifest.json.
+* RepositoryConfiguration: Representa el fichero oci.yml donde se establece la configuración del repositorio que desee usar ontolo-ci.
+
 ![](./images/ontolo-ci-hub.png)
 
 
