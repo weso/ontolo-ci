@@ -321,16 +321,24 @@ Ontolo-ci trabaja con claves privadas en formato pkcs8, sin embargo, las claves 
 
 Una vez tengamos OpenSSL en nuestro equipo podemos transformar nuestra clave privada con el siguiente comando:
 ```
-openssl pkcs8 -topk8 -in <github-app.key> -out github-app-pkcs8.key –nocrypt
+openssl pkcs8 -topk8 -in <ruta-github-app.key> -out github-app-pkcs8.key –nocrypt
 ```
 
 
 #### Despliegue por linea de comandos
+Para desplegar ontolo-ci por linea de comandos es necesario tener instalado:
+* [Java](https://www.java.com/es/)
+* [Maven](https://maven.apache.org/)
+##### Variables de entorno
 Para realizar el despliegue por linea de comandos es necesario configurar tres variables de entorno previamente:
 * ONTOLOCI_GITHUB_APP_ID: Se corresponde con el valor del ID nuestra GitHub App.
-* ONTOLOCI_GITHUB_KEY_PATH: Se corresponde con la ruta al fichero que contiene la clave privada de nuestra GitHub App y que hemos descargado previamente.
+* ONTOLOCI_GITHUB_KEY_PATH: Se corresponde con la ruta al fichero que contiene la clave privada (en formato pkcs8) de nuestra GitHub App y que hemos descargado previamente.
 * REACT_APP_ONTOLOCI_CLIENT_ID: Se corresponde con el valor del CLIENT_ID nuestra GitHub App.
-
+##### Despliegue Backend
+Una vez configuradas las variables de entorni podemos desplegar el backend mediante el comando:
+```
+mvn spring-boot:run
+```
 
 #### Despliegue con Docker
 
