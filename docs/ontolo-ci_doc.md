@@ -15,7 +15,7 @@
 
 # Módulo de Integración continua de ontologías 
 
-## Introducción y objetivos 
+## Introducción y Metas 
 Este documento incluye la documentación arquitectónica para el módulo de integración continua de ontologías, en adelante llamado ontolo-ci, que forma parte de la infraestructura ontológica del Proyecto Hércules.
 
 La estructura de este documento sigue la plantilla  [arc42](https://arc42.org/) para la documentación de arquitecturas de software y sistemas.
@@ -25,7 +25,7 @@ El objetivo general de ontolo-ci es realizar una validación continua de las ont
 
 Puede encontrar un análisis más completo de los requisitos del sistema en la sección __Análisis de requisitos__.
 
-### Objetivos de calidad
+### Metas de calidad
 En esta sección enumeraremos los objetivos de máxima calidad para la arquitectura del sistema:
 
 | Prioridad | Objetivo | Escenario |
@@ -33,7 +33,7 @@ En esta sección enumeraremos los objetivos de máxima calidad para la arquitect
 | 1 | Fleibilidad |  Aunque la implementación inicial del sistema funcionará a través del sistema de control de versiones GitHub, se deberá poder extender a otros sistemas de control de versiones de manera sencilla.|
 | 1 | Tolerancia a fallos | En caso de que falle uno de los componentes que rodean al sistema de integración continua, el sistema debe poder seguir funcionando y mantener los demás objetivos de calidad siempre que sea posible. |
 
-### Stakeholders
+### Partes interesadas (Stakeholders)
  Role/Name   | Description                   | Expectations              |
 | ----------- | ------------------------- | ------------------------- |
 | Expertos de dominio | Usuario que modifica el contenido de la ontología a través de la interfaz de usuario proporcionada por el servicio de publicación de ontologías. | Cuando se realiza un cambio a través de la interfaz de usuario, el contenido de las ontologías en el sistema de control de versiones debe ser coherente con estos cambios. |
@@ -48,7 +48,7 @@ En esta sección enumeraremos los objetivos de máxima calidad para la arquitect
 |     R3    | El sistema debe poder ejecutarse desde la linea de comandos |
 |     R4    | El sistema de versiones de control utilizado para almacenar las ontologías estará basado en git. |
 
-## Visión del Sistema y Contexto
+## Alcance y Contexto del Sistema
 Los distintos módulos software que componen un proyecto suelen utilizar sistemas de integración continua que permiten mantener el software continuamente testeado ejecutando los test de manera automática cada vez que se produzcan cambios sobre el software.
 
 La integración continua de software dispone de un gran ecosistema de herramientas como [Travis](https://travis-ci.com/plans) o [Circle-ci](https://circleci.com/) que nos permiten llevar a cabo dicho propósito. Sin embargo, a la hora de testear ontologías, no existe ninguna herramienta que nos permita realizar un proceso de integración continua de la misma. Es entonces cuando surge la necesidad de crear un sistema que cumnpla dicha necesidad.
@@ -63,17 +63,17 @@ Para construir ontolo-ci y dar solución al problema planteado anteriormente es 
 
 Cada vez que se produce un cambio sobre el repositorio de la ontología, ontolo-ci recoge ese cambio y ejecuta todas las pruebas que se encuentren definidas. Una vez terminado este proceso, ontolo-ci notifica los resultados directamente sobre el propio repositorio, así como en su propia página web. En ambos lugares podemos observar los resultados de cada una de las pruebas.
 
-## Vista de construcción en bloques
-La vista de construcción en bloques muestra la descomposición estática del sistema en bloques de construcción (módulos, componentes, subsistemas, clases, interfaces, paquetes, bibliotecas, marcos, capas, particiones, niveles, funciones, macros, operaciones, estructuras de datos, ...) así como sus dependencias (relaciones, asociaciones, ...).
+## Vista de bloques
+La vista de bloques muestra la descomposición estática del sistema en bloques de construcción (módulos, componentes, subsistemas, clases, interfaces, paquetes, bibliotecas, marcos, capas, particiones, niveles, funciones, macros, operaciones, estructuras de datos, ...) así como sus dependencias (relaciones, asociaciones, ...).
 
-El siguiente diagrama muestra la descomposición estática de la construccióndel sistema en bloques:
+El siguiente diagrama muestra la descomposición estática de la construcción del sistema en bloques:
 ![](./images/ontolo-ci-bbview.png)
 
 Ahora describiremos brevemenete los elementos principales que componen esta vista.
 
-### Whitebox ontolo-ci
+### Sistema General de Caja Blanca
 
-#### Contained Blackboxes
+#### Cajas blancas
 Los siguientes componenetes han sido encontrados:
 * listener: Este componente es el punto de entrada del subsistema que utilizarán otros sistemas externos. Para ello, ofrece una interfaz externa, denominada OnWebhook, que se encarga de recibir los datos sobre las actualizaciones de ontologías del sistema de control de versiones. Además, este componente es el encargado de crear objetos de tipo Build. Los objetos Build están presentes durante todo el ciclo de vida de ontolo-ci. Representan una ejecución de los tests sobre un estado concreto del repositorio de control de versiones. El listener es el encargado no solamente de crear estos objetos si no también de rellenarlos con la información que le llega del sistema de control de versiones.
 * scheduler: Este componente es el encargado de decidir en que momento se deben ejecutar las builds. De tal manera que si le llegan muchas builds sea capaz de gestionar el orden en que estas se han de ejecutar.
@@ -82,7 +82,7 @@ Los siguientes componenetes han sido encontrados:
 * api: La api expone un endpoint para ser consumido por la web. Devuelve los datos de las builds que ya ha finalizado.
 * web: Este componente representa una página web donde se pueden ver los resultados de todas las builds que se han llevado a cabo.
 
-### Level 2
+### Nivel 2
 En este nivel detallaremos cada uno de los bloques del sistema identificados anteriormente en el nivel 1.
 
 #### Listener
@@ -252,13 +252,21 @@ De tal forma que ahora la implementación del Hub quedaría de la siguiente form
     }
 ```
 
-## Risks and Technical Debts
+## Riesgos y deuda técnica
+En esta sección describiremos algunos de los riesgos asociados a este sistema y las soluciones que se han propuesto hasta la fecha.
+
+Uno de los riesgos que presenta el sistema es el hecho de que cambie el API de los sistemas de control de versiones, de tal manera que las llamadas que se realizan desde ontolo-ci para comunicarse con ellos cambien y el sistema deje de funcionar. La solución es sencilla, sólo habría que reemplazar las llamadas por las nuevas, pero es un riesgo a tener en cuenta ya que el sistema dejaría de funcionar hasta que se solventase el problema.
+
+
 
 ## Tests
-### Design phase
+Los test que se han llevado a cabo han sido principalmente test unitarios. No se han llevado a cabo test de interfaces de usuario por disponer el sistema de una interfaz muy sencilla y facilmente probable de manera no automática. A continuación, se muestra una tabla con el número de test realizados por módulo:
 
-### Implementation phase
-
+| Module      | Number of tests       |
+|:------------|:---------------------:|
+| Listener  | 4  |
+| Hub  | 7  |
+| Worker  | 13  |
 
 ## Requirements analysis
 ### Functional requirements
