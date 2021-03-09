@@ -453,4 +453,8 @@ La configuración es la siguiente:
 
 Llegados a este punto, y con nuestra instancia de ontolo-ci desplegada, nuesto repositorio estará integrado con ontolo-ci, de tal manera que cada vez que realizemos un push o una pull request sobre el repositorio podremos ver como se crean y actualizan los checkruns, así como todas las builds que se han llevado a cabo en la web. 
 
+![](./images/ontolo-ci-checks.png)
+
+![](./images/ontolo-ci-builds.png)
+
 ## Glossary
