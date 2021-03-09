@@ -436,8 +436,19 @@ Se trata de un json que contiene una lista de objetos donde cada objeto especifi
 | out_shape_map | Ruta relativa al shape map esperado dentro del directorio de los test especificado en el campo testFolder del .oci.yml |
 
 #### Creación del WebHook
-Para integrar ontolo-ci en un repositorio concreto deberemos crear un 
+Por último, es necesario configurar un WebHook dentro de nuestro repositorio. Los Webhooks son la manera que tenemos de vincular nuestros repositorios con nuestras aplicaciones web. De tal manera que cuando se produce un evento sobre nuestro repositorio se notifica a nuestro WebHook y éste recibe la solicitud. En nuestro caso, vamos a configurar un Webhook en nuestro repositorio para que se comunique con ontolo-ci. Para ello vamos al apartado de WebHooks dentro de los ajustes del repositorio y pulsamos en el botón añadir WebHook:
+
+**FOTO**
+
+La configuración es la siguiente:
+| Campo        | Descripción          |
+|:-----------:|:---------------------|
+| Payload URL | URL donde se encuentra nuestra instancia de ontolo-ci en el puerto 8090 (http://example.com:8090) **MUY IMPORTANTE:**Es necesario que está IP sea accesible desde el exterior|
+| Content type | Seleccionamos la opción application/json |
+| Secret | Dejar en blanco |
+| Eventos | Enviar todo |
 
 
+**FOTO**
 
 ## Glossary
