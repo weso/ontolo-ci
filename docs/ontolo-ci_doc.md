@@ -372,7 +372,8 @@ Además debermos tener el código de ontolo-ci descargado, podemos clonar el rep
 git clone https://github.com/weso/ontolo-ci.git
 ```
 ##### Configurar docker-compose.yml
-El docker-compose.yml se encuentra en el directorio docker/ dentro de ontolo-ci, y es necesario configurar las variables definidas en [Variables de entorno](#####Variables de entorno)
+El docker-compose.yml se encuentra en el directorio docker/ dentro de ontolo-ci, y es necesario configurar las variables [definidas](#Anexos) en 
+[Variables de entorno](##### Variables de entorno)
 ##### Despliegue
 Para desplegar el entorno únicamente es necesario tener la máquina virtual de docker arrancada, situarse en el directorio docker/ dentro de ontolo-ci, y ejecutar los comandos:
 ```
