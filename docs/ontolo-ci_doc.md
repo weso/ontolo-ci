@@ -331,9 +331,13 @@ Para desplegar ontolo-ci por linea de comandos es necesario tener instalado:
 * [Maven](https://maven.apache.org/)
 ##### Variables de entorno
 Para realizar el despliegue por linea de comandos es necesario configurar tres variables de entorno previamente:
-* ONTOLOCI_GITHUB_APP_ID: Se corresponde con el valor del ID nuestra GitHub App.
-* ONTOLOCI_GITHUB_KEY_PATH: Se corresponde con la ruta al fichero que contiene la clave privada (en formato pkcs8) de nuestra GitHub App y que hemos descargado previamente.
-* REACT_APP_ONTOLOCI_CLIENT_ID: Se corresponde con el valor del CLIENT_ID nuestra GitHub App.
+
+| Variable de entorno        | Valor   |
+|:-----------:|:---------------------|
+| ONTOLOCI_GITHUB_APP_ID        |  Establecer el valor del ID de nuestra GitHub App|
+| ONTOLOCI_GITHUB_KEY_PATH        | Establecer la ruta al fichero que contiene la clave privada (en formato pkcs8) de nuestra GitHub App  |
+| REACT_APP_ONTOLOCI_CLIENT_ID        |   Establecer el valor del CLIENT_ID de nuestra GitHub App   |
+
 ##### Despliegue Backend
 Una vez configuradas las variables de entorni podemos desplegar el backend mediante el comando:
 ```
