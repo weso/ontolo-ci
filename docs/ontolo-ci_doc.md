@@ -438,7 +438,7 @@ Se trata de un json que contiene una lista de objetos donde cada objeto especifi
 #### Creación del WebHook
 Por último, es necesario configurar un WebHook dentro de nuestro repositorio. Los Webhooks son la manera que tenemos de vincular nuestros repositorios con nuestras aplicaciones web. De tal manera que cuando se produce un evento sobre nuestro repositorio se notifica a nuestro WebHook y éste recibe la solicitud. En nuestro caso, vamos a configurar un Webhook en nuestro repositorio para que se comunique con ontolo-ci. Para ello vamos al apartado de WebHooks dentro de los ajustes del repositorio y pulsamos en el botón añadir WebHook:
 
-**FOTO**
+![](./images/ontolo-ci-webhook.PNG)
 
 La configuración es la siguiente:
 | Campo        | Descripción          |
@@ -449,6 +449,6 @@ La configuración es la siguiente:
 | Eventos | Enviar todo |
 
 
-**FOTO**
+![](./images/ontolo-ci-webhook-example.PNG)
 
 ## Glossary
