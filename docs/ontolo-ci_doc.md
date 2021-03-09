@@ -306,7 +306,7 @@ A continuación, pulsamos en el botón de crear una nueva GitHub App y se nos ab
 | Webhook      | En el apartado de Webhook lo desactivamos desmarcando el check que viene por defecto|
 | Permisos de repositorios      | **MUY IMPORTANTE:** Dar permiso de lectura y escritura para la opción Checks |
 
-A continuación, le damos a crear y se nos mostrará una pantalla como la siguiente con la GitHub App creada:
+A continuación, le damos a crear y se nos mostrará una pantalla como la siguiente con la GitHub App creada. Podemos guardar los valores del ID y del Client ID ya que nos harán falta más adelante para el despliegue ( pueden consultarse siempre que se quiera https://github.com/settings/apps).
 
 ![](./images/github-app-creada.PNG)
 
@@ -315,6 +315,24 @@ Por último, es necesario generar una clave privada. Para ello bajamos al aparta
 ![](./images/github-app-key.png)
 
 Es aconsejable guardar la clave privada dentro del directorio del proyecto, especialmente si la instancia va a ser desplegada con docker, ya que tiene que ser accesible desde dentro del contenedor.
+
+#### Convertir clave privada a pkcs8 con OpenSSL
+Ontolo-ci trabaja con claves privadas en formato pkcs8, sin embargo, las claves de nuestras GitHub Apps no se encuentran en este formato, por lo que es necesario transformarlas. Una manera sencilla es mediante la herramienta gratuita [OpenSSL](https://www.openssl.org/). En caso de estar en windows podemos descargarlo de https://slproweb.com/products/Win32OpenSSL.html.
+
+Una vez tengamos OpenSSL en nuestro equipo podemos transformar nuestra clave privada con el siguiente comando:
+```
+openssl pkcs8 -topk8 -in <github-app.key> -out github-app-pkcs8.key –nocrypt
+```
+
+
+#### Despliegue por linea de comandos
+Para realizar el despliegue por linea de comandos es necesario configurar tres variables de entorno previamente:
+* ONTOLOCI_GITHUB_APP_ID: Se corresponde con el valor del ID nuestra GitHub App.
+* ONTOLOCI_GITHUB_KEY_PATH: Se corresponde con la ruta al fichero que contiene la clave privada de nuestra GitHub App y que hemos descargado previamente.
+* REACT_APP_ONTOLOCI_CLIENT_ID: Se corresponde con el valor del CLIENT_ID nuestra GitHub App.
+
+
+#### Despliegue con Docker
 
 
 ### B: Integración de ontolo-ci con un repositorio de GitHub
