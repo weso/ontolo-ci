@@ -329,7 +329,12 @@ openssl pkcs8 -topk8 -in <ruta-github-app.key> -out github-app-pkcs8.key –nocr
 Para desplegar ontolo-ci por linea de comandos es necesario tener instalado:
 * [Java](https://www.java.com/es/)
 * [Maven](https://maven.apache.org/)
-* [Node.js] (https://nodejs.org/en/)
+* [Node.js](https://nodejs.org/en/)
+
+Además debermos tener el código de ontolo-ci descargado, podemos clonar el repositorio o descargar el código fuente directamente:
+```
+git clone https://github.com/weso/ontolo-ci.git
+```
 ##### Variables de entorno
 Para realizar el despliegue por linea de comandos es necesario configurar tres variables de entorno previamente:
 
@@ -358,8 +363,25 @@ npm start
 La web se encontrá disponible en http://localhost:3000
 
 #### Despliegue con Docker
+Para desplegar ontolo-ci mediante docker es necesario tener instalado:
+* [Docker](https://www.docker.com/) 
+* [Docker Compose](https://docs.docker.com/compose/)
 
-
+Además debermos tener el código de ontolo-ci descargado, podemos clonar el repositorio o descargar el código fuente directamente:
+```
+git clone https://github.com/weso/ontolo-ci.git
+```
+##### Configurar docker-compose.yml
+El docker-compose.yml se encuentra en el directorio docker/ dentro de ontolo-ci, y es necesario configurar las variables definidas en [Variables de entorno](#####Variables de entorno)
+##### Despliegue
+Para desplegar el entorno únicamente es necesario tener la máquina virtual de docker arrancada, situarse en el directorio docker/ dentro de ontolo-ci, y ejecutar los comandos:
+```
+docker-compose build
+```
+```
+docker-compose up -d
+```
+Una vez desplegado el endpoint del listener estará expuesto en  http://localhost:8090 y la web del frontend en  http://localhost:8080
 ### B: Integración de ontolo-ci con un repositorio de GitHub
 
 #### Firmar clave
