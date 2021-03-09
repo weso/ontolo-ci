@@ -49,6 +49,9 @@ public class KeyUtils {
         Instant now = Instant.now();
         PrivateKey privateKey = KeyUtils.loadPrivateKey(KEY_PATH);
 
+        if(privateKey == null)
+            return null;
+
         // Let's set the JWT Claims
         String jwt = Jwts.builder()
                 .setIssuedAt(Date.from(now))
@@ -86,7 +89,7 @@ public class KeyUtils {
             return privateKey;
 
         } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException e) {
-            e.printStackTrace();
+            LOGGER.error("Unable to load Private Key");
         }
 
         return  null;

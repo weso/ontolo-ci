@@ -142,6 +142,10 @@ public class PersistedBuildResult {
         this.status = status;
     }
 
+    public boolean isEmpty(){
+        return this.metadata != null? false:true;
+    }
+
     @Override
     public String toString() {
         return "PersistedBuildResult{" +

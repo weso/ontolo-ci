@@ -64,6 +64,8 @@ public class WorkerExecutor implements Worker {
     @Override
     public BuildResult executeBuild(Build build) {
         LOGGER.debug("Executing build: " + build);
+        if(build.getMetadata().size()<=0)
+            return null;
         // 1. Create a Hub instance
         HubImplementation ontolocyHub = new HubImplementation(repositoryProvider);
         // 2. Transform the current build to a HubBuild
