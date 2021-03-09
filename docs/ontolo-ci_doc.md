@@ -263,7 +263,7 @@ Otro aspecto muy importante a tener en cuenta es la persistencia de datos del si
 ## Tests
 Los test que se han llevado a cabo han sido principalmente test unitarios. No se han llevado a cabo test de interfaces de usuario por disponer el sistema de una interfaz muy sencilla y facilmente probable de manera no automática. A continuación, se muestra una tabla con el número de test realizados por módulo:
 
-| Module      | Number of tests       |
+| Módulo      | Número de tests       |
 |:------------|:---------------------:|
 | Listener  | 4  |
 | Hub  | 7  |
@@ -271,22 +271,45 @@ Los test que se han llevado a cabo han sido principalmente test unitarios. No se
 | API  | 4  |
 | Persistence  | 4  |
 
-## Requirements analysis
-### Functional requirements
+## Análisis de requisistos
 
-### Non-functional requirements
-
-
-
-## Annexes
-
-### A: Integración de sistema de integración continua con GitHub
-
-### B: System manual
-
-#### Defining a webhook in the source repo
+| Código        | Descripción          |
+|:-----------:|:---------------------|
+| R1         | El sistemá realizará la la validación de los casos de prueba ante un evento de cambios en el repositorio de la ontología |
+| R2         | El sistema escuchará eventos de tipo push |
+| R3         | El sistema escuchará eventos de tipo pull request |
+| R4         | El sistema notificará al usuario del estado en que se encuentre la ejecución de los casos de prueba |
+| R5         | El sistema notificará de los resultados de la ejecución de los test al repositorio de la ontología |
+| R6         | El sistemá publicará los resultados de la ejecución de los test en su propia web |
 
 
-### Launching the app with Docker
+
+## Anexos
+En las siguientes secciones proporcionaremos varios documentos que brindan información adicional sobre el despliegue y uso de ontolo-ci.
+
+### A: Despliegue de una instancia de ontolo-ci
+Antes de desplegar nuestra propia instancia de ontolo-ci es necesario disponer de una GitHub App asociada a nuestra instancia.
+Las [GitHub apps](https://docs.github.com/es/developers/apps/about-apps#:~:text=Las%20apps%20en%20GitHub%20te,vender%20apps%20en%20Mercado%20GitHub.&text=El%20usuario%20debe%20tener%20permisos,archivo%20de%20flujo%20de%20trabajo.) son la forma oficioal y recomendada de integrar aplicaciones con GitHub, ya que ofrecen permisos mucho más granulares para acceder a los datos y para comunicarse con los repositorios.
+Una vez tengamos nuestra GitHub App creada, podremos usar hacer uso de nuestra instancia de ontolo-ci en cualquier repositorio de GitHub de un usuario/organización que haya instalado nuestra GitHub App previamente.
+
+#### Creación de una GitHub App
+En primer lugar nos dirigimos a los ajustes de desarrollador de nuestra cuenta de GitHub https://github.com/settings/apps. 
+
+*FOTO*
+
+A continuación, pulsamos en el botón de crear una nueva GitHub App y se nos abrirá una ventana con un formulario. Los campos del formulario que necesitamos rellenar obligatoriamente son los siguientes:
+
+| Campo        | Descripción          |
+|:-----------:|:---------------------|
+| Nombre de la app        | Establecemos el nombre de nuestra GitHub App |
+| URL de la página principal     | Aquí podemos poner la que queramos pero es obligatorio poner una. Podemos poner la pública por defecto https://github.com/apps/<NOMBRE_DE_LA_APP> |
+| Webhook      | En el apartado de Webhook lo desactivamos desmarcando el check que viene por defecto|
+| Permisos de repositorios      | **MUY IMPORTANTE:** Dar permiso de lectura y escritura para la opción Checks |
+
+
+### B: Integración de ontolo-ci con un repositorio de GitHub
+
+#### Firmar clave
+
 
 ## Glossary
