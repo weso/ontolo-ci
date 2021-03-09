@@ -133,27 +133,36 @@ En este nivel detallaremos cada uno de los bloques del sistema identificados ant
 
 ![](./images/ontolo-ci-hub.png)
 
-## Runtime View
+## Vista en tiempo de ejecución
 En esta sección mostraremos un ejemplo de la vista del sistema en tiempo de ejecución, donde escucheros los cambios de un repositorio de GitHub y se realizará la validación de los casos de prueba oportunos.
 ### Modificación de la ontología en el repositorio de GitHub
 El siguiente diagrama ilustra la secuencia de eventos que ocurren cuando se produce un cambio sobre la ontología de un repositorio de GitHub que use ontolo-ci.
 
 ![](./images/ontolo-ci-runTimeView.png)
 
-## Deployment View
+## Vista de despliegue
 La siguiente imagen describe la vista de despliegue del sistema. Se han identificado los siguientes elementos:
 * Public Ontology Repo: Representan los repositorios de github que continen las ontologías y los test y que se encuentran conectados a github mediante el sistema de WebHooks de GitHub.
 * Ontolo-ci: Este sistema será desplegado mediante docker. Por una parte dispondrá de una API rest escuchando en el puerto 8090 y por otro lado dispondrá de un cliente web en el puerto 8080.
 * 
 ![](./images/ontolo-ci-main-schema.png)
-## Technical and Cross-cutting Concepts
 
-### Technologies used
+## Conceptos técnicos y transversales
+En esta sección especificaremos algunos de los conceptos técnicos del proyecto.
 
+### Tecnologías usadas
+Las tecnologías utilizadas en el desarrollo del sistema se enuncian a continuación:
 
-### Style guides
+#### Java
+Java es un lenguaje de programación y una plataforma informática comercializada por primera vez en 1995 por Sun Microsystems. Java es rápido, seguro, fiable y orientado a objetos. Además, dispone de una gran comunidad y librerías. 
 
-### Other dependencies
+Uno de los motivos principales por el que se decidió usar java es debido a la existencia de un validador de Shape Expressions escrito en Scala y totalmente compatible con Java.
+#### Springboot
+Spring es un framework para el desarrollo de aplicaciones web y contenedor de inversión de control, de código abierto para la plataforma Java
+Spring Boot permite compilar nuestras aplicaciones Web como un archivo . jar que podemos ejecutar como una aplicación Java normal (como alternativa a un archivo . war , que desplegaríamos en un servidor de aplicaciones como Tomcat).
+
+Springboot es una de los frameworks más utilizados actualmente para la construcción de API REST en java. Es por eso que hemos decidido utilizarlo en el proyecto.
+
 
 
 ## Design Decisions
