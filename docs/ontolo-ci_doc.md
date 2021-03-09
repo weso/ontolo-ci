@@ -329,6 +329,7 @@ openssl pkcs8 -topk8 -in <ruta-github-app.key> -out github-app-pkcs8.key –nocr
 Para desplegar ontolo-ci por linea de comandos es necesario tener instalado:
 * [Java](https://www.java.com/es/)
 * [Maven](https://maven.apache.org/)
+* [Node.js] (https://nodejs.org/en/)
 ##### Variables de entorno
 Para realizar el despliegue por linea de comandos es necesario configurar tres variables de entorno previamente:
 
@@ -339,10 +340,22 @@ Para realizar el despliegue por linea de comandos es necesario configurar tres v
 | REACT_APP_ONTOLOCI_CLIENT_ID        |   Establecer el valor del CLIENT_ID de nuestra GitHub App   |
 
 ##### Despliegue Backend
-Una vez configuradas las variables de entorni podemos desplegar el backend mediante el comando:
+Una vez configuradas las variables de entorno podemos desplegar el backend situándonos en el directorio ontolo-ci y ejecutando el comando:
 ```
 mvn spring-boot:run
 ```
+El endpoint del listener se encontrará en disponible en http://localhost:8090
+
+##### Despliegue Frontend
+Para desplegar el frontend deberemos situarnos en el directorio ontolo-ci-web e instalar las dependencias necesarias mediante el comando:
+```
+npm i
+```
+A continuación, podremos desplegarlo mediante el comando:
+```
+npm start
+```
+La web se encontrá disponible en http://localhost:3000
 
 #### Despliegue con Docker
 
