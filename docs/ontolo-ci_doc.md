@@ -142,9 +142,9 @@ El siguiente diagrama ilustra la secuencia de eventos que ocurren cuando se prod
 
 ## Vista de despliegue
 La siguiente imagen describe la vista de despliegue del sistema. Se han identificado los siguientes elementos:
-* Public Ontology Repo: Representan los repositorios de github que continen las ontologías y los test y que se encuentran conectados a github mediante el sistema de WebHooks de GitHub.
+* Public Ontology Repo: Representan los repositorios de github que contienen las ontologías y los test y que se encuentran conectados a GitGub mediante el sistema de WebHooks de GitHub.
 * Ontolo-ci: Este sistema será desplegado mediante docker. Por una parte dispondrá de una API rest escuchando en el puerto 8090 y por otro lado dispondrá de un cliente web en el puerto 8080.
-* 
+
 ![](./images/ontolo-ci-main-schema.png)
 
 ## Conceptos técnicos y transversales
@@ -295,7 +295,7 @@ Una vez tengamos nuestra GitHub App creada, podremos usar hacer uso de nuestra i
 #### Creación de una GitHub App
 En primer lugar nos dirigimos a los ajustes de desarrollador de nuestra cuenta de GitHub https://github.com/settings/apps. 
 
-**FOTO**
+![](./images/github-apps.PNG)
 
 A continuación, pulsamos en el botón de crear una nueva GitHub App y se nos abrirá una ventana con un formulario. Los campos del formulario que necesitamos rellenar obligatoriamente son los siguientes:
 
@@ -307,9 +307,13 @@ A continuación, pulsamos en el botón de crear una nueva GitHub App y se nos ab
 | Permisos de repositorios      | **MUY IMPORTANTE:** Dar permiso de lectura y escritura para la opción Checks |
 
 A continuación, le damos a crear y se nos mostrará una pantalla como la siguiente con la GitHub App creada:
-**FOTO**
+
+![](./images/github-app-creada.PNG)
+
 Por último, es necesario generar una clave privada. Para ello bajamos al apartado Private Keys y generamos una nueva.
-**FOTO**
+
+![](./images/github-app-key.png)
+
 Es aconsejable guardar la clave privada dentro del directorio del proyecto, especialmente si la instancia va a ser desplegada con docker, ya que tiene que ser accesible desde dentro del contenedor.
 
 
