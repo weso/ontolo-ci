@@ -257,6 +257,7 @@ En esta sección describiremos algunos de los riesgos asociados a este sistema y
 
 Uno de los riesgos que presenta el sistema es el hecho de que cambie el API de los sistemas de control de versiones, de tal manera que las llamadas que se realizan desde ontolo-ci para comunicarse con ellos cambien y el sistema deje de funcionar. La solución es sencilla, sólo habría que reemplazar las llamadas por las nuevas, pero es un riesgo a tener en cuenta ya que el sistema dejaría de funcionar hasta que se solventase el problema.
 
+Otro aspecto muy importante a tener en cuenta es la persistencia de datos del sistema. Ontolo-ci está pensado para trabajar con bases de datos (genarlmente documentales) que se encarguen de llevar a cabo esta labor. Sin embargo, por defecto, ya que no se trata de un sistema crítcio y una ejecución no depende de la anterior, ofrece una base de datos cargada en memoria. En caso de querer trabajar con otra base de datos, ontolo-ci permite la extensión de manera sencilla.
 
 
 ## Tests
@@ -267,6 +268,8 @@ Los test que se han llevado a cabo han sido principalmente test unitarios. No se
 | Listener  | 4  |
 | Hub  | 7  |
 | Worker  | 13  |
+| API  | 4  |
+| Persistence  | 4  |
 
 ## Requirements analysis
 ### Functional requirements
