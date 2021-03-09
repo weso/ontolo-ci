@@ -136,10 +136,16 @@ En este nivel detallaremos cada uno de los bloques del sistema identificados ant
 ## Runtime View
 En esta sección mostraremos un ejemplo de la vista del sistema en tiempo de ejecución, donde escucheros los cambios de un repositorio de GitHub y se realizará la validación de los casos de prueba oportunos.
 ### Modificación de la ontología en el repositorio de GitHub
-![](./images/runtTimeView.png)
+El siguiente diagrama ilustra la secuencia de eventos que ocurren cuando se produce un cambio sobre la ontología de un repositorio de GitHub que use ontolo-ci.
+
+![](./images/ontolo-ci-runTimeView.png)
 
 ## Deployment View
-
+La siguiente imagen describe la vista de despliegue del sistema. Se han identificado los siguientes elementos:
+* Public Ontology Repo: Representan los repositorios de github que continen las ontologías y los test y que se encuentran conectados a github mediante el sistema de WebHooks de GitHub.
+* Ontolo-ci: Este sistema será desplegado mediante docker. Por una parte dispondrá de una API rest escuchando en el puerto 8090 y por otro lado dispondrá de un cliente web en el puerto 8080.
+* 
+![](./images/ontolo-ci-main-schema.png)
 ## Technical and Cross-cutting Concepts
 
 ### Technologies used
