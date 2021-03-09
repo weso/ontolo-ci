@@ -302,7 +302,8 @@ A continuación, pulsamos en el botón de crear una nueva GitHub App y se nos ab
 | Campo        | Descripción          |
 |:-----------:|:---------------------|
 | Nombre de la app        | Establecemos el nombre de nuestra GitHub App |
-| URL de la página principal     | Aquí podemos poner la que queramos pero es obligatorio poner una. Podemos poner la pública por defecto https://github.com/apps/<NOMBRE_DE_LA_APP> |
+| URL de la página principal     | Aquí podemos poner la que queramos pero es obligatorio poner una. Podemos poner la pública por defecto https://github.com/apps/<NOMBRE_DE_LA_GITHUB_APP> |
+| CallBack URL | https://github.com/apps/<NOMBRE_DE_LA_GITHUB_APP>/installations/new |
 | Webhook      | En el apartado de Webhook lo desactivamos desmarcando el check que viene por defecto|
 | Permisos de repositorios      | **MUY IMPORTANTE:** Dar permiso de lectura y escritura para la opción Checks |
 
@@ -323,7 +324,6 @@ Una vez tengamos OpenSSL en nuestro equipo podemos transformar nuestra clave pri
 ```
 openssl pkcs8 -topk8 -in <ruta-github-app.key> -out github-app-pkcs8.key –nocrypt
 ```
-
 
 #### Despliegue por linea de comandos
 Para desplegar ontolo-ci por linea de comandos es necesario tener instalado:
@@ -383,9 +383,61 @@ docker-compose build
 docker-compose up -d
 ```
 Una vez desplegado el endpoint del listener estará expuesto en  http://localhost:8090 y la web del frontend en  http://localhost:8080
-### B: Integración de ontolo-ci con un repositorio de GitHub
 
-#### Firmar clave
+### B: Integración de ontolo-ci con un repositorio de GitHub
+#### Instalación GitHub App para usuarios/organizaciones
+Para comenzar a usar nuestra instancia de ontolo-ci en primer lugar deberemos instalar la GitHub App, que hemos creado, en nuestro usuario/organización de GitHub. Para ello, si tenemos desplegado ontolo-ci podemos ir a la web y pulsar en el apartado Get Started del menú superior, que nos llevará directamente a la página de instalación. Podemos especificar el repositorio concreto donde queramos utilizar ontolo-ci o todos los repositorios.
+#### Configuración .oci.yml
+El repositorio en el que integremos ontolo-ci debe disponer de un fichero llamado .oci.yml sobre la raiz del repositorio. Este fichero debe tener el siguiente aspecto:
+```
+manifestPath: manifest.json
+ontologyFolder: src
+testFolder: test
+```
+En este fichero debemos apareceer reflejados los siguientes campos:
+
+| Campo        | Descripción          |
+|:-----------:|:---------------------|
+| manifestPath | Ruta donde se encuentre el manifest.json en el repositorio (se definirá más adelante su contenido) |
+| ontologyFolder | Ruta al directorio de la ontología |
+| testFolder | Ruta al directorio de los tests |
+
+#### Creación del manifest.json
+El manifest.json es el fichero donde se definen los distintos casos de prueba. Tiene el siguiente aspecto:
+```
+[
+ {
+    "test_name": "test that a project instance has all needed attributes",
+    "ontology": "asio-core.ttl",
+    "data": "asio-individuals.ttl",
+    "schema": "project.s",
+    "in_shape_map": "project_in.m",
+    "out_shape_map": "project_out.m"
+  },
+  {
+    "test_name": "test that a researcher instance has all needed attributes",
+    "ontology": "asio-core.ttl",
+    "data": "asio-individuals.ttl",
+    "schema": "researcher.s",
+    "in_shape_map": "researcher_in.m",
+    "out_shape_map": "researcher_out.m"
+  }
+]
+```
+Se trata de un json que contiene una lista de objetos donde cada objeto especifica un caso de prueba distinto. Los campos que posee un caso de prueba son los siguientes: (todos son obligatorios)
+
+| Campo        | Descripción          |
+|:-----------:|:---------------------|
+| test_name | Nombre del caso de prueba |
+| ontology | Ruta relativa a la ontología dentro del directorio de la ontología especificado en el campo ontologyFolder del .oci.yml |
+| data | Ruta relativa al fichero que contiene las instancias de prueba ( en formato ttl) dentro del directorio de los test especificado en el campo testFolder del .oci.yml |
+| schema | Ruta relativa al fichero de schemas, donde se definen las Shape Expressions, dentro del directorio de los test especificado en el campo testFolder del .oci.yml |
+| in_shape_map | Ruta relativa al shape map de entrada dentro del directorio de los test especificado en el campo testFolder del .oci.yml |
+| out_shape_map | Ruta relativa al shape map esperado dentro del directorio de los test especificado en el campo testFolder del .oci.yml |
+
+#### Creación del WebHook
+Para integrar ontolo-ci en un repositorio concreto deberemos crear un 
+
 
 
 ## Glossary
