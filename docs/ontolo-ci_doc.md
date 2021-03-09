@@ -164,9 +164,93 @@ Spring Boot permite compilar nuestras aplicaciones Web como un archivo . jar que
 Springboot es una de los frameworks más utilizados actualmente para la construcción de API REST en java. Es por eso que hemos decidido utilizarlo en el proyecto.
 
 
+## Decisiones de Diseño
+En esta sección enumeraremos algunas de las decisiones de diseño tomadas durante la implementación del sistema.
 
-## Design Decisions
-singleton, adapter...
+### Patrón Adapter: Cambiar la implementación del Sistema de control de versiones
+Uno de los objetivos iniciales era la felxibilidad, de manera que fuese posible extender de manera sencilla la implementación del módulo que se comunica con los sitemas de control de versiones (el hub) para abarcar nuevos sistemas.
+Una de las posibles soluciones es enviarle al Hub el tipo de repositorio con el que nos vamos a comunicar y mediante una serie de ifs anidados comprobar de que tipo se trata:
+
+```java
+ public HubImplementation(String repositoryType) {
+
+       if(repositoryType.equals("GITHUB")){
+         this.repositoryProvider = new GitHubRepositoryProvider();
+       }else if(repositoryType.equals("GITLAB")){
+        this.repositoryProvider = new GitLabRepositoryProvider();
+       }
+       ...
+
+    }
+```
+Sin embargo esta solución es bastante precaria, de modo que se decidió por definir una interfaz común a la que deberían adaptarse cada uno de los sistemas de control de versiones que quisiéramos utilizar:
+
+```java
+/**
+ * This interface sets the contract for all the repository providers possible implementations
+ * @author Pablo Menéndez
+ */
+public interface RepositoryProvider {
+
+    /**
+     * Gets a collection of test cases from a specific commit of a repository provider.
+     *
+     * @param owner                 of the repository
+     * @param repo                  name of the repository
+     * @param commit                sha of the commit
+     *
+     * @return test cases
+     * @throws IOException
+     */
+    Collection<HubTestCase> getTestCases(
+            final String owner,
+            final String repo,
+            final String commit
+    ) throws Exception;
+
+
+    /**
+     * Creates a checkrun for a specific commit of a repository
+     *
+     * @param owner     of the repository
+     * @param repo      name of the repository
+     * @param commit    sha of the commit
+     *
+     * @return  id of the created checkrun
+     * @throws IOException
+     */
+    String createCheckRun(
+            final String owner,
+            final String repo,
+            final String commit) throws IOException;
+
+    /**
+     * Updates the checkrun status for a specific checkRunId of a repository
+     *
+     * @param checkRunId            id of the checkRun
+     * @param owner                 of the repository
+     * @param repo                  name of the repository
+     * @param conclusion            new status of the checkrun
+     * @param output                message
+     *
+     * @return  info of the updated checkrun
+     * @throws IOException
+     */
+    String updateCheckRun(
+            final String checkRunId,
+            final String owner,
+            final String repo,
+            final String conclusion,
+            final String output) throws IOException;
+}
+```
+De tal forma que ahora la implementación del Hub quedaría de la siguiente forma:
+
+```java
+ public HubImplementation(RepositoryProvider repositoryProvider) {
+      this.repositoryProvider = repositoryProvider;
+    }
+```
 
 ## Risks and Technical Debts
 
