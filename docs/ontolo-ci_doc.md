@@ -133,8 +133,10 @@ En este nivel detallaremos cada uno de los bloques del sistema identificados ant
 
 ![](./images/ontolo-ci-hub.png)
 
-
 ## Runtime View
+En esta sección mostraremos un ejemplo de la vista del sistema en tiempo de ejecución, donde escucheros los cambios de un repositorio de GitHub y se realizará la validación de los casos de prueba oportunos.
+### Modificación de la ontología en el repositorio de GitHub
+![](./images/runtTimeView.png)
 
 ## Deployment View
 
