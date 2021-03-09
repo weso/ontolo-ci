@@ -295,7 +295,7 @@ Una vez tengamos nuestra GitHub App creada, podremos usar hacer uso de nuestra i
 #### Creación de una GitHub App
 En primer lugar nos dirigimos a los ajustes de desarrollador de nuestra cuenta de GitHub https://github.com/settings/apps. 
 
-*FOTO*
+**FOTO**
 
 A continuación, pulsamos en el botón de crear una nueva GitHub App y se nos abrirá una ventana con un formulario. Los campos del formulario que necesitamos rellenar obligatoriamente son los siguientes:
 
@@ -305,6 +305,12 @@ A continuación, pulsamos en el botón de crear una nueva GitHub App y se nos ab
 | URL de la página principal     | Aquí podemos poner la que queramos pero es obligatorio poner una. Podemos poner la pública por defecto https://github.com/apps/<NOMBRE_DE_LA_APP> |
 | Webhook      | En el apartado de Webhook lo desactivamos desmarcando el check que viene por defecto|
 | Permisos de repositorios      | **MUY IMPORTANTE:** Dar permiso de lectura y escritura para la opción Checks |
+
+A continuación, le damos a crear y se nos mostrará una pantalla como la siguiente con la GitHub App creada:
+**FOTO**
+Por último, es necesario generar una clave privada. Para ello bajamos al apartado Private Keys y generamos una nueva.
+**FOTO**
+Es aconsejable guardar la clave privada dentro del directorio del proyecto, especialmente si la instancia va a ser desplegada con docker, ya que tiene que ser accesible desde dentro del contenedor.
 
 
 ### B: Integración de ontolo-ci con un repositorio de GitHub
