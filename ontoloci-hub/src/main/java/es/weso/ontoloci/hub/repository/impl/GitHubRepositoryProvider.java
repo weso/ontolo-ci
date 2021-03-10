@@ -295,7 +295,8 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
      */
     private Manifest getManifest(String path)
             throws JsonMappingException, JsonProcessingException, IOException {
-        return new Manifest(Arrays.asList(jsonMapper.readValue(getGitHubData(path), ManifestEntry[].class)));
+        String data = getGitHubData(path);
+        return new Manifest(Arrays.asList(jsonMapper.readValue(data, ManifestEntry[].class)));
     }
 
 

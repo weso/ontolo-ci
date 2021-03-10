@@ -1,13 +1,24 @@
 package es.weso.ontoloci.listener;
 
 
+import es.weso.ontoloci.hub.exceptions.EmptyContentFileException;
 import es.weso.ontoloci.scheduler.SchedulerImpl;
 import es.weso.ontoloci.worker.build.Build;
+import fansi.Str;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -64,8 +75,11 @@ public class GitHubRestListener implements RepositoryRestListener{
             // We set the metadata.
             build.setMetadata(metadata);
 
-            // Instantiate the scheduler.
-            SchedulerImpl.getInstance().scheduleBuild(build);
+            // We don´t want to handle a push if it´s contained in a PR because it will be handle by the PR
+            if(!isInPullRequest(owner,repo,commit)){
+                // Instantiate the scheduler.
+                SchedulerImpl.getInstance().scheduleBuild(build);
+            }
 
     }
 
@@ -93,8 +107,8 @@ public class GitHubRestListener implements RepositoryRestListener{
             // We set the metadata.
             build.setMetadata(metadata);
 
-            // Instantiate the scheduler.
             SchedulerImpl.getInstance().scheduleBuild(build);
+
         }
     }
 
@@ -109,5 +123,29 @@ public class GitHubRestListener implements RepositoryRestListener{
         metadata.put("commitName", commitName);
         metadata.put("prNumber", prNumber);
         return metadata;
+    }
+
+
+    private boolean isInPullRequest(String owner, String repo, String commit){
+        HttpClient httpclient = HttpClients.createDefault();
+        HttpGet httpGet = new HttpGet("https://api.github.com/repos/"+owner+"/"+repo+"/commits/"+commit+"/pulls");
+        httpGet.addHeader("Accept", "application/vnd.github.groot-preview+json");
+
+        HttpResponse response = null;
+        try {
+            response = httpclient.execute(httpGet);
+            HttpEntity entity = response.getEntity();
+            if (entity != null) {
+                try (InputStream instream = entity.getContent()) {
+                    String result =  IOUtils.toString(instream, "UTF-8");
+                    if(result.startsWith("[") && result.endsWith("]") && result.length()==2){ // [] ->No PRs
+                        return false;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 }
