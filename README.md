@@ -7,7 +7,7 @@
 | Módulo         | Control efectivo de versiones de ontologías                  |
 | Tipo           | Software                                                     |
 | Objetivo       | Sistema encargado de ejecutar la integración continua de ontologías a través de shape expressions sobre Git[Hub] Flow |
-| Estado         | **80%** Todos los casos de usos de este sistema han sido implementados. Actualmente documentando manuales técnicos y no técnicos |
+| Estado         | **100%** Todos los casos de usos de este sistema han sido implementados, así como la documentación asociada. |
 
 ## HerculesCRUE's fork of onotolo-ci
 
