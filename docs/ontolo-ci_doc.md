@@ -30,11 +30,11 @@ En esta sección enumeraremos los objetivos de máxima calidad para la arquitect
 
 | Prioridad | Objetivo | Escenario |
 | ---- | ----------- | -------- |
-| 1 | Fleibilidad |  Aunque la implementación inicial del sistema funcionará a través del sistema de control de versiones GitHub, se deberá poder extender a otros sistemas de control de versiones de manera sencilla.|
+| 1 | Flexibilidad |  Aunque la implementación inicial del sistema funcionará a través del sistema de control de versiones GitHub, se deberá poder extender a otros sistemas de control de versiones de manera sencilla.|
 | 1 | Tolerancia a fallos | En caso de que falle uno de los componentes que rodean al sistema de integración continua, el sistema debe poder seguir funcionando y mantener los demás objetivos de calidad siempre que sea posible. |
 
 ### Partes interesadas (Stakeholders)
- Role/Name   | Description                   | Expectations              |
+ Role/Nombre   | Descripción                   | Expectativas              |
 | ----------- | ------------------------- | ------------------------- |
 | Expertos de dominio | Usuario que modifica el contenido de la ontología a través de la interfaz de usuario proporcionada por el servicio de publicación de ontologías. | Cuando se realiza un cambio a través de la interfaz de usuario, el contenido de las ontologías en el sistema de control de versiones debe ser coherente con estos cambios. |
 | Ingeniero de ontologías | Usuario que modifica el contenido de la ontología directamente desde el sistema de control de versiones. | Cuando se modifica la ontología sobre el sistema de control de versiones, el sistema de integración continua debe realizar una ejecución automática de los test que validan la ontología |
@@ -44,18 +44,18 @@ En esta sección enumeraremos los objetivos de máxima calidad para la arquitect
 | Restricción | Descripción                            |
 |:---------:|----------------------------------------|
 |     R1    | El sistema debe ser desarrollado bajo la licencia [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.html). |
-|     R2    | El sistema debe ser independiente de la plataforma y debe poder ejecutarse en los principales sistemas operativos  (Windows™, Linux, and Mac-OS™). |
-|     R3    | El sistema debe poder ejecutarse desde la linea de comandos |
+|     R2    | El sistema debe ser independiente de la plataforma y debe poder ejecutarse en los principales sistemas operativos(Windows™, Linux, and Mac-OS™). |
+|     R3    | El sistema debe poder ejecutarse desde la línea de comandos |
 |     R4    | El sistema de versiones de control utilizado para almacenar las ontologías estará basado en git. |
 
 ## Alcance y Contexto del Sistema
 Los distintos módulos software que componen un proyecto suelen utilizar sistemas de integración continua que permiten mantener el software continuamente testeado ejecutando los test de manera automática cada vez que se produzcan cambios sobre el software.
 
-La integración continua de software dispone de un gran ecosistema de herramientas como [Travis](https://travis-ci.com/plans) o [Circle-ci](https://circleci.com/) que nos permiten llevar a cabo dicho propósito. Sin embargo, a la hora de testear ontologías, no existe ninguna herramienta que nos permita realizar un proceso de integración continua de la misma. Es entonces cuando surge la necesidad de crear un sistema que cumnpla dicha necesidad.
+La integración continua de software dispone de un gran ecosistema de herramientas como [Travis](https://travis-ci.com/plans) o [Circle-ci](https://circleci.com/) que nos permiten llevar a cabo dicho propósito. Sin embargo, a la hora de testear ontologías, no existe ninguna herramienta que nos permita realizar un proceso de integración continua de la misma. Es entonces cuando surge la necesidad de crear un sistema que cumpla dicha necesidad.
 
 Ontolo-ci es un sistema de integración continua de ontologías inspirado en [Travis](https://travis-ci.com/plans), que permite la ejecución de test para ontologías de manera automática sobre repositorios de GitHub. Las pruebas que realiza ontolo-ci sobre la ontología están basadas en test definidos mediante [Shape Expressions](https://shex.io/).
 
-## Estrategía de solución
+## Estrategia de solución
 Para construir ontolo-ci y dar solución al problema planteado anteriormente es la creación de una API rest que sea capaz de:
  * Escuchar los cambios que se produzcan sobre el repositorio de la ontología y 
  * Llevar a cabo la ejecución de los test
@@ -69,17 +69,17 @@ La vista de bloques muestra la descomposición estática del sistema en bloques 
 El siguiente diagrama muestra la descomposición estática de la construcción del sistema en bloques:
 ![](./images/ontolo-ci-bbview.png)
 
-Ahora describiremos brevemenete los elementos principales que componen esta vista.
+Ahora describiremos brevemente los elementos principales que componen esta vista.
 
 ### Sistema General de Caja Blanca
 
 #### Cajas blancas
-Los siguientes componenetes han sido encontrados:
-* listener: Este componente es el punto de entrada del subsistema que utilizarán otros sistemas externos. Para ello, ofrece una interfaz externa, denominada OnWebhook, que se encarga de recibir los datos sobre las actualizaciones de ontologías del sistema de control de versiones. Además, este componente es el encargado de crear objetos de tipo Build. Los objetos Build están presentes durante todo el ciclo de vida de ontolo-ci. Representan una ejecución de los tests sobre un estado concreto del repositorio de control de versiones. El listener es el encargado no solamente de crear estos objetos si no también de rellenarlos con la información que le llega del sistema de control de versiones.
-* scheduler: Este componente es el encargado de decidir en que momento se deben ejecutar las builds. De tal manera que si le llegan muchas builds sea capaz de gestionar el orden en que estas se han de ejecutar.
-* worker: Este componente es el encargado de llevar a cabo la ejecución de los test una vez la build ha sido rellenada con lost test oportunos.
+Los siguientes componentes han sido encontrados:
+* listener: Este componente es el punto de entrada del subsistema que utilizarán otros sistemas externos. Para ello, ofrece una interfaz externa, denominada OnWebhook, que se encarga de recibir los datos sobre las actualizaciones de ontologías del sistema de control de versiones. Además, este componente es el encargado de crear objetos de tipo Build. Los objetos Build están presentes durante todo el ciclo de vida de ontolo-ci. Representan una ejecución de los tests sobre un estado concreto del repositorio de control de versiones. El listener es el encargado no solamente de crear estos objetos sino también de rellenarlos con la información que le llega del sistema de control de versiones.
+* scheduler: Este componente es el encargado de decidir en qué momento se deben ejecutar las builds. De tal manera que si le llegan muchas builds sea capaz de gestionar el orden en que estas se han de ejecutar.
+* worker: Este componente es el encargado de llevar a cabo la ejecución de los test una vez la build ha sido rellenada con los test oportunos.
 * hub: El hub es el componente que se comunica con el sistema de control de versiones. Es el encargado de obtener los ficheros que se corresponden con la nueva build, así como de postear los resultados de los test en el sistema de control de versiones.
-* api: La api expone un endpoint para ser consumido por la web. Devuelve los datos de las builds que ya ha finalizado.
+* api: El api expone un endpoint para ser consumido por la web. Devuelve los datos de las builds que ya ha finalizado.
 * web: Este componente representa una página web donde se pueden ver los resultados de todas las builds que se han llevado a cabo.
 
 ### Nivel 2
@@ -102,14 +102,14 @@ En este nivel detallaremos cada uno de los bloques del sistema identificados ant
 ![](./images/ontolo-ci-api.png)
 #### Worker
 * Worker: Define un contrato para el scheduler.
-* WorkerExecutor: Implementa la interfaz Worker. Es el encargado de comunicarse con el Hub para obtener los casos de prueba y para actualizar la información del repositorio una vez se ha llevado a cabo la validación, la cúal se delega en el worker secuencial.
+* WorkerExecutor: Implementa la interfaz Worker. Es el encargado de comunicarse con el Hub para obtener los casos de prueba y para actualizar la información del repositorio una vez se ha llevado a cabo la validación, la cual se delega en el worker secuencial.
 * WorkerSequential: Es el encargado de llevar a cabo la validación de los casos de prueba de una build.
 
 ![](./images/ontolo-ci-worker-1.png)
 
 * Build: Entidad que representa los casos de prueba a ejecutar de un repositorio concreto. Cada build tiene un identificador único, una colección de casos de prueba y una serie de metadatos. En los metadatos se encuentra toda la información relativa al repositorio donde se ha producido un cambio y donde se encuentran los casos de prueba.
 * TestCase: Entidad que representa un caso de prueba. Cada caso de prueba está formado por: nombre, ontología, instancias, schema, shape map de entrada y shape map esperado.
-* BuildResult: Entidad que representa los casos de prueba ejecutados de un repositorio concreto. Se encuentra formado por un identificador único, una colección de resultados de casos de prueba y una serie de metadatos. Entre los metadatos, además de los que contenía la build previamente, disponemos del tiempo de ejecución total de la build y shapeMaps resultantes y esperados. Por último, dispone de un estado que representa representa el estado de ejecución en el que se encuentra.
+* BuildResult: Entidad que representa los casos de prueba ejecutados de un repositorio concreto. Se encuentra formado por un identificador único, una colección de resultados de casos de prueba y una serie de metadatos. Entre los metadatos, además de los que contenía la build previamente, disponemos del tiempo de ejecución total de la build y shapeMaps resultantes y esperados. Por último, dispone de un estado que representa el estado de ejecución en el que se encuentra.
 * BuildResultStatus: Enumerado que define los distintos estados que puede atravesar una BuildResult.
 * TestCaseResult: Entidad que representa el resultado de un caso de prueba tras su validación. Dispone de una serie de metadatos donde se almacenan los tiempos de ejecución. Posee un estado que representa el estado de ejecución en el que se encuentra.
 * TestCaseResultStatus: Enumerado que define los distintos estados que puede atravesar una TestCaseResult.
@@ -126,7 +126,7 @@ En este nivel detallaremos cada uno de los bloques del sistema identificados ant
 * RepositoryProvider: Define una interfaz para cada una de las implementaciones concretas de sistemas de control de versiones, como por ejemplo GitHub.
 * GitHubRepositoryProvider: Implementa la interfaz RepositoryProvider. Se encarga de realizar la comunicación entre el Hub y GitHub.
 * HubBuild: Representa una build (definida anteriormente) adaptada al dominio del Hub.
-* HubTestCase: Representa una caso de prueba (definido anteriormente) adaptada al dominio del Hub.
+* HubTestCase: Representa un caso de prueba (definido anteriormente) adaptada al dominio del Hub.
 * Manifest: Entidad que representa el objeto manifest.json en el que se definen los casos de prueba.
 * ManifestEntry: Entidad que representa cada uno de los casos de prueba definidos dentro del manifest.json.
 * RepositoryConfiguration: Representa el fichero oci.yml donde se establece la configuración del repositorio que desee usar ontolo-ci.
@@ -134,7 +134,7 @@ En este nivel detallaremos cada uno de los bloques del sistema identificados ant
 ![](./images/ontolo-ci-hub.png)
 
 ## Vista en tiempo de ejecución
-En esta sección mostraremos un ejemplo de la vista del sistema en tiempo de ejecución, donde escucheros los cambios de un repositorio de GitHub y se realizará la validación de los casos de prueba oportunos.
+En esta sección mostraremos un ejemplo de la vista del sistema en tiempo de ejecución, donde escucharemos los cambios de un repositorio de GitHub y se realizará la validación de los casos de prueba oportunos.
 ### Modificación de la ontología en el repositorio de GitHub
 El siguiente diagrama ilustra la secuencia de eventos que ocurren cuando se produce un cambio sobre la ontología de un repositorio de GitHub que use ontolo-ci.
 
@@ -142,8 +142,8 @@ El siguiente diagrama ilustra la secuencia de eventos que ocurren cuando se prod
 
 ## Vista de despliegue
 La siguiente imagen describe la vista de despliegue del sistema. Se han identificado los siguientes elementos:
-* Public Ontology Repo: Representan los repositorios de github que contienen las ontologías y los test y que se encuentran conectados a GitGub mediante el sistema de WebHooks de GitHub.
-* Ontolo-ci: Este sistema será desplegado mediante docker. Por una parte dispondrá de una API rest escuchando en el puerto 8090 y por otro lado dispondrá de un cliente web en el puerto 8080.
+* Public Ontology Repo: Representan los repositorios de GitHub que contienen las ontologías y los test y que se encuentran conectados a GitHub mediante el sistema de WebHooks de GitHub.
+* Ontolo-ci: Este sistema será desplegado mediante docker. Por una parte, dispondrá de una API rest escuchando en el puerto 8090 y por otro lado dispondrá de un cliente web en el puerto 8080.
 
 ![](./images/ontolo-ci-main-schema.png)
 
@@ -168,7 +168,7 @@ Springboot es una de los frameworks más utilizados actualmente para la construc
 En esta sección enumeraremos algunas de las decisiones de diseño tomadas durante la implementación del sistema.
 
 ### Patrón Adapter: Cambiar la implementación del Sistema de control de versiones
-Uno de los objetivos iniciales era la felxibilidad, de manera que fuese posible extender de manera sencilla la implementación del módulo que se comunica con los sitemas de control de versiones (el hub) para abarcar nuevos sistemas.
+Uno de los objetivos iniciales era la flexibilidad, de manera que fuese posible extender de manera sencilla la implementación del módulo que se comunica con los sistemas de control de versiones (el hub) para abarcar nuevos sistemas.
 Una de las posibles soluciones es enviarle al Hub el tipo de repositorio con el que nos vamos a comunicar y mediante una serie de ifs anidados comprobar de que tipo se trata:
 
 ```java
@@ -257,11 +257,11 @@ En esta sección describiremos algunos de los riesgos asociados a este sistema y
 
 Uno de los riesgos que presenta el sistema es el hecho de que cambie el API de los sistemas de control de versiones, de tal manera que las llamadas que se realizan desde ontolo-ci para comunicarse con ellos cambien y el sistema deje de funcionar. La solución es sencilla, sólo habría que reemplazar las llamadas por las nuevas, pero es un riesgo a tener en cuenta ya que el sistema dejaría de funcionar hasta que se solventase el problema.
 
-Otro aspecto muy importante a tener en cuenta es la persistencia de datos del sistema. Ontolo-ci está pensado para trabajar con bases de datos (genarlmente documentales) que se encarguen de llevar a cabo esta labor. Sin embargo, por defecto, ya que no se trata de un sistema crítcio y una ejecución no depende de la anterior, ofrece una base de datos cargada en memoria. En caso de querer trabajar con otra base de datos, ontolo-ci permite la extensión de manera sencilla.
+Otro aspecto muy importante a tener en cuenta es la persistencia de datos del sistema. Ontolo-ci está pensado para trabajar con bases de datos (generalmente documentales) que se encarguen de llevar a cabo esta labor. Sin embargo, por defecto, ya que no se trata de un sistema crítico y una ejecución no depende de la anterior, ofrece una base de datos cargada en memoria. En caso de querer trabajar con otra base de datos, ontolo-ci permite la extensión de manera sencilla.
 
 
 ## Tests
-Los test que se han llevado a cabo han sido principalmente test unitarios. No se han llevado a cabo test de interfaces de usuario por disponer el sistema de una interfaz muy sencilla y facilmente probable de manera no automática. A continuación, se muestra una tabla con el número de test realizados por módulo:
+Los test que se han llevado a cabo han sido principalmente test unitarios. No se han llevado a cabo test de interfaces de usuario por disponer el sistema de una interfaz muy sencilla y fácilmente probable de manera no automática. A continuación, se muestra una tabla con el número de test realizados por módulo:
 
 | Módulo      | Número de tests       |
 |:------------|:---------------------:|
@@ -275,12 +275,12 @@ Los test que se han llevado a cabo han sido principalmente test unitarios. No se
 
 | Código        | Descripción          |
 |:-----------:|:---------------------|
-| R1         | El sistemá realizará la la validación de los casos de prueba ante un evento de cambios en el repositorio de la ontología |
+| R1         | El sistema realizará la validación de los casos de prueba ante un evento de cambios en el repositorio de la ontología |
 | R2         | El sistema escuchará eventos de tipo push |
 | R3         | El sistema escuchará eventos de tipo pull request |
 | R4         | El sistema notificará al usuario del estado en que se encuentre la ejecución de los casos de prueba |
 | R5         | El sistema notificará de los resultados de la ejecución de los test al repositorio de la ontología |
-| R6         | El sistemá publicará los resultados de la ejecución de los test en su propia web |
+| R6         | El sistema publicará los resultados de la ejecución de los test en su propia web |
 
 
 
@@ -302,12 +302,12 @@ A continuación, pulsamos en el botón de crear una nueva GitHub App y se nos ab
 | Campo        | Descripción          |
 |:-----------:|:---------------------|
 | Nombre de la app        | Establecemos el nombre de nuestra GitHub App |
-| URL de la página principal     | Aquí podemos poner la que queramos pero es obligatorio poner una. Podemos poner la pública por defecto https://github.com/apps/<NOMBRE_DE_LA_GITHUB_APP> |
+| URL de la página principal     | Aquí podemos poner la que queramos, pero es obligatorio poner una. Podemos poner la pública por defecto https://github.com/apps/<NOMBRE_DE_LA_GITHUB_APP> |
 | CallBack URL | https://github.com/apps/<NOMBRE_DE_LA_GITHUB_APP>/installations/new |
 | Webhook      | En el apartado de Webhook lo desactivamos desmarcando el check que viene por defecto|
 | Permisos de repositorios      | **MUY IMPORTANTE:** Dar permiso de lectura y escritura para la opción Checks |
 
-A continuación, le damos a crear y se nos mostrará una pantalla como la siguiente con la GitHub App creada. Podemos guardar los valores del ID y del Client ID ya que nos harán falta más adelante para el despliegue ( pueden consultarse siempre que se quiera https://github.com/settings/apps).
+A continuación, le damos a crear y se nos mostrará una pantalla como la siguiente con la GitHub App creada. Podemos guardar los valores del ID y del Client ID ya que nos harán falta más adelante para el despliegue (pueden consultarse siempre que se quiera https://github.com/settings/apps).
 
 ![](./images/github-app-creada.PNG)
 
@@ -325,18 +325,18 @@ Una vez tengamos OpenSSL en nuestro equipo podemos transformar nuestra clave pri
 openssl pkcs8 -topk8 -in <ruta-github-app.key> -out github-app-pkcs8.key –nocrypt
 ```
 
-#### Despliegue por linea de comandos
-Para desplegar ontolo-ci por linea de comandos es necesario tener instalado:
+#### Despliegue por línea de comandos
+Para desplegar ontolo-ci por línea de comandos es necesario tener instalado:
 * [Java](https://www.java.com/es/)
 * [Maven](https://maven.apache.org/)
 * [Node.js](https://nodejs.org/en/)
 
-Además debermos tener el código de ontolo-ci descargado, podemos clonar el repositorio o descargar el código fuente directamente:
+Además, debemos tener el código de ontolo-ci descargado, podemos clonar el repositorio o descargar el código fuente directamente:
 ```
 git clone https://github.com/weso/ontolo-ci.git
 ```
 ##### Variables de entorno
-Para realizar el despliegue por linea de comandos es necesario configurar tres variables de entorno previamente:
+Para realizar el despliegue por línea de comandos es necesario configurar tres variables de entorno previamente:
 
 | Variable de entorno        | Valor   |
 |:-----------:|:---------------------|
@@ -360,14 +360,14 @@ A continuación, podremos desplegarlo mediante el comando:
 ```
 npm start
 ```
-La web se encontrá disponible en http://localhost:3000
+La web se encontrará disponible en http://localhost:3000
 
 #### Despliegue con Docker
 Para desplegar ontolo-ci mediante docker es necesario tener instalado:
 * [Docker](https://www.docker.com/) 
 * [Docker Compose](https://docs.docker.com/compose/)
 
-Además debermos tener el código de ontolo-ci descargado, podemos clonar el repositorio o descargar el código fuente directamente:
+Además, debemos tener el código de ontolo-ci descargado, podemos clonar el repositorio o descargar el código fuente directamente:
 ```
 git clone https://github.com/weso/ontolo-ci.git
 ```
@@ -388,13 +388,13 @@ Una vez desplegado el endpoint del listener estará expuesto en  http://localhos
 #### Instalación GitHub App para usuarios/organizaciones
 Para comenzar a usar nuestra instancia de ontolo-ci en primer lugar deberemos instalar la GitHub App, que hemos creado, en nuestro usuario/organización de GitHub. Para ello, si tenemos desplegado ontolo-ci podemos ir a la web y pulsar en el apartado Get Started del menú superior, que nos llevará directamente a la página de instalación. Podemos especificar el repositorio concreto donde queramos utilizar ontolo-ci o todos los repositorios.
 #### Configuración .oci.yml
-El repositorio en el que integremos ontolo-ci debe disponer de un fichero llamado .oci.yml sobre la raiz del repositorio. Este fichero debe tener el siguiente aspecto:
+El repositorio en el que integremos ontolo-ci debe disponer de un fichero llamado .oci.yml sobre la raíz del repositorio. Este fichero debe tener el siguiente aspecto:
 ```
 manifestPath: manifest.json
 ontologyFolder: src
 testFolder: test
 ```
-En este fichero debemos apareceer reflejados los siguientes campos:
+En este fichero debemos aparecer reflejados los siguientes campos:
 
 | Campo        | Descripción          |
 |:-----------:|:---------------------|
@@ -451,7 +451,7 @@ La configuración es la siguiente:
 
 ![](./images/ontolo-ci-webhook-example.PNG)
 
-Llegados a este punto, y con nuestra instancia de ontolo-ci desplegada, nuesto repositorio estará integrado con ontolo-ci, de tal manera que cada vez que realizemos un push o una pull request sobre el repositorio podremos ver como se crean y actualizan los checkruns, así como todas las builds que se han llevado a cabo en la web. 
+Llegados a este punto, y con nuestra instancia de ontolo-ci desplegada, nuestro repositorio estará integrado con ontolo-ci, de tal manera que cada vez que realicemos un push o una pull request sobre el repositorio podremos ver como se crean y actualizan los checkruns, así como todas las builds que se han llevado a cabo en la web. 
 
 ![](./images/ontolo-ci-checks.png)
 
@@ -462,3 +462,4 @@ Llegados a este punto, y con nuestra instancia de ontolo-ci desplegada, nuesto r
 |:-----------:|:---------------------|
 | WebHook | Un webhook, en desarrollo web, es un método de alteración del funcionamiento de una página o aplicación web, con callbacks personalizados. Estos se pueden mantener, modificar y gestionar por terceros; desarrolladores que no tienen por qué estar afiliados a la web o aplicación.|
 | PKCS8 | Sintaxis estándar para almacenar información de clave privada |
+
