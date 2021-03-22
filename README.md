@@ -21,13 +21,13 @@ Although inspired in [Travis-CI](https://github.com/travis-ci/travis-ci) and man
 
 The following diagram illustrates the architecture of Ontolo-CI. As can be seen, it can be deployed as a docker container in any machine. Then it will listen to [GitHub Webhooks](https://developer.github.com/webhooks/). Whenever a webhook from github arrives it inmediatelly schedulles a build and after the build is finished Ontolo-CI will notify GitHub and publish the data on its webpage.
 
-![](docs/ontolo-ci-main-schema.png)
+![](docs/images/ontolo-ci-main-schema.png)
 
 ## Docker Container
 
 Ontolo-CI is shipped as a Docker container so that anyone can deploy its own instance on demand. Inside the Docker container there are several components that work together. The following schema shows them.
 
-![](docs/ontolo-ci-schema-docker.png)
+![](docs/images/ontolo-ci-schema-docker.png)
 
  - **Ontolo-CI Listener:** The listener component receives notifications from GitHub when a Pull Request is started or when commits are pushed. This notifies the scheduller about the new build to perform.
 

@@ -1,6 +1,7 @@
 package es.weso.ontoloci.api;
 
 import es.weso.ontoloci.persistence.PersistedBuildResult;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public interface OntolociAPI {
      *
      * @return a list containing all the build results as a JSON array.
      */
-    List<PersistedBuildResult> getAllBuildResults();
+    ResponseEntity getAllBuildResults();
 
     /**
      * Gets a build result for a given id. If the id does not exist then an empty build result is return.
@@ -28,5 +29,5 @@ public interface OntolociAPI {
      * @param id of the build result that you want to retrieve.
      * @return the build result if exists, an empty one else.
      */
-    PersistedBuildResult getBuildResult(String id);
+    ResponseEntity getBuildResult(String id);
 }

@@ -6,7 +6,7 @@ import es.weso.ontoloci.hub.build.HubBuild;
  * This interface sets the contract for all the hub possible implementations
  * @author Pablo Menéndez Suárez
  */
-public interface OntolociHub {
+public interface Hub {
 
     /**
      * Add the tests to an empty build object.
@@ -14,7 +14,7 @@ public interface OntolociHub {
      * @param hubBuild to populate with test cases.
      * @return the populated hub build.
      */
-    HubBuild addTestsToBuild(HubBuild hubBuild);
+    HubBuild fillBuild(HubBuild hubBuild);
 
 
     /**
