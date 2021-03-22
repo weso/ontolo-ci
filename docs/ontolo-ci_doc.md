@@ -289,7 +289,7 @@ En las siguientes secciones proporcionaremos varios documentos que brindan infor
 
 ### A: Despliegue de una instancia de ontolo-ci
 Antes de desplegar nuestra propia instancia de ontolo-ci es necesario disponer de una GitHub App asociada a nuestra instancia.
-Las [GitHub apps](https://docs.github.com/es/developers/apps/about-apps#:~:text=Las%20apps%20en%20GitHub%20te,vender%20apps%20en%20Mercado%20GitHub.&text=El%20usuario%20debe%20tener%20permisos,archivo%20de%20flujo%20de%20trabajo.) son la forma oficioal y recomendada de integrar aplicaciones con GitHub, ya que ofrecen permisos mucho más granulares para acceder a los datos y para comunicarse con los repositorios.
+Las [GitHub apps](https://docs.github.com/es/developers/apps/about-apps#:~:text=Las%20apps%20en%20GitHub%20te,vender%20apps%20en%20Mercado%20GitHub.&text=El%20usuario%20debe%20tener%20permisos,archivo%20de%20flujo%20de%20trabajo.) son la forma oficial y recomendada de integrar aplicaciones con GitHub, ya que ofrecen permisos mucho más granulares para acceder a los datos y para comunicarse con los repositorios.
 Una vez tengamos nuestra GitHub App creada, podremos usar hacer uso de nuestra instancia de ontolo-ci en cualquier repositorio de GitHub de un usuario/organización que haya instalado nuestra GitHub App previamente.
 
 #### Creación de una GitHub App
@@ -457,4 +457,8 @@ Llegados a este punto, y con nuestra instancia de ontolo-ci desplegada, nuesto r
 
 ![](./images/ontolo-ci-builds.png)
 
-## Glossary
+## Glosario
+| Término        | Definición          |
+|:-----------:|:---------------------|
+| WebHook | Un webhook, en desarrollo web, es un método de alteración del funcionamiento de una página o aplicación web, con callbacks personalizados. Estos se pueden mantener, modificar y gestionar por terceros; desarrolladores que no tienen por qué estar afiliados a la web o aplicación.|
+| PKCS8 | Sintaxis estándar para almacenar información de clave privada |
