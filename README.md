@@ -61,3 +61,7 @@ cd ontolo-ci/docker
 3. Finally, execute `docker-compose up`. This will generate the corresponding images, deploy the containers and expose the posrts.
 
 > **Ports Configuration:** Ontolo-CI uses port 80 for serving the web UI, port 10010 for its API and port 10011 for listening to GitHub. 
+
+
+## Examples
+Take a look to [ontolo-ci-example](https://github.com/weso/ontolo-ci-example) 
