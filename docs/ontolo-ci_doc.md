@@ -457,6 +457,8 @@ Llegados a este punto, y con nuestra instancia de ontolo-ci desplegada, nuestro 
 
 ![](./images/ontolo-ci-builds.png)
 
+El repositorio [ontolo-ci-example](https://github.com/weso/ontolo-ci-example) representa un ejemplo de una configuración básica para empezar a usar ontolo-ci.
+
 ## Glosario
 | Término        | Definición          |
 |:-----------:|:---------------------|
