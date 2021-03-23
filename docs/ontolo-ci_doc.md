@@ -464,3 +464,4 @@ El repositorio [ontolo-ci-example](https://github.com/weso/ontolo-ci-example) re
 |:-----------:|:---------------------|
 | WebHook | Un webhook, en desarrollo web, es un método de alteración del funcionamiento de una página o aplicación web, con callbacks personalizados. Estos se pueden mantener, modificar y gestionar por terceros; desarrolladores que no tienen por qué estar afiliados a la web o aplicación.|
 | PKCS8 | Sintaxis estándar para almacenar información de clave privada |
+
