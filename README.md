@@ -43,7 +43,7 @@ git clone https://github.com/weso/ontolo-ci
 cd ontolo-ci/docker
 ```
 
-3. Finally, execute `docker-compose up`. This will generate the corresponding images, deploy the containers and expose the posrts.
+3. Finally, execute `docker-compose up`. This will generate the corresponding images, deploy the containers and expose the ports.
 
 > **Ports Configuration:** Ontolo-CI uses port 80 for serving the web UI, port 10010 for its API and port 10011 for listening to GitHub. 
 
