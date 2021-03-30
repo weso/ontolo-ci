@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ontolo-ci</title>
+  <link rel="icon"  type="image/png" href="doc/imgs/favicon.png">
+
+
+  <link href="doc.min.css" rel="stylesheet" type="text/css" />
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  </head>
+  <body>
+
+    <style>
+   
+       .navbar{
+         border-radius: 0;
+       }
+
+    </style>
+
+  <a href="https://github.com/weso/ontolo-ci" target="_blank"><img style="z-index: 1; position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
+   <!-- Fixed navbar -->
+    <div class="navbar navbar-inverse" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Ontolo-ci</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a target="_blank" href="http://www.weso.es/">WESO</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+    <div class="container logoCont" role="main" >
+      </div>
+
+     <div class="container" role="main">
+      
+      	<div class="row" id="aboutYQuery">
+      	    <div class="col-md-12">
+                <h1>Welcome to Ontolo-ci</h1>
+                Ontolo-CI is a docker based system that integrates with GitHub to provide a continuos integration system for ontologies. It uses   <a target="_blank" href='http://shex.io/shex-semantics/'>Shape Expressions</a> and test instances in order to validate ontologies.<br><br>
+                Although inspired in <a target="_blank" href='https://github.com/travis-ci/travis-ci'>Travis-CI</a> and many other continuos integration systems, Ontolo-CI is focused on develop continuos integration for ontologies. This is done by means of test instances and Shape Expressions. Furthermore, Ontolo-CI is integrated with GitHub, so you can add it as a check to Pull Requests or Pushes to different branches.<br><br>
+                The following diagram illustrates the architecture of Ontolo-CI. As can be seen, it can be deployed as a docker container in any machine. Then it will listen to <a target="_blank" href='https://docs.github.com/en/developers/webhooks-and-events/about-webhooksGitHub Webhooks'>GitHub Webhooks</a>. Whenever a webhook from github arrives it inmediatelly schedulles a build and after the build is finished Ontolo-CI will notify GitHub and publish the data on its webpage.
+            </div>
+        </div>
+
+      
+        <img src="./images/ontolo-ci-main-schema.png" width="1000"></img>
+
+
+        <div class="row" id="features">
+          <div class="col-md-12">
+          <h2>Docker Container</h2>
+          Ontolo-CI is shipped as a Docker container so that anyone can deploy its own instance on demand. Inside the Docker container there are several components that work together. The following schema shows them.<br>
+          <br>
+
+          <img src="./images/ontolo-ci-schema-docker.png" width="1000"></img>
+
+          <ul>
+            <li><strong>Ontolo-CI Listener:</strong>The listener component receives notifications from GitHub when a Pull Request is started or when commits are pushed. This notifies the scheduller about the new build to perform.</li>
+            <li><strong>Ontolo-CI Hub:</strong>It acts as a GitHub API interface client. It allows the system to collect files from GitHub but also to inform about the status of the builds.</li>
+            <li><strong>Ontolo-CI Scheduller:</strong>This component receives builds to schedule from the listener, then creates a worker with the build and schedules its execution.</li>
+            <li><strong>Ontolo-CI Worker:</strong>Each worker contains a build to execute. A build is a set of tests to execute over an ontology. It only knows how to execute tests when told and who to notificate when finished.</li>
+            <li><strong>Database:</strong>When a build is finished by a worker the results of the build are stored in a database. Up to now the results that are being stored are: repo, branch, event, result. Where the result stores not only the results of the test cases, but also the execution time and other metrics.</li>
+            <li><strong>Ontolo-CI API:</strong>The API provides an access layer for thrid party services that need to explore the data from an Ontolo-CI instance. It is also used by the web service. It only allows reading data at the time.</li>
+            <li><strong>Ontolo-CI Web:</strong>Is a Web interface that stores the results of all executions schedulled, under execution and executed.</li>
+
+   
+          </ul>
+        
+          </div>
+          </div>
+         
+          <h2>Results</h2>
+          Every time ontolo-ci executes a build, the results are posted on GitHub and also on the ontolo-ci website
+          Ontolo-ci has it´s own website for every ontolo-ci instance.
+          <h3>GitHub Check Runs</h3>
+          <p>Ontolo-ci uses <a target="_blank" href='https://github.com/travis-ci/travis-ci'>Check Runs </a>in order to provide detailed feedback on commits. Every time a push or a pull request is made, ontolo-ci creates and updates a check run with the status of the validation proccess. </p>
+          <img src="./images/check-results.png" ></img>
+          <h3>GitHub Details View</h3>
+          <p>Once the validation has finished, we can see a more detailed view in the details section of the checkrun:</p>
+          <img src="./images/github-results.png" ></img>
+          <h3>Web View</h3>
+          <h4>Dashboard View</h4> 
+          <p>The Dashboard View shows all the builds that has been executed over the ontolo-ci instance:</p>
+          <img src="./images/builds.png"></img>
+          <h4>Specific Build View</h4> 
+          <p>There is a specific view for every build. This view shows the test cases that has been executed for the build.  </p>
+          <img src="./images/specific-build.png" ></img>
+
+          <h2>Deploy</h2>
+          <p>As previously seen, Ontolo-CI is a docker based system. Therefore the only important requirement is that you have Docker installed and running on your computer. Then, you just need to follow these steps.</p>
+          <p>1 .Download the latest version of the repository, either as a ZIP file or by cloning the master branch.</p>
+          <code>$~ git clone https://github.com/weso/ontolo-ci</code>
+          <p>2 .Then move to the docker folder from inside Ontolo-CI. For that:</p>
+          <code>$~ cd ontolo-ci/docker</code>
+          <p>3 .Finally, execute docker-compose up. This will generate the corresponding images, deploy the containers and expose the ports.</p>
+          
+
+</body>
+</html>
