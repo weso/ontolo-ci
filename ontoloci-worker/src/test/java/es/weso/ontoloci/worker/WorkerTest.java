@@ -9,9 +9,10 @@ import es.weso.ontoloci.worker.build.BuildResultStatus;
 import es.weso.ontoloci.worker.test.TestCase;
 import es.weso.ontoloci.worker.test.TestCaseResult;
 import es.weso.ontoloci.worker.test.TestCaseResultStatus;
-import es.weso.ontoloci.worker.validation.ResultValidation;
+// import es.weso.ontoloci.worker.validation.ResultValidation;
 import es.weso.ontoloci.worker.validation.Validate;
-import es.weso.shapeMaps.ShapeMap;
+import es.weso.shaclex.ResultValidation;
+import es.weso.shapemaps.ShapeMap;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -184,7 +185,7 @@ public class WorkerTest {
                 testCase.getOntology(),
                 testCase.getInstances(),
                 testCase.getSchema(),
-                testCase.getProducedShapeMap()).unsafeRunSync();
+                testCase.getProducedShapeMap());
 
         assertNotNull(resultValidation);
         assertTrue(resultValidation.toJson().spaces2().length()>0);
@@ -200,20 +201,20 @@ public class WorkerTest {
 
         TestCase testCase = defaultBuild.getTestCases().iterator().next();
         Validate v = new Validate();
-        ResultValidation resultValidation = new ResultValidation();
+        // ResultValidation resultValidation = new ResultValidation();
 
-        assertNull(resultValidation.getResultShapeMap());
-        assertNull(resultValidation.getExpectedShapeMap());
+        // assertNull(resultValidation.getResultShapeMap());
+        // assertNull(resultValidation.getExpectedShapeMap());
 
-        resultValidation = v.validateStrResultValidation(
+        ResultValidation resultValidation = v.validateStrResultValidation(
                 testCase.getOntology(),
                 testCase.getInstances(),
                 testCase.getSchema(),
                 testCase.getProducedShapeMap(),
-                testCase.getExpectedShapeMap()).unsafeRunSync();
+                testCase.getExpectedShapeMap());
 
-        assertNotNull(resultValidation.getResultShapeMap());
-        assertNotNull(resultValidation.getExpectedShapeMap());
+        assertNotNull(resultValidation.resultShapeMap());
+        assertNotNull(resultValidation.expectedShapeMap());
 
     }
 
