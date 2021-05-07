@@ -154,6 +154,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
         String path = getCheckRunsPath(owner,repo);
         // 3. Authenticate the user
         String authToken = authenticate(owner);
+        LOGGER.debug( String.format("AuthToken=[%s]",authToken));
         // 4. Create the appropriate HTTP method for the request
         HttpPost httppost = getGitHubPostAuth(path,authToken);
         // 5. Set the request params
@@ -163,7 +164,8 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
         // 7. Obtain the checkRunId from the response
         String checkRunId =  getCheckRunIdFromResponse(response);
 
-        LOGGER.debug( String.format("Created CheckRun for user=[%s], repo =[%s] and commit =[%s] ",owner,repo,commit));
+
+        LOGGER.debug( String.format("Created CheckRun for user=[%s], repo =[%s], commit =[%s] and checkRunId=[%s]",owner,repo,commit,checkRunId));
 
         return checkRunId;
     }
@@ -230,10 +232,12 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
         HttpGet httpGet = getGitHubGetAuth(path);
         // Perform the request
         String response = executeRequest(httpclient,httpGet);
+        LOGGER.debug( String.format("Response=[%s] ",response));
         // Obtain the installationId from the response
         String installationId = getInstallationIdFromResponse(response,user);
 
         LOGGER.debug( String.format("InstallationId obtained for user=[%s] ",user));
+        LOGGER.debug( String.format("InstallationId obtained=[%s] ",installationId));
 
         return installationId;
     }
@@ -291,7 +295,8 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
      */
     private Manifest getManifest(String path)
             throws JsonMappingException, JsonProcessingException, IOException {
-        return new Manifest(Arrays.asList(jsonMapper.readValue(getGitHubData(path), ManifestEntry[].class)));
+        String data = getGitHubData(path);
+        return new Manifest(Arrays.asList(jsonMapper.readValue(data, ManifestEntry[].class)));
     }
 
 
@@ -478,6 +483,7 @@ public class GitHubRepositoryProvider implements RepositoryProvider {
     private HttpGet getGitHubGetAuth(String path){
         HttpGet httpGet = getGitHubGet(path);
         String jwt = "Bearer "+KeyUtils.getJWT();
+        LOGGER.debug("jwt"+jwt);
         httpGet.setHeader("Authorization", jwt);
         return httpGet;
     }

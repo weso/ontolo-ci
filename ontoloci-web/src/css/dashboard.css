@@ -4,7 +4,7 @@
     justify-content: center;
     grid-template-columns: 55%;
     grid-template-rows: 10%  auto;
-    height: 80vh;
+    height: 75vh;
     overflow-y: scroll;
     margin-left: 5vh;
     gap:1vh;

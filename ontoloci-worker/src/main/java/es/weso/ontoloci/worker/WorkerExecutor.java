@@ -1,27 +1,29 @@
 package es.weso.ontoloci.worker;
 
 import es.weso.ontoloci.hub.build.HubBuild;
+import es.weso.ontoloci.hub.repository.RepositoryProvider;
+import es.weso.ontoloci.hub.repository.impl.GitHubRepositoryProvider;
 import es.weso.ontoloci.persistence.OntolociDAO;
 import es.weso.ontoloci.persistence.PersistedBuildResult;
 import es.weso.ontoloci.persistence.mongo.OntolociInMemoryDAO;
 import es.weso.ontoloci.worker.build.Build;
 import es.weso.ontoloci.worker.build.BuildResult;
 import es.weso.ontoloci.worker.build.BuildResultStatus;
-import es.weso.ontoloci.worker.test.TestCaseResult;
 import es.weso.ontoloci.worker.utils.MarkdownUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.weso.ontoloci.hub.OntolociHubImplementation;
+import es.weso.ontoloci.hub.HubImplementation;
 
-import javax.swing.plaf.ButtonUI;
 import java.util.*;
 
 public class WorkerExecutor implements Worker {
 
     // LOGGER CREATION
     private static final Logger LOGGER = LoggerFactory.getLogger(BuildResult.class);
+
     private final Worker worker;
+    private final RepositoryProvider repositoryProvider;
     private final OntolociDAO persistence = OntolociInMemoryDAO.instance();
 
     /**
@@ -29,17 +31,23 @@ public class WorkerExecutor implements Worker {
      * @param worker from which to create the new WorkerExecutor.
      * @return the new WorkerExecutor instance.
      */
+    public static WorkerExecutor from(Worker worker, RepositoryProvider repositoryProvider) {
+        LOGGER.debug("Static factory creating a new worker executor for " + worker+ " and "+ repositoryProvider);
+        return new WorkerExecutor(worker,repositoryProvider);
+    }
+
     public static WorkerExecutor from(Worker worker) {
         LOGGER.debug("Static factory creating a new worker executor for " + worker);
-        return new WorkerExecutor(worker);
+        return new WorkerExecutor(worker,GitHubRepositoryProvider.empty());
     }
     
     /**
      * Main constructor for the worker executor class. This is intended for dependency injection.
      * @param worker to execute the builds.
      */
-    private WorkerExecutor(final Worker worker) {
+    private WorkerExecutor(final Worker worker, RepositoryProvider repositoryProvider) {
         this.worker = worker;
+        this.repositoryProvider = repositoryProvider;
     }
 
     /**
@@ -56,12 +64,14 @@ public class WorkerExecutor implements Worker {
     @Override
     public BuildResult executeBuild(Build build) {
         LOGGER.debug("Executing build: " + build);
+        if(build.getMetadata().size()<=0)
+            return null;
         // 1. Create a Hub instance
-        OntolociHubImplementation ontolocyHub = new OntolociHubImplementation();
+        HubImplementation ontolocyHub = new HubImplementation(repositoryProvider);
         // 2. Transform the current build to a HubBuild
         HubBuild hubBuild = build.toHubBuild();
         // 3. Add the tests to the build
-        hubBuild = ontolocyHub.addTestsToBuild(hubBuild);
+        hubBuild = ontolocyHub.fillBuild(hubBuild);
         // 4. Transform the HubBuild to a worker build
         build = Build.from(hubBuild);
         // 5. Execute worker in case everything went right
@@ -84,9 +94,33 @@ public class WorkerExecutor implements Worker {
      * @return build result after the execution or empty build
      */
     private BuildResult executeWorker(Build build){
-      return !hasExceptions(build) ?
-              this.worker.executeBuild(build) :
-              BuildResult.from(build.getId(),build.getMetadata(),BuildResultStatus.CANCELLED,new ArrayList<>());
+        if(hasExceptions(build)){
+            return BuildResult.from(build.getId(),build.getMetadata(),BuildResultStatus.CANCELLED,new ArrayList<>());
+        }
+
+        BuildResult buildResult;
+        try {
+
+             buildResult = this.worker.executeBuild(build);
+
+        }catch (RuntimeException e){
+
+            LOGGER.error(String.format("ERROR while trying to validate build=[%s]",build));
+            Map<String,String> metadata = fillMetadataException(build.getMetadata(),"ValidationError","Error during validation");
+            buildResult = BuildResult.from(build.getId(),metadata,BuildResultStatus.CANCELLED,new ArrayList<>());
+
+        }
+
+        return buildResult;
+    }
+
+    private Map<String,String> fillMetadataException(Map<String,String> metadata,String checkTitle,String checkBody){
+        Map<String,String> newMap = new HashMap<>(metadata);
+        newMap.put("exceptions","true");
+        newMap.put("checkTitle",checkTitle);
+        newMap.put("checkBody",checkBody);
+        newMap.put("execution_date",String.valueOf(System.currentTimeMillis()));
+        return newMap;
     }
 
     /**
@@ -94,7 +128,7 @@ public class WorkerExecutor implements Worker {
      * @param ontolocyHub hub
      * @param buildResult build result
      */
-    private void updateCheckRun(OntolociHubImplementation ontolocyHub, BuildResult buildResult) {
+    private void updateCheckRun(HubImplementation ontolocyHub, BuildResult buildResult) {
         String conclusion = getConclusion(buildResult);
         String output = getOutput(buildResult);
         ontolocyHub.updateCheckRun(conclusion,output);

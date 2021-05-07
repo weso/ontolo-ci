@@ -17,7 +17,7 @@ public class OntolociMongoDAOTest {
 
     // DAO to test.
     private final OntolociDAO dao = OntolociInMemoryDAO.instance(); //new OntolociMongoSprinbootDAO(repo);
-        //new OntolociMongoDAO(new MongoClient(new ServerAddress("ds241489.mlab.com", 41489), Arrays.asList(credential)));
+    //new OntolociMongoDAO(new MongoClient(new ServerAddress("ds241489.mlab.com", 41489), Arrays.asList(credential)));
 
     // Test instances.
     private final PersistedBuildResult r1 = PersistedBuildResult.from(UUID.randomUUID().toString(),new HashMap<>(),new ArrayList<>());

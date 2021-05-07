@@ -24,7 +24,7 @@ public interface RepositoryProvider {
             final String owner,
             final String repo,
             final String commit
-    ) throws IOException;
+    ) throws Exception;
 
 
     /**

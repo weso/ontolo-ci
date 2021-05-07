@@ -128,7 +128,7 @@ public class PersistedBuildResult {
      * @return the metadata map.
      */
     public Map<String, String> getMetadata() {
-        LOGGER.debug("Getting the metadata of the test case result " + this.metadata.toString()
+        LOGGER.debug("Getting the metadata of the test case result "
                 + " from " + this);
 
         return Collections.unmodifiableMap(this.metadata);
@@ -140,6 +140,10 @@ public class PersistedBuildResult {
 
     public void setStatus(PersistedBuildResultStatus status) {
         this.status = status;
+    }
+
+    public boolean isEmpty(){
+        return this.metadata != null? false:true;
     }
 
     @Override
