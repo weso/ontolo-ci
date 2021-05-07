@@ -13,7 +13,7 @@ public class ShapeMapResultValidation {
     private String node;
     private String shape;
     private String status;
-    private String appInfo;
+    private Object appInfo;
     private String reason;
     private PrefixedNode nodePrefix;
     private PrefixedNode shapePrefix;
@@ -77,7 +77,7 @@ public class ShapeMapResultValidation {
      *
      * @return status
      */
-    public String getAppInfo() {
+    public Object getAppInfo() {
         return appInfo;
     }
 

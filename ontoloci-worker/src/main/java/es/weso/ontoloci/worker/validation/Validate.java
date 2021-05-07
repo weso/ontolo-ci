@@ -1,11 +1,12 @@
 package es.weso.ontoloci.worker.validation;
 
 import cats.effect.IO;
+import es.weso.rdf.RDFBuilder;
 import es.weso.rdf.RDFReader;
 import es.weso.rdf.jena.RDFAsJenaModel;
 import es.weso.rdf.nodes.IRI;
-import es.weso.shapeMaps.ResultShapeMap;
-import es.weso.shapeMaps.ShapeMap;
+import es.weso.shapemaps.ResultShapeMap;
+import es.weso.shapemaps.ShapeMap;
 import es.weso.shex.ResolvedSchema;
 import es.weso.shex.Schema;
 import es.weso.shex.validator.Validator;
@@ -18,6 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.logging.Logger;
+import es.weso.shaclex.*;
 
 /**
  * Redefines shexsjava library (https://github.com/weso/shexsjava)
@@ -30,8 +32,8 @@ public class Validate {
 	Logger log = Logger.getLogger(Validate.class.getName());
 
 	// none object is required to pass no base
-	Option<IRI> none = Option.empty();
-	Option<RDFReader> noneRDF = Option.empty();
+	// Option<IRI> none = Option.empty();
+	// Option<RDFBuilder> noneRDF = Option.empty();
 	
 	/**
 	 * This method performs the validation given the data as a String. Uses an
@@ -46,8 +48,9 @@ public class Validate {
 	 *
 	 * @return Validation result as a ResultShapeMap
 	 */
-	public IO<ResultShapeMap> validateStr(String dataStr, String ontologyStr, String schemaStr, String shapeMapStr) {
-		return readRDFStr(dataStr, "TURTLE").flatMap(rdfData -> readRDFStr(ontologyStr, "TURTLE")
+	public ResultShapeMap validateStr(String dataStr, String ontologyStr, String schemaStr, String shapeMapStr) {
+		return ShExWrapper.validateStr(dataStr,ontologyStr,schemaStr,shapeMapStr);
+	/*	return readRDFStr(dataStr, "TURTLE").flatMap(rdfData -> readRDFStr(ontologyStr, "TURTLE")
 				.flatMap(ontologyData -> rdfData.merge(ontologyData).flatMap(merged -> Schema
 						.fromString(schemaStr, "SHEXC", none, noneRDF)
 						.flatMap(schema -> EitherIOUtils
@@ -59,7 +62,8 @@ public class Validate {
 												.flatMap(resolvedSchema -> Validator
 														.validate(resolvedSchema, fixedShapeMap, merged)
 														.flatMap(result -> result.toResultShapeMap().flatMap(
-																resultShapeMap -> IO.pure(resultShapeMap))))))))));
+																resultShapeMap -> IO.pure(resultShapeMap)))))))))); */
+
 	}
 
 
@@ -77,8 +81,9 @@ public class Validate {
 	 *
 	 * @return Validation result as a ResultValidation
 	 */
-	public IO<ResultValidation> validateStrResultValidation(String ontologyStr, String dataStr, String schemaStr, String shapeMapStr,String expectedShapeMapStr) {
-		return readRDFStr(dataStr, "TURTLE").flatMap(rdfData -> readRDFStr(ontologyStr, "TURTLE")
+	public ResultValidation validateStrResultValidation(String ontologyStr, String dataStr, String schemaStr, String shapeMapStr,String expectedShapeMapStr) {
+		return ShExWrapper.validateStrResultValidation(ontologyStr,dataStr,schemaStr,shapeMapStr,expectedShapeMapStr);
+/*		return readRDFStr(dataStr, "TURTLE").flatMap(rdfData -> readRDFStr(ontologyStr, "TURTLE")
 				.flatMap(ontologyData -> rdfData.merge(ontologyData).flatMap(merged -> Schema
 						.fromString(schemaStr, "SHEXC", none, noneRDF)
 						.flatMap(schema -> EitherIOUtils
@@ -95,14 +100,14 @@ public class Validate {
 														.flatMap(result -> result.toResultShapeMap().flatMap(
 																resultShapeMap -> IO.pure(
 																		new ResultValidation(resultShapeMap,expectedShapeMap)
-																)))))))))));
+																))))))))))); */
 	}
 
 
 
-	private IO<RDFAsJenaModel> readRDFStr(String str, String format) {
+/*	private IO<RDFAsJenaModel> readRDFStr(String str, String format) {
 		return RDFAsJenaModel.fromChars(str, format, none).handleErrorWith(
 				e -> IO.raiseError(new RuntimeException("Cannot parse RDF from str: " + str + ":" + e.getMessage())));
 	}
-
+*/
 }

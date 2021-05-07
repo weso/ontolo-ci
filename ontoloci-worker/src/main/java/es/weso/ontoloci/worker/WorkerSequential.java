@@ -1,5 +1,6 @@
 package es.weso.ontoloci.worker;
 
+import cats.effect.unsafe.IORuntime;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,13 +11,14 @@ import es.weso.ontoloci.worker.test.TestCase;
 import es.weso.ontoloci.worker.test.TestCaseResult;
 import es.weso.ontoloci.worker.test.TestCaseResultStatus;
 import es.weso.ontoloci.worker.validation.PrefixedNode;
-import es.weso.ontoloci.worker.validation.ResultValidation;
+// import es.weso.ontoloci.worker.validation.ResultValidation;
 import es.weso.ontoloci.worker.validation.ShapeMapResultValidation;
 import es.weso.ontoloci.worker.validation.Validate;
 import es.weso.rdf.Prefix;
 import es.weso.rdf.PrefixMap;
 import es.weso.rdf.nodes.IRI;
-import es.weso.shapeMaps.ShapeMap;
+import es.weso.shaclex.ResultValidation;
+import es.weso.shapemaps.ShapeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scala.Tuple3;
@@ -25,7 +27,7 @@ import scala.util.Either;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
-
+import cats.effect.unsafe.implicits.*;
 /**
  * The sequential worker
  * @author Pablo Menéndez
@@ -148,8 +150,8 @@ public class WorkerSequential implements Worker {
         testCaseResult.setStatus(status);
         testCaseResult.addMetadata("produced",toJson(produced));
         testCaseResult.addMetadata("expected",toJson(expected));
-        testCaseResult.addMetadata("produced_output",resultValidation.getResultShapeMap().toJson().spaces2());
-        testCaseResult.addMetadata("expected_output",resultValidation.getExpectedShapeMap().toJson().spaces2());
+        testCaseResult.addMetadata("produced_output",resultValidation.resultShapeMap().toJson().spaces2());
+        testCaseResult.addMetadata("expected_output",resultValidation.expectedShapeMap().toJson().spaces2());
     }
 
 
@@ -190,12 +192,13 @@ public class WorkerSequential implements Worker {
      */
     private ResultValidation validateTest(TestCase testCase){
         Validate v = new Validate();
+        IORuntime runtime = cats.effect.unsafe.implicits.global();
         ResultValidation resultValidation = v.validateStrResultValidation(
                 testCase.getOntology(),
                 testCase.getInstances(),
                 testCase.getSchema(),
                 testCase.getProducedShapeMap(),
-                testCase.getExpectedShapeMap()).unsafeRunSync();
+                testCase.getExpectedShapeMap());
         return resultValidation;
     }
 
@@ -207,11 +210,11 @@ public class WorkerSequential implements Worker {
      * @return expected result
      */
     private List<ShapeMapResultValidation> getExpectedResult(ResultValidation resultValidation){
-        final List<ShapeMapResultValidation> expected =  getResultFromValidation(resultValidation.getExpectedShapeMap());
+        final List<ShapeMapResultValidation> expected =  getResultFromValidation(resultValidation.expectedShapeMap());
         // Now add the prefixes
         for(ShapeMapResultValidation e: expected){
-            PrefixedNode nodePrefix = getPrefix(resultValidation.getResultShapeMap().nodesPrefixMap(),e.getNode());
-            PrefixedNode shapePrefix = getPrefix(resultValidation.getExpectedShapeMap().shapesPrefixMap(),e.getShape());
+            PrefixedNode nodePrefix = getPrefix(resultValidation.resultShapeMap().nodesPrefixMap(),e.getNode());
+            PrefixedNode shapePrefix = getPrefix(resultValidation.expectedShapeMap().shapesPrefixMap(),e.getShape());
             e.setNodePrefix(nodePrefix);
             e.setShapePrefix(shapePrefix);
         }
@@ -230,8 +233,8 @@ public class WorkerSequential implements Worker {
      * @return produced result
      */
     private List<ShapeMapResultValidation> getProducedResult(ResultValidation resultValidation){
-        final List<ShapeMapResultValidation> expected = getResultFromValidation(resultValidation.getExpectedShapeMap());
-        final List<ShapeMapResultValidation> produced = getResultFromValidation(resultValidation.getResultShapeMap());
+        final List<ShapeMapResultValidation> expected = getResultFromValidation(resultValidation.expectedShapeMap());
+        final List<ShapeMapResultValidation> produced = getResultFromValidation(resultValidation.resultShapeMap());
         final List<ShapeMapResultValidation> cleanProduced = new ArrayList<>();
 
         for(ShapeMapResultValidation e: expected){
@@ -240,10 +243,10 @@ public class WorkerSequential implements Worker {
                     String node = p.getNode();
                     String shape = p.getShape();
                     String status = p.getStatus();
-                    String info = p.getAppInfo();
+                    String info = p.getAppInfo().toString();
                     String reason = p.getReason();
-                    PrefixedNode nodePrefix = getPrefix(resultValidation.getResultShapeMap().nodesPrefixMap(),node);
-                    PrefixedNode shapePrefix = getPrefix(resultValidation.getExpectedShapeMap().shapesPrefixMap(),shape);
+                    PrefixedNode nodePrefix = getPrefix(resultValidation.resultShapeMap().nodesPrefixMap(),node);
+                    PrefixedNode shapePrefix = getPrefix(resultValidation.expectedShapeMap().shapesPrefixMap(),shape);
 
                     cleanProduced.add(new ShapeMapResultValidation(node,shape,status,info,reason,nodePrefix,shapePrefix));
                 }
