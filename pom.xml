@@ -15,7 +15,6 @@
     <module>ontoloci-persistence</module>
     <module>ontoloci-api</module>
     <module>ontoloci-server-igniter</module>
-    <module>hellocucumber</module>
   </modules>
   	
   <properties>
@@ -69,15 +68,7 @@
       <version>5.7.0</version>
       <scope>test</scope>
     </dependency>
-    		
-    <dependency>
-      <groupId>io.cucumber</groupId>
-      <artifactId>cucumber-java</artifactId>
-      <version>6.8.1</version>
-      <scope>test</scope>
-      		
-    </dependency>
-    	
+
   </dependencies>
   	
   <build>
