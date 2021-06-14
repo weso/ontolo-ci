@@ -49,11 +49,10 @@
     <dependency>
       <groupId>es.weso</groupId>
       <artifactId>shaclex_2.12</artifactId>
-      <version>0.1.93</version>
+      <version>0.1.102</version>
     </dependency>
-            
+
     <!-- Yaml support -->
-            
     <dependency>
       <groupId>com.fasterxml.jackson.dataformat</groupId>
       <artifactId>jackson-dataformat-yaml</artifactId>
